@@ -59,16 +59,17 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			<para>
 				Unter Rasberry Pi OS (Debian) 10 Buster ist die Erzeugung des Binärpakets aus dem Quellcode relativ einfach. Laden Sie diesen zunächst herunter:
 				<screen>
-					$ sudo apt install git
-					$ git clone https://gitlab.com/meteoradix/personalfme.git
-					$ cd ./personalfme
+					$ sudo apt-get -y update 
+					$ sudo apt install -y git
+					$ git clone -b master https://github.com/erl987/personalfme
+					$ cd personalfme
+					$ git checkout tags/personalfme-1.0.0-release
 				</screen>
 			</para>
 			<para>
 				Kompilieren und installieren Sie nun manuell die Bibliothek Poco Version 1.8.1. Dies ist notwendig da die aktuelle Version 1.9.0, die
 				als Paket in Betriebssystem verfügbar ist, einen kritischen Fehler enthält der das Versenden von E-Mails verhindert.
 				<screen>
-					$ sudo apt-get -y update 
 					$ sudo apt-get -y install git g++ make cmake libssl-dev
 					$ git clone -b master https://github.com/pocoproject/poco.git
 					$ cd poco
