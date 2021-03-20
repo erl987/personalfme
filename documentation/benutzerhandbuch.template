@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>-->
+
+<book 	xml:id="benutzerhandbuch_personalfme" 
+		xml:lang="de" 
+		xmlns="http://docbook.org/ns/docbook" 
+		xmlns:xi="http://www.w3.org/2001/XInclude"
+		version="5.0">
+		
+	<title>@PROJECT_SOFTWARE_NAME@</title>
+	<subtitle>Dokumentation</subtitle>
+	<subtitle>Version @PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@ @PROJECT_VERSION_TYPE@</subtitle>
+	<info>
+		<author><personname>
+			<firstname>Ralf</firstname><surname>Rettig</surname>
+		</personname></author>
+		<copyright>
+			<year>2010-${REVISION_YEAR}</year>
+			<holder>Ralf Rettig.</holder>
+		</copyright>
+		<releaseinfo>veröffentlicht: @PROJECT_DATE@ (rev. @PROJECT_REVISION@)</releaseinfo>
+	</info>	
+
+	<xi:include href="chap1.xml"/>
+	<xi:include href="chap2.xml"/>
+	<xi:include href="chap3.xml"/>
+	<xi:include href="chap4.xml"/>
+	
+	
+	<chapter xml:id="licenses">
+		<title>Lizenzen</title>
+		<para>
+			Dieses Programm steht unter der GNU General Public License Version 3 oder einer neueren Version. Das Programm darf daher frei weitergegeben und verändert 
+			werden, solange der Quellcode frei zugänglich bleibt. Der Autor übernimmt keinerlei Verantwortung für das korrekte Funktionieren der Software und eventuelle
+			Folgen aus einem Programmfehler.
+			<warning>
+				Es wird darauf hingewiesen, dass das willentliche unbefugte Erlangen von Informationen aus nicht-öffentlichen Funkdiensten, z.B. der Behörden und Organisationen 
+				mit Sicherheitsaufgaben (BOS) strafbar ist. Dies gilt auch für die Auswertung von Fünftonfolgen. Die vorschriftsgemäße Nutzung des Programms liegt allein in 
+				der Verantwortung des Nutzers.
+			</warning>
+		</para>
+		<para>
+			Copyright (c) 2010-${REVISION_YEAR} Ralf Rettig
+		</para>
+		<para>
+			This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, 
+			either version 3 of the License, or (at your option) any later version.
+		</para>
+		<para>
+			This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+			PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+		</para>
+		<para>
+			You should have received a copy of the GNU General Public License along with this program.  If not, see <ulink url="http://www.gnu.org/licenses/"></ulink>.
+		</para>
+		<section xml:id="third_party_licenses">
+			<title>Lizenzen von Drittsoftwarekomponenten</title>
+			<section xml:id="portaudio_license">
+				<title>PortAudio Portable Real-Time Audio Library</title>
+				<para>
+					Copyright (c) 1999-2011 Ross Bencina and Phil Burk
+				</para>
+				<para>
+					Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+					to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+					sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+				</para>
+				<para>
+					The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+				</para>
+				<para>
+					THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+					FITNESS FOR A PARTICULAR PURPOSE AND ON INFRINGEMENT.
+				</para>
+				<para>
+					IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+					TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+				</para>
+			</section>
+			<section xml:id="alglib_license">
+				<title>Alglib</title>
+				<para>
+					Copyright (c) Sergey Bochkanov (ALGLIB project)
+				</para>
+				<para>
+					This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+					Free Software Foundation, either version 2 of the License, or (at your option) any later version.
+				</para>
+				<para>
+					This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+					or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+				</para>
+				<para>
+					You should have received a copy of the GNU General Public License along with this program.  If not, see <ulink url="http://www.gnu.org/licenses/"></ulink>.
+				</para>
+			</section>
+			
+			<section xml:id="libsndfile_license">
+				<title>Libsndfile</title>
+				<para>
+					<para>Copyright (c) 2005-2015 Erik de Castro Lopo (<email>erikd@mega-nerd.com</email>)</para>
+				</para>
+				<para>
+					This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free 
+					Software Foundation; either version 2.1 of the License, or (at your option) version 3.
+				</para>
+				<para>
+					This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+					PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+				</para>
+				<para>
+					You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, 
+					Fifth Floor, Boston, MA  02110-1301  USA
+				</para>
+			</section>
+			
+			<section xml:id="libvorbis_license">
+				<title>Libvorbis</title>
+				<para>
+					<para>Copyright (c) 2002-2015 Xiph.org Foundation</para>
+				</para>
+				<para>
+					Redistribution and use in source and binary forms, with or without
+					modification, are permitted provided that the following conditions
+					are met:
+				</para>
+				<para>
+					- Redistributions of source code must retain the above copyright
+					notice, this list of conditions and the following disclaimer.
+				</para>
+				<para>
+					- Redistributions in binary form must reproduce the above copyright
+					notice, this list of conditions and the following disclaimer in the
+					documentation and/or other materials provided with the distribution.
+				</para>
+				<para>
+					- Neither the name of the Xiph.org Foundation nor the names of its
+					contributors may be used to endorse or promote products derived from
+					this software without specific prior written permission.
+				</para>
+				<para>
+					THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+					``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+					LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+					A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION
+					OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+					SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+					LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+					DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+					THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+					(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+					OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+				</para>
+			</section>
+			<section xml:id="apache_xerces_license">
+				<title>Apache Xerces</title>
+				<para>
+					This product includes software developed by The Apache Software Foundation (<ulink url="http://www.apache.org/"></ulink>).
+					<para>Portions of this software were originally based on the following:</para>
+					- software copyright (c) 1999, IBM Corporation., <ulink url="http://www.ibm.com"></ulink>.
+				</para>
+			</section>	
+		</section>
+	</chapter>
+ </book>

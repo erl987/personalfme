@@ -1,0 +1,56 @@
+# PersonalFME - Gateway linking analog radio selcalls to internet communication services
+# Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+#
+# This program is free software: you can redistribute it and / or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.If not, see <http://www.gnu.org/licenses/>
+
+find_package( Boost COMPONENTS
+	system
+	date_time
+	filesystem
+	thread
+REQUIRED )
+
+set( SOURCE
+	CoreTest.cpp
+)
+
+add_executable( CoreTester ${SOURCE} )
+
+target_link_libraries( CoreTester PRIVATE
+	Utilities
+	Networking
+	Core
+
+	Boost::system 
+	Boost::date_time 
+	Boost::filesystem 
+	Boost::thread 
+)
+
+# copy the required configuration files
+set( DST "${CMAKE_BINARY_DIR}" )
+set( SRC "${PROJECT_SOURCE_DIR}/audioSettings.dat" )
+add_custom_command( TARGET CoreTester
+   COMMAND ${CMAKE_COMMAND} -E copy ${SRC} ${DST}
+)
+
+set( SRC "${PROJECT_SOURCE_DIR}/fmeParams.dat" )
+add_custom_command( TARGET CoreTester
+   COMMAND ${CMAKE_COMMAND} -E copy ${SRC} ${DST}
+)
+
+set( SRC "${PROJECT_SOURCE_DIR}/params.dat" )
+add_custom_command( TARGET CoreTester
+   COMMAND ${CMAKE_COMMAND} -E copy ${SRC} ${DST}
+)

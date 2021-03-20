@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--	PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>-->
+
+<chapter 	xml:id="features"
+			xml:lang="de" 
+			xmlns="http://docbook.org/ns/docbook" 
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			version="5.0">
+	<title>Features</title>
+	<itemizedlist>
+		<listitem>
+			<para>Software zum Empfang von Fünftonfolgen des analogen BOS-Funks, besonders geeignet für Minicomputer wie den Raspberry Pi</para>
+		</listitem>
+		<listitem>
+			<para>Sehr hohe Zuverlässigkeit der Tonfolgenerkennung</para>
+		</listitem>
+		<listitem>
+			<para>Getestet im Dauerbetrieb (>100 Tage)</para>
+		</listitem>
+		<listitem>
+			<para>Auswertung des Funksignals über die Soundkarte</para>
+		</listitem>
+		<listitem>
+			<para>Integriertes Gateway zum Weiterleiten der Alarmierungen über das Internet per SMS bzw. Handy-Apps (mittels <acronym>www.Groupalarm.de</acronym>) und E-Mail</para>
+		</listitem>
+		<listitem>
+			<para>Ansteuerung von externen Programmen und Skripten (z.B. für Torsteuerungen, optische Alarmierungen)</para>
+		</listitem>
+		<listitem>
+			<para>Versand der Alarmdurchsage per E-Mail</para>
+		</listitem>
+		<listitem>
+			<para>Flexible Konfiguration von Alarmierungen, Probealarmen und zeitabhängigen Alarmierungen (z.B. nachts, am Wochenende, Infoalarme) über eine XML-Datei</para>
+		</listitem>
+		<listitem>
+			<para>Erfüllt die relevanten Anforderungen der Technischen Richtlinie der BOS für Geräte für die Funkalarmierung</para>
+		</listitem>
+		<listitem>
+			<para>Erweiterung um zusätzliche Audioformate über Plugins möglich</para>
+		</listitem>
+		<listitem>
+			<para>Lauffähig unter Linux und Windows</para>
+		</listitem>
+	</itemizedlist>
+</chapter>

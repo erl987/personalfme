@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!-- PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>-->
+
+<xs:schema	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.personalfme.de/v1"
+			xmlns="http://www.personalfme.de/v1"
+			elementFormDefault="qualified">
+
+<xs:complexType name="authentificationBaseType">											
+	<xs:complexContent>
+		<xs:restriction base="xs:anyType">
+			<xs:attribute name="type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="simplePassword"/>
+						<xs:enumeration value="encryptedPassword"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:restriction>
+	</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="authentificationType">
+	<xs:complexContent>
+		<xs:extension base="authentificationBaseType">
+			<xs:all>
+				<xs:element name="user" type="xs:string"/>
+				<xs:element name="password" type="xs:string"/>
+			</xs:all>
+		</xs:extension>
+	</xs:complexContent>
+</xs:complexType>
+
+								
+<xs:complexType name="emailLoginDataType">
+	<xs:all>
+		<xs:element name="security">
+			<xs:complexType>
+				<xs:complexContent>
+					<xs:restriction base="xs:anyType">
+						<xs:attribute name="type" use="required"> 
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="TLS"/>
+									<xs:enumeration value="TLSSTART"/>
+									<xs:enumeration value="none"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:restriction>
+				</xs:complexContent>
+			</xs:complexType>
+		</xs:element>
+		<xs:element name="smtpServer" type="xs:anyURI"/>
+		<xs:element name="port" type="xs:unsignedShort"/>
+		<xs:element name="senderName" type="xs:string" minOccurs="0"/>
+		<xs:element name="senderMailAddress" type="xs:anyURI"/>
+		<xs:element name="authentification" type="authentificationType" minOccurs="0"/>
+		<xs:element name="trials" type="xs:positiveInteger" minOccurs="0"/>
+		<xs:element name="waitTime" minOccurs="0">
+			<xs:simpleType>
+				<xs:restriction base="xs:double">
+					<xs:minExclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:element>
+		<xs:element name="connections" type="xs:positiveInteger" minOccurs="0"/>
+	</xs:all>
+</xs:complexType>						
+
+</xs:schema> 

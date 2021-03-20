@@ -1,0 +1,51 @@
+#	WAV audio file handler plugin for the software PersonalFME
+#	Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+#
+#	This program is free software: you can redistribute it and / or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+#
+#	This program is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with this program.If not, see <http://www.gnu.org/licenses/>
+
+# WAV audio file handler plugin make file
+
+find_package( Poco COMPONENTS
+	Foundation
+REQUIRED )
+
+find_package( Libsndfile CONFIG REQUIRED )
+
+set( SOURCE
+	WAVAudioPlugin.cpp
+	WAVHandler.cpp
+)
+
+set( HEADERS
+	WAVAudioPlugin.h
+	WAVHandler.h
+)
+
+add_library( WAVAudioPlugin SHARED ${SOURCE} ${HEADERS} )
+
+target_link_libraries( WAVAudioPlugin PRIVATE 
+	Utilities
+	
+	${Poco_LIBRARIES}
+	sndfile-shared
+)
+
+# installer settings (on Windows the required filesystem structure is not available here)
+if( UNIX AND NOT APPLE )
+	install( TARGETS WAVAudioPlugin
+		LIBRARY DESTINATION /usr/lib/${CMAKE_PROJECT_NAME}/plugins
+		COMPONENT ${PROJECT_NAME}
+		CONFIGURATIONS Release
+	)
+endif()

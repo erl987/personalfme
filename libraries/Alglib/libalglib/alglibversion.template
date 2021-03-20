@@ -1,0 +1,38 @@
+// DO NOT CHANGE THIS FILE MANUALLY. CHANGE INSTEAD "VERSION.TEMPLATE" FROM WHICH IT IS GENERATED AUTOMATICALLY BY SVN.
+/*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2017 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>
+*/
+#pragma once
+
+#include <string>
+
+namespace alglib {
+	/**	@brief		Returns the version information of the Alglib-library
+	*	@param		versionString					Version number
+	*	@param		dateString						Date of release
+	*	@param		licenseTextString				Short form of license
+	*	@return 									None
+	*	@exception 									None
+	*	@remarks 									This function is not an original part of the Alglib-library
+	*												This function has to be adjusted manually for a new version.
+	*/
+	void GetVersionInfo(std::string& versionString, std::string& dateString, std::string& licenseTextString)
+	{
+		versionString = "@Alglib_VERSION_MAJOR@.@Alglib_VERSION_MINOR@.@Alglib_VERSION_PATCH@";
+		dateString = "@Alglib_DATE@";
+		licenseTextString = "Copyright (c) Sergey Bochkanov (ALGLIB project)";
+	}
+}

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>-->
+
+<config	xmlns="http://www.personalfme.de/v1"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.personalfme.de/v1 ./config.xsd">
+
+	<audio>
+		<driver>MME</driver>
+		<device>Microsoft Soundmapper - Input</device>
+	</audio>
+	<voiceCaptureTime>30</voiceCaptureTime>
+	<protocol default="off"/>
+	<minDetectionDist>10</minDetectionDist>
+	<playTone>false</playTone>
+	<logins>
+		<email>
+			<smtpServer>mail.gmx.net</smtpServer>
+			<port>465</port>
+			<security type="TLS"/>
+			<authentification type="simplePassword">
+				<user>user@gmx.de</user>
+				<password>passwort</password>
+			</authentification>
+			<senderName>Funkalarm</senderName>
+			<senderMailAddress>user@gmx.de</senderMailAddress>
+			<trials>10</trials>
+			<waitTime>60</waitTime>
+		</email>
+		<groupalarm>
+			<user>user</user>
+			<password type="plain">pass</password>
+			<proxy>
+				<server>proxy.orga.de</server>
+				<port>8080</port>
+			</proxy>
+			<trials>10</trials>
+			<waitTime>60</waitTime>
+		</groupalarm>
+	</logins>
+	<alarms>
+		<all>
+			<!--wird für jegliche Alarmierung ausgelöst, kann neben sämtlichen Gateways auch mit sogenannten Infoalarmen konfiguriert werden-->
+			<default>
+				<alarms>
+					<infoalarm>
+						<!--ein Infoalarm sendet Details über alle anderen ausgelösten Alarmierungen (je nach gewähltem Gateway)-->
+						<email>
+							<organization>Kreisbrandinspektion</organization>
+							<unit>KBR</unit>
+							<recipient>
+								<address>test@test.de</address>
+							</recipient>
+							<message>Infoalarm.</message>
+							<attachVoice>true</attachVoice>
+						</email>
+					</infoalarm>
+				</alarms>
+			</default>
+			<!--Ausnahmen sind hier wie bei jedem anderen Alarm möglich-->
+			<weeklyException>
+				<validity>
+					<validWeeks>
+						<all/>
+					</validWeeks>
+					<weekday>So</weekday>
+					<begin>10:30:00</begin>
+					<end>17:00:00</end>
+				</validity>
+				<!--alle Alarmierungen für die Ausnahme sind unterdrückt-->
+				<alarms/>
+			</weeklyException>		
+		</all>
+		
+		<fallback>
+			<!--wird immer dann ausgelöst wenn zum jeweiligen Alarmzeitpunkt keine andere Alarmierung ausgelöst wird, verhält sich identisch zu einer normalen Alarmierung-->
+			<!--unter Normalbedingungen ist in diesem Fall auch das Fallback unterdrückt-->
+			<default/>
+			<monthlyException>
+				<validity>
+					<validMonths>
+						<month>3</month>
+					</validMonths>
+					<day>3</day>
+					<begin>13:00:00</begin>
+					<end>13:10:00</end>
+				</validity>
+				<alarms>
+					<groupalarm>
+						<!--zum Ausnahmezeitpunkt wird eine Groupalarm-Alarmierung als Fallback ausgelöst-->
+						<alarm>
+							<code>
+								<group>12345</group>
+								<list>23456</list>
+								<group>98765</group>
+							</code>
+						</alarm>
+						<message type="code">34567</message>
+						<feedbackReset>true</feedbackReset>
+						<normalSMS>true</normalSMS>
+						<suppressFax>false</suppressFax>
+					</groupalarm>
+				</alarms>
+			</monthlyException>
+		</fallback>		
+		
+		<code call="12345">
+			<default>
+				<alarms>
+					<email>
+						<organization>Einrichtung 1</organization>
+						<unit>Schleife 1</unit>
+						<recipient>
+							<address>test@test.de</address>
+						</recipient>
+						<message>Standardalarm.</message>
+						<attachVoice>true</attachVoice>
+					</email>
+				</alarms>
+			</default>
+			<weeklyException>
+				<validity>
+					<validWeeks>
+						<all/>
+					</validWeeks>
+					<weekday>Di</weekday>
+					<begin>15:30:00</begin>
+					<end>16:00:00</end>
+				</validity>
+				<!--alle Alarmierungen für die Ausnahme sind unterdrückt-->
+				<alarms/>
+			</weeklyException>
+			<weeklyException>
+				<validity>
+					<validWeeks>
+						<!--Alternative: <all/> für eine Ausnahme in jeder Woche -->
+						<week>5</week>
+					</validWeeks>
+					<weekday>Fr</weekday>
+					<begin>10:05:00</begin>
+					<end>10:20:00</end>
+				</validity>
+				<alarms>
+					<email>
+						<organization>Einrichtung 1</organization>
+						<unit>Schleife 1</unit>
+						<recipient>
+							<address>test2@test2.de</address>
+						</recipient>
+						<message>Probealarm Übung!!!</message>
+						<attachVoice>false</attachVoice>
+					</email>
+				</alarms>
+			</weeklyException>
+		</code>
+		<code call="45678">
+			<!--für die Schleife 45678 gibt es keinerlei Alarmierungen. Sie ist hier definiert, damit sie trotz der Protokollierungseinstellung "off" aufgezeichnet wird-->
+			<default/>
+		</code>
+		<code call="23456">
+			<!--für die Alarmschleife 23456 sind unter Normalbedingungen alle Alarmierungen unterdrückt-->
+			<default/>
+			<monthlyException>
+				<validity>
+					<validMonths>
+						<month>3</month>
+					</validMonths>
+					<day>3</day>
+					<begin>13:00:00</begin>
+					<end>13:10:00</end>
+				</validity>
+				<!--auch für diese Ausnahme ist die Alarmierung unterdrückt-->
+				<alarms/>
+			</monthlyException>
+		</code>
+		<code call="25634">
+			<default>
+				<alarms>
+					<email>
+						<organization>Einrichtung 1</organization>
+						<unit>Schleife 3</unit>
+						<recipient>
+							<address>user@gmx.de</address>
+						</recipient>
+						<message>Alarm für die Schleife 25634.</message>
+						<attachVoice>true</attachVoice>
+					</email>
+				</alarms>
+			</default>
+			<singleTimeException>
+				<validity>
+					<beginDate>2016-01-05</beginDate>
+					<begin>10:00:00</begin>
+					<endDate>2016-01-27</endDate>
+					<end>20:00:00</end>
+				</validity>
+				<!--die Alarmierung ist während der Gültigkeit der Ausnahme unterdrückt-->
+				<alarms/>
+			</singleTimeException>
+		</code>
+		<code call="98765">
+			<default>
+				<alarms>
+					<!--mehrere Groupalarm- bzw. E-Mail-Nachrichten sind möglich-->
+					<groupalarm>
+						<alarm>
+							<code>
+								<group>12345</group>
+								<list>23456</list>
+								<group>98765</group>
+							</code>
+						</alarm>
+						<message type="code">34567</message>
+						<feedbackReset>true</feedbackReset>
+						<normalSMS>true</normalSMS>
+						<suppressFax>false</suppressFax>
+					</groupalarm>
+					<groupalarm>
+						<alarm>
+							<phoneNumber>015112345</phoneNumber>
+						</alarm>
+						<message type="freeText">Probealarm für die Schleife 98765.</message>
+						<feedbackReset>true</feedbackReset>
+						<normalSMS>true</normalSMS>
+						<suppressFax>false</suppressFax>
+					</groupalarm>
+				</alarms>
+			</default>
+		</code>
+	</alarms>
+</config>

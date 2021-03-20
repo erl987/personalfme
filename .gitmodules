@@ -1,0 +1,3 @@
+[submodule "CMakeModules/externals/CMake-gitinfo"]
+	path = CMakeModules/externals/CMake-gitinfo
+	url = git://github.com/RWTH-HPC/CMake-gitinfo.git

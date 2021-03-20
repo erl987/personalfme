@@ -1,0 +1,10 @@
+build/
+documentation/benutzerhandbuch.fo
+documentation/benutzerhandbuch.html
+documentation/benutzerhandbuch.xml
+documentation/benutzerhandbuch.xsl
+documentation/benutzerhandbuch_html.xsl
+documentation/chap2.xml
+documentation/chap4.xml
+documentation/manpage.xml
+/libraries/Alglib/libalglib/alglibversion.h

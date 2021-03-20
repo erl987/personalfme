@@ -1,0 +1,1236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--	PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>-->
+
+<chapter 	xml:id="configuration"
+			xml:lang="de" 
+			xmlns="http://docbook.org/ns/docbook" 
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			version="5.0">
+	<title>Konfiguration des Programms</title>
+	<note>
+		Die Anwendungsbeispiele in diesem Kapitel gelten sowohl für Windows als auch für Linux.
+	</note>
+	<para>
+		Das Programm wird vollständig über eine einzige XML-Konfigurationsdatei <filename>config.xml</filename> gesteuert. Die folgende einfache Datei reicht für die Standardeinstellungen:
+	</para>
+	<programlisting language="XML">
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config	xmlns="http://www.personalfme.de/v1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.personalfme.de/v1
+		C:/Users\Benutzer\AppData\Roaming\PersonalFME\schema\config.xsd">
+
+<protocol default="on"/>
+<!--Hier kann der Benutzer seine Konfiguration einfügen-->
+</config>
+]]>
+	</programlisting>
+	<para>Damit werden alle Alarmierungen protokolliert und deren Alarmdurchsagen aufgezeichnet, jedoch keine Nachrichten versendet.</para>
+	<note>
+		Die Pfadangabe für die XML-Schema-Datei (im Beispiel: <filename>C:/Users\Benutzer\AppData\Roaming\PersonalFME\schema\config.xsd</filename>) wird von PersonalFME ignoriert 
+		und kann daher beliebige Angaben erhalten.
+	</note>		
+	<para>
+		Der Benutzer erstellt die eigentliche Konfiguration zwischen den <code language="XML"><![CDATA[<config>]]></code>-Auszeichnern. Die XML-Datei muss <emphasis>UTF-8</emphasis> kodiert sein, 
+		damit die Umlaute korrekt wiedergegeben werden. Stellen Sie das in Ihrem Editor sicher. Empfehlenswert ist z.B. der freie Editor <acronym>Notepad++</acronym>. Sofern in wenigen
+		Fällen nicht anders angegeben, ist die Reihenfolge der Auszeichner beliebig. Benutzen Sie für Ihre Konfiguration die Vorlage <filename>complex_config.xml</filename> 
+		im Ordner <filename class="directory">PersonalFME\beispiele</filename>.
+	</para>
+	<para>Ein Beispiel für eine umfangreiche Konfigurationsdatei ist:</para>	
+	<programlisting language="XML">
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config	xmlns="http://www.personalfme.de/v1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.personalfme.de/v1 
+		C:/Users\Benutzer\AppData\Roaming\PersonalFME\schema\config.xsd">
+
+	<audio>
+		<driver>MME</driver>
+		<device>Microsoft Soundmapper - Input</device>
+	</audio>
+	<voiceCaptureTime>30</voiceCaptureTime>
+	<protocol default="off"/>
+	<audioFormat>Ogg</audioFormat>				
+	<minDetectionDist>10</minDetectionDist>
+	<playTone>false</playTone>
+	
+	<logins>
+		<email>
+			<smtpServer>mail.gmx.net</smtpServer>
+			<port>465</port>
+			<security type="TLS"/>
+			<authentification type="simplePassword">
+				<user>user@gmx.de</user>
+				<password>passwort</password>
+			</authentification>
+			<senderName>Funkalarm</senderName>
+			<senderMailAddress>user@gmx.de</senderMailAddress>
+			<trials>10</trials>
+			<waitTime>60</waitTime>
+			<connections>1</connections>
+		</email>
+	</logins>
+	
+	<alarms>
+		<all>
+			<default>
+				<alarms>
+					<infoalarm>
+						<email>
+							<organization>Einsatzleitung</organization>
+							<unit>OrgL</unit>
+							<recipient>
+								<address>test2@test2.de</address>
+							</recipient>
+							<message>Alarmierung ausgelöst.</message>
+							<attachVoice>false</attachVoice>
+						</email>
+					</infoalarm>
+				</alarms>
+			</default>
+		</all>
+		<code call="12345">
+			<default>
+				<alarms>
+					<email>
+						<organization>HiOrg OV A-Dorf</organization>
+						<unit>Alarmgruppe A</unit>
+						<recipient>
+							<address>test@test.de</address>
+						</recipient>
+						<message>Einsatz für die Alarmgruppe A.</message>
+						<attachVoice>true</attachVoice>
+					</email>
+				</alarms>
+			</default>
+
+			<weeklyException>
+				<validity>
+					<validWeeks>
+						<week>5</week>
+					</validWeeks>
+					<weekday>Fr</weekday>
+					<begin>10:05:00</begin>
+					<end>10:20:00</end>
+				</validity>
+				<alarms>
+					<email>
+						<organization>HiOrg OV A-Dorf</organization>
+						<unit>SEG</unit>
+						<recipient>
+							<address>test2@test2.de</address>
+						</recipient>
+						<message>Probealarm</message>
+						<attachVoice>false</attachVoice>
+					</email>
+				</alarms>
+			</weeklyException>
+		</code>			
+	</alarms>
+</config>
+]]>
+	</programlisting>
+	<para>Im Folgenden werden alle möglichen Einstellungen gegliedert nach den Abschnitten der XML-Datei erläutert.</para>
+	
+	<section xml:id="basic_settings">
+		<title>Basiseinstellungen</title>
+		<para>In den Basiseinstellungen werden die grundlegenden Funktionalitäten gesteuert. Sämtliche Einstellungen haben hier Standardwerte und können daher auch wegelassen werden.</para>
+		<para>
+			<emphasis role="underline">Syntax:</emphasis>
+			<programlisting language="xml">
+<![CDATA[
+<audio>
+	<driver>MME</driver>
+	<device>Microsoft Soundmapper - Input</device>
+</audio>
+<voiceCaptureTime>25</voiceCaptureTime>
+<protocol default="off"/>
+<audioFormat>Ogg</audioFormat>
+<minDetectionDist>10</minDetectionDist>
+<playTone>false</playTone>
+]]>
+			</programlisting>
+		</para>
+		
+		<section xml:id="soundcard_settings">
+			<title>Soundkarteneinstellung (<code language="xml"><![CDATA[<audio>]]></code>)</title>
+			<para><emphasis>Standard (wenn wegelassen):</emphasis> Standardaudiogerät des Systems</para>
+			<para>
+				In fast allen Anwendungsfällen kann diese Einstellung weggelassen und das Standardgerät benutzt werden. Eine mögliche Ausnahme sind Notebooks, deren Standardgerät 
+				evtl. ein Umgebungsmikrofon und nicht die Mikrofonbuchse ist.
+			</para>
+			<para><emphasis>Einstellungsmöglichkeiten:</emphasis></para>
+			<itemizedlist>
+				<listitem>
+				<code language="xml"><![CDATA[<driver>]]></code>: Name des benutzten Soundkartentreibers (unter Windows in der Regel MME, WASAPI, …; unter Linux meist ALSA)
+				</listitem>
+				<listitem>
+				<code language="xml"><![CDATA[<device>]]></code>: Name des benutztes Audiogeräts / -ausgangs
+				</listitem>
+				</itemizedlist>
+			<para>
+				Es reicht aus, den Namen soweit in Kleinbuchstaben anzugeben, dass er eindeutig ist. Die verfügbaren Audiogeräte und -treiber werden in der 
+				<acronym>PersonalFME</acronym>-Kommandozeile über den folgenden Befehl ermittelt: <command>PersonalFME –a</command>
+			</para>
+			<screen>
+				C:\Program Files (x86)\PersonalFME\bin>personalfme -a
+
+				Verfügbare Audio-Eingabegeräte:
+
+				Treiber: MME
+				- Microsoft Soundmapper - Input
+				- FrontMic (Realtek High Definiti (-----> Standardgerät)
+			</screen>
+			<para>Wenn kein Audiokabel einsteckt ist, erhalten Sie die folgende Ausgabe:</para>
+			<screen>
+				C:\Program Files (x86)\PersonalFME\bin>personalfme -a
+
+				Fehler:
+				Kein Audio-Eingabegerät verfügbar. Eventuell ist in der 
+				Mikrofonbuchse kein Kabel eingesteckt.
+			</screen>
+		</section>
+
+		<section xml:id="voice_capture_time">
+			<title>Länge der Sprachaufzeichnung nach einer Alarmierung (<code language="xml"><![CDATA[<voiceCaptureTime>]]></code>)</title>
+			<para><emphasis>Standard (wenn weggelassen):</emphasis> 30 Sekunden</para>
+			<para>
+				<emphasis>Einstellungsmöglichkeiten:</emphasis>
+				Länge der Sprachaufzeichnung in Sekunden. Die Sprachaufzeichnung kann nicht ausgeschaltet werden, d.h. eine Angabe von 0 Sekunden ist nicht zulässig.
+			</para>
+		</section>
+			
+		<section xml:id="protocol">
+			<title>Protokollierung fremder Alarmierungen (<code language="xml"><![CDATA[<protocol>]]></code>)</title>
+			<para><emphasis>Standard (wenn weggelassen):</emphasis> Protokollierung fremder Alarmierungen ist ausgeschaltet ("off")</para>				
+			<para>
+				<emphasis>Einstellungsmöglichkeiten:</emphasis>
+				<itemizedlist>
+					<listitem>
+						<code language="xml"><![CDATA[<protocol default="on"/>]]></code>: Alle erkannten Alarmierungen werden protokolliert und die Alarmdurchsage aufgenommen.
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<protocol default="off"/>]]></code>: Ausschließlich die Alarmschleifen, die im Block <code language="xml"><![CDATA[<alarms>]]></code> 
+						eingetragen sind, werden protokolliert sowie deren Sprachdurchsage aufgenommen.
+					</listitem>
+				</itemizedlist>
+			</para>
+			<warning>
+				<emphasis>Rechtlicher Hinweis</emphasis>: Benutzen Sie die Einstellung <code language="xml"><![CDATA[<protocol default="on"/>]]></code> nur, wenn Sie zur Aufzeichnung sämtlicher Alarmierungen auf dem 
+				Funkkanal befugt sind. Das Protokollieren bzw. Aufzeichnen fremder Alarmierungen stellt eine bewusstes Mithören dar und ist strafbar. 
+			</warning>
+		</section>
+
+		<section xml:id="audioFormat">
+			<title>Audio-Dateiformat (<code language="xml"><![CDATA[<audioFormat>]]></code>)</title>
+			<para><emphasis>Standard (wenn weggelassen):</emphasis> WAV-Format</para>
+			<para>
+				<emphasis>Einstellungsmöglichkeiten:</emphasis>				
+				<itemizedlist>
+					<listitem>
+						<code language="xml"><![CDATA[<audioFormat>WAV</audioFormat>]]></code>: WAV-Format (unkomprimiert)
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<audioFormat>Ogg</audioFormat>]]></code>: Ogg Vorbis-Format (komprimiert)
+					</listitem>
+				</itemizedlist>
+				Das WAV-Format benötigt deutlich mehr Speicherplatz und E-Mail-Übertragungen dauern länger, allerdings kann es von den meisten Betriebssystemen standardmäßig abgespielt werden. 
+				Das Ogg Vorbis-Format ist ein komprimiertes Format und benötigt wesentlich weniger Speicherplatz (ca. um den Faktor 5), jedoch kann die Datei unter Windows nur mit geeigneter Software abgespielt werden 
+				(z.B. VLC Media Player oder RealPlayer). Auf dem mobilen Betriebssystem Android funktioniert dies ohne zusätzliche Software. Falls weitere Audio-Plugins installiert sind, können die weiteren Formate analog angegeben werden.
+			</para>
+		</section>	
+		
+		<section xml:id="minDetectionDist">
+			<title>Unterdrückung von Mehrfachalarmierungen (<code language="xml"><![CDATA[<minDetectionDist>]]></code>)</title>
+			<para><emphasis>Standard (wenn weggelassen):</emphasis> keine Unterdrückung von Mehrfachalarmierungen (0 Sekunden)</para>
+			<para>
+				<emphasis>Einstellungsmöglichkeiten:</emphasis>				
+				Angabe der Zeit in Sekunden, in der nach einer erkannten Alarmierung für diese Tonfolge jede weitere Alarmierung unterdrückt wird. Damit wird vermieden dass bei wiederholten 
+				Fünftonfolgen (z.B. durch einen Alarmumsetzer) doppelte Alarmierungen versandt werden. In vielen Fällen sind 10 Sekunden eine gute Wahl.
+			</para>
+		</section>	
+
+		<section xml:id="playTone">
+			<title>Alarmton bei einer Alarmierung  (<code language="xml"><![CDATA[<playTone>]]></code>)</title>
+			<para><emphasis>Standard (wenn weggelassen):</emphasis> kein Alarmton</para>
+			<para>
+				<emphasis>Einstellungsmöglichkeiten:</emphasis>
+				<itemizedlist>
+					<listitem>
+						<code language="xml"><![CDATA[<playTone>false</playTone>]]></code>: kein Alarmton
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<playTone>true</playTone>]]></code>: Alarmton des Systems (Beep) nach Erkennen einer Alarmierung
+					</listitem>
+				</itemizedlist>
+			</para>
+		</section>			
+	</section>
+	
+	<section xml:id="login_settings">
+		<title>Logineinstellungen für den Nachrichtenversand</title>
+		<para>
+			<emphasis role="underline">Syntax:</emphasis>
+			<programlisting language="xml">
+<![CDATA[
+<logins>
+	<email>
+		<!--Einstellungen für Emails-->
+	</email>
+	<groupalarm>
+		<!--Einstellungen für Groupalarm-->
+	</groupalarm>
+	<external>
+		<!--Einstellungen für externe Programmaufrufe-->
+	</external>
+</logins>
+]]>
+			</programlisting>
+			Für jedes Alarmierungs-Gateway mit Netzwerkverbindung (Groupalarm, E-Mail) ist jeweils die Angabe der notwendigen Login-Daten im Auszeichner <code language="xml"><![CDATA[<logins>]]></code>
+			erforderlich. Im Auszeichner <code language="xml"><![CDATA[<alarms>]]></code> wird dann festgelegt, bei welchen Fünftonfolgen welche Nachrichten versandt werden. Außerdem kann ein 
+			anderes Verhalten während eines Probealarms festgelegt werden. Nicht benötigte Alarmierungsarten werden weggelassen.
+		</para>
+		<para><emphasis>Allgemeine Einstellungsmöglichkeiten (außer für das Starten externer Programme)</emphasis>:
+			<itemizedlist>
+				<listitem>
+					<code language="xml"><![CDATA[<trials>]]></code>: Anzahl der Sendeversuche bei fehlender Verbindung.
+					<para><emphasis>Standard (wenn weggelassen)</emphasis>: 10 Versuche</para>
+				</listitem>
+				<listitem>
+					<code language="xml"><![CDATA[<waitTime>]]></code>: Anzahl der Sendeversuche bei fehlender Verbindung.
+					<para><emphasis>Standard (wenn weggelassen)</emphasis>: 60 Sekunden</para>
+				</listitem>
+				<listitem>
+					<code language="xml"><![CDATA[<connections>]]></code>: Anzahl der parallelen Verbindungen. Dies ist eine Spezialoption für Experten. 
+					Nur in wenigen Fällen ist es sinnvoll, mehr als eine parallele Verbindung zu nutzen.
+					<para><emphasis>Standard (wenn weggelassen)</emphasis>: 1 Verbindung</para>
+				</listitem>
+			</itemizedlist>
+			Für die meisten Anwender sind die Standardoptionen angemessen und diese Auszeichner können daher meist weggelassen werden. U.a. wird durch die wiederholten 
+			Sendeversuche sichergestellt, dass ein Versand der Nachrichten mit geringer Zeitverzögerung auch bei einer Resychronisation einer DSL-Leitung stattfindet.
+		</para>
+		
+		<section xml:id="email_settings">
+			<title>E-Mail (<code language="xml"><![CDATA[<email>]]></code>)</title>
+			<para>
+				<emphasis role="underline">Syntax:</emphasis>
+				<programlisting language="xml">
+<![CDATA[
+<email>
+	<smtpServer>mail.gmx.net</smtpServer>
+	<port>465</port>
+	<security type="TLS"/>
+	<authentification type="simplePassword">
+		<user>user@gmx.de</user>
+		<password>passwort</password>
+	</authentification>
+	<senderName>Funkalarm</senderName>
+	<senderMailAddress>user@gmx.de</senderMailAddress>
+	<trials>10</trials>
+	<waitTime>60</waitTime>
+	<connections>1</connections>
+</email>
+]]>
+				</programlisting>
+				Die folgenden notwendigen Angaben sind vom E-Mail-Provider zu erfahren.
+				<itemizedlist>
+					<listitem>
+						<code language="xml"><![CDATA[<smtpServer>]]></code>: SMTP-Servername
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<port>]]></code>: Server-Port
+					</listitem>
+					<listitem>
+						<para><code language="xml"><![CDATA[<security>]]></code>: Verschlüssung der Verbindung.</para>
+						<emphasis>Verfügbare Optionen</emphasis>:
+						<itemizedlist>
+							<listitem>
+								<code language="xml"><![CDATA[<security type="TLS"/>]]></code>: TLS/SSL-Verschlüsselung (Standardport: 465)
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[<security type="TLSSTART"/>]]></code>: TLSSTART-Verschlüsselung (Standardport: 587).
+								Falls keine verschlüsselte Verbindung zustande kommt, wird der Verbindungsaufbau abgebrochen.
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[<security type="none"/>]]></code>: Keine Verschlüsselung (Standardport: 25). Nur innerhalb sicherer Netze zu empfehlen.
+							</listitem>
+						</itemizedlist>								
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<authentification>]]></code>: Authentifizierung des Benutzers
+						<para><emphasis>Standard (wenn weggelassen):</emphasis> keine Authentifizierung</para>
+						<emphasis>Verfügbare Optionen:</emphasis>
+						<itemizedlist>
+							<listitem>
+								<code language="xml"><![CDATA[<authentification type="simplePassword">]]></code>: Authentifizierung über unverschlüsseltes Password und Benutzername
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[<authentification type="encryptedPassword">]]></code>: Authentifizierung über verschlüsseltes Password und Benutzername
+							</listitem>
+						</itemizedlist>									
+						Anzugeben sind jeweils:
+						<para><code language="xml"><![CDATA[<user>]]></code>: Benutzername</para>
+						<para><code language="xml"><![CDATA[<password>]]></code>: Passwort</para>
+						<warning>
+							Das Passwort des E-Mail-Accounts wird unverschlüsselt in der XML-Konfigurationsdatei gespeichert. Sorgen Sie durch Festlegung 
+							der Benutzerrechte und Begrenzung des Zugangs zum Rechner dafür, dass das Passwort geschützt bleibt. Geben Sie die XML-Konfigurationsdatei nicht mit Ihrem Passwort weiter.
+						</warning>
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<senderMailAddress>]]></code>: E-Mail-Adresse des Absenders
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<senderName>]]></code>: Absendername. Optional, kann weggelassen werden.
+						Beispiel:
+						<programlisting language="xml">
+<![CDATA[
+<senderName>Funkalarm</senderName>
+<senderMailAddress>alarm@test.de</senderMailAddress>
+]]>
+						</programlisting>
+						Führt zu folgender Absenderangabe: <screen><![CDATA[Funkalarm <alarm@test.de>]]></screen>
+					</listitem>
+				</itemizedlist>	
+			</para>
+		</section>
+		
+		<section xml:id="groupalarm_settings">
+			<title>Groupalarm (<code language="xml"><![CDATA[<groupalarm>]]></code>)</title>
+			<ulink url="www.groupalarm.de"></ulink> ist ein kostenpflichtiger externer Dienst für den schnellen Versand von Massen-SMS bzw. Nachrichten 
+			auf Mobiltelefon-Apps. Detaillierte Informationen zur Konfiguration von Groupalarm gibt es unter: <ulink url="http://prowiki.groupalarm.de"></ulink>.
+			<para>
+				<emphasis role="underline">Syntax:</emphasis>
+				<programlisting language="xml">
+<![CDATA[
+<groupalarm>
+	<user>user</user>
+	<password type="plain">passwort</password>
+	<proxy>
+		<server>proxy.orga.de</server>
+		<port>8080</port>
+	</proxy>
+	<trials>10</trials>
+	<waitTime>60</waitTime>
+	<connections>1</connections>
+</groupalarm>
+]]>
+				</programlisting>
+			</para>
+			<itemizedlist>
+				<listitem>
+					<code language="xml"><![CDATA[<user>]]></code>: Benutzername bei Groupalarm
+				</listitem>
+				<listitem>
+					<code language="xml"><![CDATA[<password>]]></code>: Groupalarm-Passwort für das Login. Groupalarm bietet die Übertragung 
+					von Passwörtern in Klartext und als Hash (verschlüsselt) an. Beide Optionen können genutzt werden:
+					<itemizedlist>
+						<listitem>
+							<code language="xml"><![CDATA[<password type="plain">]]></code>: Passwort als Klartext
+						</listitem>
+						<listitem>
+							<code language="xml"><![CDATA[<password type="hashed">]]></code>: Passwort als Hash
+							<warning>
+								Das Passwort wird unverschlüsselt in der XML-Konfigurationsdatei gespeichert. Sorgen Sie durch Festlegung der Benutzerrechte 
+								und Begrenzung des Zugangs zum Rechner dafür, dass das Passwort nicht in falsche Hände gerät. Geben Sie die XML-Konfigurationsdatei nicht mit Ihrem Passwort weiter.
+							</warning>
+							<warning>
+								Der Versand der Alarmierung inklusive Passwort erfolgt unverschlüsselt an den Groupalarm-Server. Nutzen Sie für die Alarmierung einen eigenen Groupalarm-Benutzer 
+								welcher ausschließlich das Recht hat, Alarmierungen über den Weblink anzunehmen. Damit wird vermieden, dass ein Angreifer Ihre Groupalarm-Konfiguration verändern kann.
+							</warning>
+						</listitem>
+						<listitem>
+							<code language="xml"><![CDATA[<proxy>]]></code>: Proxy-Server
+							<para><emphasis>Standard (wenn weggelassen)</emphasis>: Keine Nutzung eines Proxy-Servers</para>
+							<para><emphasis>Einstellungen:</emphasis></para>
+							<itemizedlist>
+								<listitem>
+									<code language="xml"><![CDATA[<server>]]></code>: Name des Servers
+								</listitem>
+								<listitem>
+									<code language="xml"><![CDATA[<port>]]></code>: Port des Servers
+									<para><emphasis>Standard (wenn weggelassen)</emphasis>: Port 8080</para>
+								</listitem>
+							</itemizedlist>
+							<para>
+								In vielen Einrichtungen ist der Datenverkehr ins Internet nur über einen Proxy-Server möglich.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</itemizedlist>
+		</section>
+		<section xml:id="external_program_settings">
+			<title>Externe Programme / Skripte (<code language="xml"><![CDATA[<external>]]></code>)</title>
+			Abweichend von den Gateways die auf Netzwerkverbindungen beruhen, gibt es nur die folgende optionale Einstellungsmöglichkeit:
+			<itemizedlist>
+				<listitem>
+				<code language="xml"><![CDATA[<maxSessions>]]></code>: Maximale Anzahl der gleichzeitig laufenden externe Programme, die durch eine Alarmierung
+					gestartet wurden
+					<para><emphasis>Standard (wenn weggelassen)</emphasis>: maximal 10 gleichzeitige Programmausführungen</para>
+			</listitem>
+			</itemizedlist>
+			Beispiel:
+			<programlisting language="xml">
+<![CDATA[
+<logins>
+	<external>
+		<maxSessions>15</maxSessions>
+	</external>
+</logins>
+]]>
+			</programlisting>			
+
+			In den meisten Fällen reicht die folgende minimale Konfiguration mit den Standardeinstellungen aus:
+			<programlisting language="xml">
+<![CDATA[
+<logins>
+	<external/>
+</logins>
+]]>
+			</programlisting>
+			<note>
+				Es können nur so viele externe Programme bzw. Skripte gleichzeitig ausgeführt werden wie im Auszeichner <code language="xml"><![CDATA[<maxSessions>]]></code>
+				festgelegt. Dies betrifft nur die Situation, wenn mehrere Alarmierungen kurz hinteinander Programmausführungen starten und diese länger laufen. Bei Bedarf 
+				kann der Standardwert auch erhöht werden.
+			</note>
+		</section>
+	</section>
+	<section xml:id="alarm_settings">
+		<title>Nachrichtenversand</title>
+		<para>Für jede Fünftonfolge für die eine Nachricht versandt werden soll, muss im Block <code language="xml"><![CDATA[<alarms>]]></code> ein Block im 
+		Format <code language="xml"><![CDATA[<code call="12345">]]></code> vorhanden sein.</para>
+		<para>
+			<emphasis role="underline">Syntax:</emphasis>
+			<programlisting language="xml">
+<![CDATA[
+<alarms>
+	<all>
+		<!--Optionale Alarmierungen, die immer ausgelöst werden-->
+	</all>
+	<fallback>
+		<!--Optionale Alarmierungen, die ausgelöst werden wenn keine andere für diese Fünftonfolge ausgelöst wird-->
+	</fallback>
+	<code call="12345">
+		<default>
+			<alarms>
+				<groupalarm>
+					<!--Groupalarm-Nachricht-->
+				</groupalarm>
+			</alarms>
+		</default>
+		<weeklyException>
+			<validity>
+				<!--Gültigkeit des Probealarms-->
+			</validity>
+			<alarms>
+				<email>
+					<!--E-Mail-Nachricht-->
+				</email>
+			</alarms>
+		</weeklyException>
+		<monthlyException>
+			<!--monatliche Ausnahme-->
+		</monthlyException>
+		<singleTimeException>
+			<!--einmalige Ausnahme-->
+		</singleTimeException>
+	</code>
+	<code call="23456">
+		<!--weitere Alarmschleife-->
+	</code>
+</alarms>
+]]>
+			</programlisting>
+			Jeder Block <code language="xml"><![CDATA[<code call="12345">]]></code> muss zunächst einen Block <code language="xml"><![CDATA[<default>]]></code> enthalten. Dieser definiert 
+			die Alarmierungen die immer dann ausgeführt werden, wenn gerade keine Ausnahme gültig ist. Danach können die Ausnahmen (z.B. Probealarme) in beliebiger Anzahl 
+			und Reihenfolge definiert werden.
+		</para>
+		<section xml:id="default_alarm_settings">
+			<title>Alarmierung unter Normalbedingungen (<code language="xml"><![CDATA[<default>]]></code>)</title>
+			<para>
+				Innerhalb des Auszeichners <code language="xml"><![CDATA[<alarms>]]></code> werden die auszulösenden Alarmierungen definiert. Es können beliebig viele Groupalarm- und E-Mail-Nachrichten 
+				definiert werden (also auch mehrere von einem Typ). Wenn unter Normalbedingungen kein Nachrichtenversand erfolgen soll, muss der Auszeichner trotzdem angegeben werden, bleibt jedoch leer:
+					<programlisting language="xml">
+<![CDATA[
+<code call="12345">
+	<default/>
+</code>
+]]>
+					</programlisting>
+				In diesem Fall wird die Alarmierung trotzdem protokolliert und die Alarmdurchsage aufgenommen (auch wenn <code language="xml"><![CDATA[<protocol default="off"/>]]></code>).
+			</para>
+		</section>
+		<section xml:id="exception_alarm_settings">
+			<title>Alarmierungen bei Ausnahmen (z.B. bei Probealarmen, Wochenenden, nachts)</title>
+			<para>
+				Folgende Ausnahmen stehen zur Verfügung.
+				<itemizedlist>
+					<listitem>
+						Wochentägliche Ausnahme (<code language="xml"><![CDATA[<weeklyException>]]></code>): Probealarm / Ausnahme an einem bestimmten Wochentag, z.B. an jedem Sonntag um 19:00 Uhr, am 1. Samstag im 
+						Monat um 10:00 Uhr, oder in jeder Nacht von Freitag 18:00 Uhr bis 24:00 Uhr.
+					</listitem>
+					<listitem>
+						Monatliche Ausnahme (<code language="xml"><![CDATA[<monthlyException>]]></code>): Probealarm / Ausnahme an einem bestimmten Tag des Monats, z.B. an jedem 1. des Monats um 13:00 Uhr.
+					</listitem>
+					<listitem>
+						Einmalige Ausnahme (<code language="xml"><![CDATA[<singleTimeException>]]></code>): Einmaliger Zeitraum, z.B. während eines Urlaubs vom 05.01.2016 00:00 Uhr – 12.01.2016 00:00 Uhr.
+					</listitem>
+				</itemizedlist>
+				Es können beliebig viele Ausnahmen definiert werden. Dadurch lassen sich auch komplexere Szenarien konstruieren (z.B. andere Alarmierungen während der Nacht, am Wochenende, …).
+			</para>
+			<para>
+				Jede Ausnahme benötigt einen Block <code language="xml"><![CDATA[<validity>]]></code> in welchem die zeitliche Gültigkeit festgelegt wird. Im Block 
+				<code language="xml"><![CDATA[<alarms>]]></code> werden die zu versendenden Nachrichten festgelegt. Hier gelten dieselben Regeln wie für den Auszeichner <code language="xml"><![CDATA[<default>]]></code>. 
+				Es sind beliebig viele Nachrichten möglich. Falls während des Ausnahmezeitraums alle Alarmierungen unterdrückt werden sollen, muss der Auszeichner leer bleiben 
+				(also: <code language="xml"><![CDATA[<alarms/>]]></code>).
+			</para>
+			<para>
+				Für alle Arten von Ausnahmen werden die Beginn- und Enduhrzeit wie folgt festgelegt:
+				<itemizedlist>
+					<listitem>
+						<code language="xml"><![CDATA[<begin>]]></code>: Beginn des Probealarms / Ausnahme (Uhrzeit), z.B. <code language="xml"><![CDATA[<begin>10:05:00</begin>]]></code>
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<end>]]></code>: Ende des Probealarms / Ausnahme (Uhrzeit), z.B. <code language="xml"><![CDATA[<end>10:20:00</end>]]></code>. Die angegebene Uhrzeit zählt nicht mehr zur Ausnahme.
+						Das Beispiel bedeutet also, dass die Ausnahme ab 10:20:00 nicht mehr gilt. Für Mitternacht kann 24:00:00 angegeben werden.
+					</listitem>
+				</itemizedlist>
+			</para>
+			
+			<section xml:id="weeklyException">
+				<title>Wochentägliche Ausnahme <code language="xml"><![CDATA[<weeklyException>]]></code></title>			
+				<para>
+					Die Gültigkeit beträgt maximal 24 Stunden ab dem Beginn. Bei Bedarf können mehrere Ausnahmen hintereinander gehängt werden.
+					Wenn die Uhrzeit im Auszeichner <code language="xml"><![CDATA[<end>]]></code> vor der im Auszeichner <code language="xml"><![CDATA[<begin>]]></code> liegt, 
+					endet die Ausnahme am nächsten Tag.
+				</para>
+				<para>
+					<emphasis role="underline">Syntax:</emphasis>
+					<programlisting language="xml">
+<![CDATA[
+<weeklyException>
+	<validity>
+		<validWeeks>
+			<week>5</week>
+		</validWeeks>
+		<weekday>Fr</weekday>
+		<begin>10:05:00</begin>
+		<end>10:20:00</end>
+	</validity>
+	<alarms>
+		<!--Alarm-Nachrichten-->
+	</alarms>
+</weeklyException>
+]]>
+					</programlisting>
+					<para><emphasis>Einstellungsmöglichkeiten:</emphasis></para>
+					<itemizedlist>
+						<listitem>
+							<code language="xml"><![CDATA[<validWeeks>]]></code>: Wochen des Monats in denen der Probealarm / die Ausnahme gültig ist.
+								<itemizedlist>
+									<listitem>
+										entweder für jede Woche des Monats:
+										<programlisting language="XML">
+<![CDATA[
+<validWeeks>
+	<all/>
+</validWeeks>
+]]>
+										</programlisting>
+									</listitem>
+									<listitem>
+										oder unter einzelner Angabe der Wochen (hier z.B. 1. und 3. Woche):
+										<programlisting language="XML">
+<![CDATA[
+<validWeeks>
+	<week>1</week>
+	<week>3</week>
+</validWeeks>
+]]>
+										</programlisting>
+										Dabei steht 5 für die letzte Woche des Monats, je nach Monat also entweder die 4. oder die 5. Woche.
+									</listitem>
+								</itemizedlist>
+						</listitem>
+						<listitem>
+							<code language="xml"><![CDATA[<weekday>]]></code>: Wochentag an dem der Probealarm / die Ausnahme gültig ist. Die Angabe erfolgt mit den 
+							deutschen Abkürzungen: Mo, Di, Mi, Do, Fr, Sa, So.
+						</listitem>
+					</itemizedlist>
+				</para>
+			</section>
+			<section xml:id="monthlyException">
+				<title>Monatliche Ausnahme <code language="xml"><![CDATA[<monthlyException>]]></code></title>			
+				<para>
+					Die Gültigkeit beträgt maximal 24 Stunden ab dem Beginn. Bei Bedarf können mehrere Ausnahmen hintereinander gehängt werden.
+					Wenn die Uhrzeit im Auszeichner <code language="xml"><![CDATA[<end>]]></code> vor der im Auszeichner <code language="xml"><![CDATA[<begin>]]></code> liegt, 
+					endet die Ausnahme am nächsten Tag.
+				</para>
+				<para>
+					Falls der Tag in einem Monat nicht existiert, wird die Ausnahme ausgelassen (z.B. 31. des Monats).
+				</para>
+				<para>
+					<emphasis role="underline">Syntax:</emphasis>
+					<programlisting language="XML">
+<![CDATA[
+<monthlyException>
+	<validity>
+		<validMonths>
+			<month>3</month>
+		</validMonths>
+		<day>3</day>
+		<begin>13:00:00</begin>
+		<end>13:10:00</end>
+	</validity>
+	<alarms>
+		<!--Alarm-Nachrichten-->
+	</alarms>
+</monthlyException>
+
+]]>
+					</programlisting>
+				</para>
+				<para><emphasis>Einstellungsmöglichkeiten</emphasis></para>
+				<itemizedlist>
+					<listitem>
+						<code language="xml"><![CDATA[<validMonths>]]></code>: Monate in denen der Probealarm / die Ausnahme gültig ist:
+						<itemizedlist>
+							<listitem>
+								entweder für jeden Monat des Jahres:
+								<programlisting language="XML">
+<![CDATA[
+<validMonths>
+	<all/>
+</validMonths>
+]]>
+								</programlisting>
+							</listitem>
+							<listitem>
+								oder unter einzelner Angabe der Monate (Beispiel: 6. und 12. Monat)
+								<programlisting language="XML">
+<![CDATA[
+<validMonths>
+	<month>6</month>
+	<month>12</month>
+</validMonths>
+]]>
+								</programlisting>									
+							</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<day>]]></code>: Tag im Monat an dem der Probealarm / die Ausnahme gültig ist
+					</listitem>
+				</itemizedlist>
+			</section>								
+			<section xml:id="singleTimeException">
+				<title>Einmalige Ausnahme <code language="xml"><![CDATA[<singleTimeException>]]></code></title>			
+				<para>
+					<emphasis role="underline">Syntax (die Reihenfolge muss eingehalten werden):</emphasis>
+					<programlisting language="XML">
+<![CDATA[
+<singleTimeException>
+	<validity>
+		<beginDate>2016-01-05</beginDate>
+		<begin>10:00:00</begin>
+		<endDate>2016-01-27</endDate>
+		<end>20:00:00</end>
+	</validity>
+	<alarms>
+		<!--Alarm-Nachrichten-->
+	</alarms>
+</singleTimeException>
+]]>
+					</programlisting>
+					<para><emphasis>Einstellungsmöglichkeiten</emphasis></para>
+					<itemizedlist>
+						<listitem>
+							<code language="xml"><![CDATA[<beginDate>]]></code>: Datum des Beginns. Angabe im Format: JJJJ-MM-TT (mit JJJJ = Jahr, MM = Monat, 
+							TT = Tag), z.B. für den 05.01.2016: <code language="xml"><![CDATA[<beginDate>2016-01-05</beginDate>]]></code>
+						</listitem>
+						<listitem>
+							<code language="xml"><![CDATA[<endDate>]]></code>: Datum des Endes. Angabe im Format: JJJJ-MM-TT.
+						</listitem>
+					</itemizedlist>
+					<para>
+						Zudem müssen die Uhrzeit des Beginns und des Endes angegeben werden.
+					</para>
+				</para>
+			</section>
+		</section>		
+		<section xml:id="email_messages">
+			<title>E-Mails <code language="xml"><![CDATA[<email>]]></code></title>			
+			<para>
+				<emphasis role="underline">Syntax (hier ist die Reihenfolge strikt einzuhalten):</emphasis>
+				<programlisting language="xml">
+<![CDATA[
+<email>
+	<organization>HiOrg OV A-Dorf</organization>
+	<unit>SEG</unit>
+	<recipient>
+		<address>test2@test2.de</address>
+	</recipient>
+	<message>Probealarm</message>
+	<attachVoice>false</attachVoice>
+</email>
+]]>		
+				</programlisting>
+
+				<emphasis>Einstellungsmöglichkeiten:</emphasis>
+				<itemizedlist>
+					<listitem>
+						<code language="xml"><![CDATA[<organization>]]></code>: Bezeichnung der Einrichtung, z.B. <computeroutput>HiOrg A-Dorf</computeroutput>
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<unit>]]></code>: Bezeichnung der alarmierten Einheit, z.B. <computeroutput>SEG</computeroutput>. Die versandte 
+						E-Mail erhält dann den Betreff <computeroutput>Einsatzalarmierung HiOrg A-Dorf, SEG</computeroutput> bzw. 
+						<computeroutput>Probealarm HiOrg A-Dorf, SEG</computeroutput>.
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<recipient>]]></code>: Empfänger der E-Mail nach dem Schema:
+						<programlisting language="xml">
+<![CDATA[
+<recipient>
+	<name>Helfer 1</name>
+	<address>helfer1@test.de</address>
+</recipient>
+<recipient>
+	<name>Helfer 2</name>
+	<address>helfer2@test.de</address>
+</recipient>
+]]>
+						</programlisting>	
+						Es können beliebig viele Empfänger hintereinander angegeben werden. Die Angabe des Namens 
+						(<code language="xml"><![CDATA[<name>]]></code>) ist optional.
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<message>]]></code>: 	Text, welcher in der E-Mail übermittelt wird. Umlaute sind möglich (UTF-8 kodiert).
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<attachVoice>]]></code>:  Versand mit / ohne Sprachaufzeichnung:
+						<itemizedlist>
+							<listitem>
+								<code language="xml"><![CDATA[<attachVoice>true</attachVoice>]]></code>: Versand mit Alarmdurchsage
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[<attachVoice>false</attachVoice>]]></code>: Versand ohne Alarmdurchsage											
+							</listitem>
+						</itemizedlist>				
+						<para>									
+							Es kann gewählt werden, ob die E-Mail inklusive der Alarmdurchsage versandt wird. Ohne diese Option wird die E-Mail sofort nach dem 
+							Alarmeingang versandt, andernfalls unmittelbar nach Ende der Sprachaufzeichnung (Länge definiert im Auszeichner 
+							<code language="xml"><![CDATA[<voiceCaptureTime>]]></code>).
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</section>
+		<section xml:id="groupalarm_messages">
+			<title>Groupalarm (<code language="xml"><![CDATA[<groupalarm>]]></code>)</title>
+			<para>
+				<emphasis role="underline">Syntax:</emphasis>
+				<programlisting language="xml">
+<![CDATA[
+<groupalarm>
+	<alarm>
+		<code>
+			<group>23434</group>
+			<list>51234</list>
+			<group>98712</group>
+		</code>
+	</alarm>
+	<message type="code">92342</message>
+	<feedbackReset>true</feedbackReset>
+	<normalSMS>true</normalSMS>
+	<suppressFax>false</suppressFax>
+</groupalarm>
+]]>
+				</programlisting>
+				<emphasis>Einstellungsmöglichkeiten</emphasis>
+				<itemizedlist>
+					<listitem>
+						<code language="xml"><![CDATA[<alarm>]]></code>: Definition der Alarmempfänger. Es bestehen folgende Wahlmöglichkeiten:
+						<itemizedlist>
+							<listitem>
+								<code language="xml"><![CDATA[<code>]]></code>: SMS an vordefinierte Gruppen / Listen von Groupalarm (Permanent-ID). Die jeweiligen 
+								IDs können Ihrem Konfigurationsmenü auf der Webseite von Groupalarm entnommen werden. Sie können beliebig viele Gruppen und Listen in beliebiger
+								Reihenfolge angeben. <emphasis>Vollalarm für alle Listen kann durch <code language="xml"><![CDATA[<list>0</list>]]></code> ausgelöst werden.</emphasis>
+								<para>
+									<itemizedlist>
+										<listitem>
+											<code language="xml"><![CDATA[<list>]]></code>: vordefinierte Liste (LID)
+										</listitem>
+										<listitem>
+											<code language="xml"><![CDATA[<group>]]></code>: vordefinierte Gruppe (GID)
+										</listitem>
+									</itemizedlist>
+									
+									<para>Beispiele</para>
+									<itemizedlist>
+										<listitem>
+											Alarmierung der Liste 51234:
+											<programlisting language="xml">
+<![CDATA[
+<alarm>
+	<code>
+		<list>51234</list>
+	</code>
+</alarm>
+]]>
+											</programlisting>
+										</listitem>
+										<listitem>
+											Alarmierung der Gruppe 23434:
+											<programlisting language="xml">
+<![CDATA[
+<alarm>
+	<code>
+		<group>23434</group>
+	</code>
+</alarm>
+]]>
+											</programlisting>
+										</listitem>
+										<listitem>
+											Alarmierung der Listen 51234, 64542 und 72348
+											sowie der Gruppen 23434 und 12345:
+											<programlisting language="xml">
+<![CDATA[
+<alarm>
+	<code>
+		<list>51234</list>
+		<group>23434</group>
+		<list>64542</list>
+		<list>72348</list>
+		<group>12345</group>
+	</code>
+</alarm>
+]]>
+											</programlisting>
+										</listitem>
+									</itemizedlist>
+								</para>
+								<note>
+									Durch die Verwendung der Permanent-IDs wird sicherstellt, dass sich der notwendige Alarmcode für die SMS-Auslösung auch beim Anlegen oder Löschen von Gruppen nie ändert.
+								</note>
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[<phoneNumber>]]></code>: SMS an eine einzelne Telefonnummer. Die Rufnummer muss bei Groupalarm in Ihrem Profil 
+								registriert sein.
+								<para>Beispiel:</para>
+								<programlisting language="xml">
+<![CDATA[
+<alarm>
+	<phoneNumber>015112345</phoneNumber>
+</alarm>
+]]>
+								</programlisting>
+							</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<message>]]></code>: Definition der Alarmnachricht. Es bestehen folgende Wahlmöglichkeiten:
+						<itemizedlist>
+							<listitem>
+								<code language="xml"><![CDATA[<message type="code">]]></code>: Vordefinierte Groupalarm-Nachricht (Permanent-ID, TID):
+								<para>Beispiel: <code language="xml"><![CDATA[<message type="code">78923</message>]]></code>: Versand der bei Groupalarm gespeicherten Nachricht 78923</para>
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[<message type="freeText">]]></code>: Frei definierte Nachricht:
+								<para>Beispiel: <code language="xml"><![CDATA[<message type="freeText">Probealarm für die SEG.</message>]]></code></para>
+							</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<feedbackReset>]]></code>: Zurücksetzen der Feedback-Liste in Groupalarm
+						<itemizedlist>
+							<listitem>
+								<code language="xml"><![CDATA[<feedbackReset>true</feedbackReset>]]></code>: Feedback-Liste zurücksetzen
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[<feedbackReset>false</feedbackReset>]]></code>: Feedback-Liste nicht zurücksetzen
+							</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<normalSMS>]]></code>: Versand als normale SMS oder Flash-SMS
+						<itemizedlist>
+							<listitem>
+								<code language="xml"><![CDATA[<normalSMS>true</normalSMS>]]></code>: normale SMS werden versandt
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[<normalSMS>false</normalSMS>]]></code>: Versand von Flash-SMS
+							</listitem>
+						</itemizedlist>
+						<note>
+							Flash-SMS werden zwar direkt auf dem Display des Mobiltelefons angezeigt, aber meist nicht dauerhaft gespeichert.
+						</note>
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<suppressFax>]]></code>: Alarm-Faxversand unterdrücken
+						<itemizedlist>
+							<listitem>
+								<code language="xml"><![CDATA[<suppressFax>true</suppressFax>]]></code>: Status-Faxe von Groupalarm werden unterdrückt, selbst wenn diese in Ihrem Groupalarm-Profil aktiviert sind
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[<suppressFax>false</suppressFax>]]></code>: Es gelten die Einstellungen in Ihrem Groupalarm-Profil
+							</listitem>
+						</itemizedlist>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</section>
+			
+		<section xml:id="external_program_messages">
+			<title>Externe Programme / Skripte (<code language="xml"><![CDATA[<external>]]></code>)</title>
+			<para>
+				Es können beliebige externe Programme oder auch Skripte (z.B. Python-Skripte) ausgeführt werden. Es wird lediglich erwartet, dass sie bei erfolgreicher Ausführung
+				den Wert 0 zurückgeben. Ein anderer Wert signalisiert einen Fehler.
+			</para>
+			<para>
+				<emphasis role="underline">Syntax:</emphasis>
+				<programlisting language="xml">
+<![CDATA[
+<external>
+	<command>python script.py</command>
+	<arguments>"Argument 1" $CODE "$TIME" $TYPE</arguments>
+</external>
+]]>
+				</programlisting>
+				<emphasis>Einstellungsmöglichkeiten</emphasis>
+				<itemizedlist>
+					<listitem>
+						<code language="xml"><![CDATA[<command>]]></code>: Programmbefehl (z.B. <command>programm.exe</command> oder <command>python</command>). Das Programm muss mit einem 
+						absoluten Pfad angegeben werden oder über eine Umgebungsvariable erreichbar sein.
+					</listitem>
+					<listitem>
+						<code language="xml"><![CDATA[<arguments>]]></code>: Programmargumente in beliebiger Anzahl, verfügbar sind auch die folgenden Platzhalter:
+						<itemizedlist>
+							<listitem>
+								<code language="xml"><![CDATA[$CODE]]></code>: alarmierte Schleife, z.B. "25634"
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[$TIME]]></code>: Uhrzeit der Alarmierung im Format "Sonntag, 04.12.2016 18:30:50"
+							</listitem>
+							<listitem>
+								<code language="xml"><![CDATA[$TYPE]]></code>: Art der Alarmierung (entweder "Einsatzalarmierung" oder "Probealarm")
+							</listitem>
+						</itemizedlist>
+					</listitem>
+				</itemizedlist>
+				<note>
+					Sämtliche Ausgaben des externen Programms werden lediglich über die Standardausgabe angezeigt und nicht protokolliert. Im Fehlerfall wird jedoch eine Nachricht
+					auf Basis des Rückgabewerts des Programms protokolliert.
+				</note>
+				<para>
+					Mehrere externe Programme sind möglich, diese werden diese parallel aufgerufen. Es können auch länger laufende Programme genutzt werden. Insgesamt in die
+					Anzahl der gleichzeitig laufenden Programminstanzen standardmäßig auf zehn begrenzt (für eine Änderung siehe <xref linkend="external_program_settings"/>). 
+					Es empfiehlt sich, den Platzhalter für die Uhrzeit in Anführungszeichen zu setzen um diesen trotz Leerzeichen als ein einziges Argument zu übergeben.
+				</para>
+			</para>
+		</section>
+	</section>
+	
+	<section xml:id="all_fallback_settings">
+		<title>Spezielle Alarmnachrichten</title>
+		<para>
+			Die Elemente <code language="xml"><![CDATA[<all>]]></code> und <code language="xml"><![CDATA[<fallback>]]></code> sind optional und dienen zur Konfiguration von Alarmnachrichten, die
+			nicht auf eine einzelne Alarmschleife beschränkt sind.
+		</para>
+		<section xml:id="alarms_for_all_codes">
+			<title>Auslösung für sämtliche Fünftonfolgen (<code language="xml"><![CDATA[<all>]]></code>)</title>
+			<para>
+				Hier können Alarmnachrichten definiert werden, die für sämtliche eingehende Alarmierungen versandt werden. Zum Beispiel können damit Infoalarme für Führungskräfte oder
+				Torsteuerungen realisiert werden. Innerhalb eines <code language="xml"><![CDATA[<all>]]></code>-Elements können sämtliche Alarm-Gateways wie auch sämtliche Ausnahmen genauso wie 
+				für einzelne Alarmschleifen benutzt werden (siehe <xref linkend="alarm_settings"/>).
+			</para>
+				
+			<para>
+				<emphasis role="underline">Syntax:</emphasis>
+				<programlisting language="xml">			
+	<![CDATA[		
+	<alarms>
+		<all>
+			<default>
+				<alarms>
+					<infoalarm>
+						<email>
+							<!--Definition der Alarmnachricht-->
+						</email>
+					</infoalarm>
+					<external>
+						<!--Definition der Alarmnachricht-->
+					</external>
+				</alarms>
+			</default>
+			
+			<!--Beliebige Ausnahmen können definiert werden-->
+			<weeklyException>
+				<!--Definition der Ausnahme-->
+			</weeklyException>
+		</all>
+		
+		<code call="12345">
+			<!--Alarmierungen für die einzelnen Fünftonfolgen-->
+		</code>
+	</alarms>
+	]]>		
+				</programlisting>
+			
+				Die hier definierten Ausnahmen sind völlig unabhängig von den Alarmierungen für die einzelnen Alarmschleifen. <emphasis>Der Status "Einsatzalarmierung" bzw. "Probealarm" wird jedoch 
+				ausschließlich durch die ausgelöste Alarmschleife bestimmt. Eine Ausnahme bestimmt bei <code language="xml"><![CDATA[<all>]]></code> lediglich die ausgelöste Aktion.</emphasis> 
+				Zusätzlich zu den verfügbaren Gateways können hier auch sogenannte Infoalarme versandt werden:
+			</para>
+
+			<section xml:id="infoalarm_messages">
+				<title>Infoalarme <code language="xml"><![CDATA[<infoalarm>]]></code></title>			
+				<para>
+					<emphasis role="underline">Syntax:</emphasis>
+					<programlisting language="xml">				
+<![CDATA[
+<infoalarm>
+	<email>
+		<!--Definition der Alarmnachricht-->
+	</email>
+</infoalarm>
+]]>
+					</programlisting>
+					
+					Infoalarme können <emphasis role="underline">ausschließlich innerhalb eines  <code language="xml"><![CDATA[<all>]]></code>-Elements benutzt werden</emphasis>. Ein Infoalarm bedeutet, 
+					dass bei jeglichem erkannten Alarm die innerhalb des  <code language="xml"><![CDATA[<infoalarm>]]></code>-Elements definierte Nachricht versandt wird. Es können sämtliche Gateways für 
+					den Versand von Infoalarmen benutzt werden und es sind auch mehrere Infoalarme möglich. Jedoch müssen diese separat in mehreren  <code language="xml"><![CDATA[<infoalarm>]]></code>-Elementen 
+					definiert werden.
+				</para>
+				<para>
+					<emphasis>Ein Infoalarm enthält folgende Informationen:</emphasis>
+					<itemizedlist>
+						<listitem>ausgelöste Alarmschleife, z.B. "25634"</listitem>
+						<listitem>Alarmzeitpunkt</listitem>
+						<listitem>Art der Alarmierung (entweder "Einsatzalarmierung" oder "Probealarm")</listitem>
+						<listitem>nur bei E-Mail: Liste der sonstigen ausgelösten Alarmierungen</listitem>
+						<listitem>nur bei Groupalarm: Zusammenfassung der ausgelösten Alarmierungen</listitem>
+						<listitem>nur bei externen Programmaufrufen: keine weiteren Informationen</listitem>
+					</itemizedlist>
+				</para>
+			</section>
+		</section>
+		
+		<section xml:id="fallback_alarms">
+			<title>Auslösung als Rückfallebene (<code language="xml"><![CDATA[<fallback>]]></code>)</title>
+			<para>
+				In diesem Element können Alarmnachrichten definiert werden, die immer dann ausgelöst werden wenn keine andere Nachricht für die Alarmschleife ausgelöst wird. Das Kriterium
+				ist dabei der Alarmzeitpunkt, da zum Beispiel zu bestimmten Zeitpunkten Alarmierungen aufgrund von Ausnahmen unterdrückt sein könnten. Die Alarmnachrichten in einem eventuellen
+				<code language="xml"><![CDATA[<all>]]></code>-Element bleiben unberücksichtigt.
+			</para>
+			<para>
+				<emphasis role="underline">Syntax:</emphasis>
+				<programlisting language="xml">		
+<![CDATA[		
+<alarms>
+	<fallback>
+		<default>
+			<alarms>
+				<email>
+					<!--Definition der Alarmnachricht-->
+				</email>
+				<groupalarm>
+					<!--Definition der Alarmnachricht-->
+				</groupalarm>
+			</alarms>
+		</default>
+		
+		<!--Beliebige Ausnahmen können definiert werden-->
+		<weeklyException>
+			<!--Definition der Ausnahme-->
+		</weeklyException>
+	</fallback>
+	
+	<code call="12345">
+		<!--Alarmierungen für die einzelnen Fünftonfolgen-->
+	</code>
+</alarms>
+]]>
+				</programlisting>
+			</para>
+			<para>
+				Innerhalb des <code language="xml"><![CDATA[<fallback>]]></code>-Elements gilt genau die gleiche Syntax wie bei der Definition von Alarmnachrichten für spezifische Codes 
+				(siehe <xref linkend="alarm_settings"/>). Eine versandte Nachricht ist für den Empfänger nicht von anderen Nachrichten unterscheidbar, d.h. sie enthält die identischen
+				Informationen.
+			</para>
+		</section>
+	</section>	
+		
+	<section xml:id="typical_errors">
+		<title>Typische Fehlerquellen</title>
+		<para>
+			Die XML-Dateien werden vor der Verwendung durch den XML-Parser validiert, d.h. auf ihre Korrektheit überprüft. Daher ist es 
+			nicht möglich, dass fehlerhafte Konfigurationsdateien in das Programm geladen werden. Überprüfen Sie dennoch sorgfältig Benutzernamen, 
+			Passwörter, … da diese durch den Parser nicht überprüft werden können.
+		</para>
+		<para>
+			Zur Vermeidung einer fehlerhaften Konfiguration folgt eine Einführung in XML in aller Kürze.
+		</para>
+		<para>
+			Die XML-Konfigurationsdatei von PersonalFME muss immer mit dem folgenden Header beginnen:
+			<programlisting language="XML">
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config	xmlns="http://www.personalfme.de/v1"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.personalfme.de/v1 
+			C:/Users\Benutzer\AppData\Roaming\PersonalFME\schema\config.xsd">
+]]>
+			</programlisting>
+		</para>
+		<para>
+			Dementsprechend muss sie mit dem Endauszeichner <code language="XML"><![CDATA[</config>]]></code> enden.
+		</para>
+		<para>
+			Sämtliche Blöcke stehen zwischen einem Beginn- <code language="XML"><![CDATA[<block>]]></code> und einem Endauszeichner <code language="XML"><![CDATA[</block>]]></code>. 
+			Wenn ein Block leer ist, kann auch folgendermaßen abgekürzt werden: <code language="XML"><![CDATA[<block/>]]></code>.
+		</para>
+		<para>
+			Der XML-Parser erzeugt Fehlermeldungen in englischer Sprache. Dabei wird immer die Zeile (line) und die Spalte (column) angegeben, in der 
+			der Fehler erkannt wurde. Es empfiehlt sich, den Bereich um diese Angaben herum genau mit der Dokumentation zu vergleichen um den Fehler 
+			zu finden. Eine typische Ausgabe ist:
+			<screen>
+			XML-parser error:
+			file:   C:\Users\Benutzer\Documents\PersonalFME\config.xml
+			line:   55, column: 11
+			error:  element 'email' is not allowed for content model 
+					'All(groupalarm?,email?,external?)'
+			</screen>
+		</para>
+	</section>
+	<section xml:id="incompatible_changes">
+		<title>Liste der inkompatiblen Änderungen der Konfigurationsdateien</title>
+		<para>
+			In den folgenden Versionen wurden Änderungen an der Syntax der XML-Konfigurationsdatei durchgeführt, die nicht abwärtskompatibel sind:
+			<itemizedlist>
+				<listitem>
+					Version 0.2.1: neue vereinfachte Syntax für Groupalarm-Auslösungen (Auszeichner: <code language="XML"><![CDATA[<groupalarm>]]></code>)
+				</listitem>
+			</itemizedlist>
+		</para>
+	</section>
+</chapter>

@@ -1,0 +1,56 @@
+personalfme (1.0.0-1) focal; urgency=medium
+
+ * supporting now Debian / Raspberry Pi OS 10, Ubuntu 20.04 LTS and Windows 7 and higher
+ * dropped support for previous Linux versions
+ * refactored the CMake build system to be target-based
+ * using now the vcpkg package manager on Windows
+ * migrated the version control system to Git
+ * updated the audio library Portaudio-version on Windows, this fixes problems that some users experienced with their attached audio devices
+ * made the source code available on Github
+
+ -- Ralf Rettig <info@personalfme.de>  Sun, 17 January 2021 21:00:00 +0100
+
+personalfme (0.2.4-1) xenial; urgency=medium
+
+  * Supporting now Debian / Raspbian 9, Debian / Raspbian 8, Ubuntu 16.04 LTS
+  * Implemented alarms that are triggered for any sequence
+  * Implemented fallback alarms that are triggered if no other alarm is 
+    valid  
+  * Fixing errors when the configuration paths had spaces or special 
+    characters
+  * Fixing missing UTF-8 encoding of e-mail subject lines	
+  * Split the README-files into separate ones for the supported OS
+  * Fixing broken manpage layout on Ubuntu 16.04 LTS
+  * Fixing a bug that using the default audio device on sound cards 
+    with less than 96 kHz sampling rate failed
+  * Made the documentation for the different gateways more easily 
+    accessible in the handbook
+  * Documentation can now be created as a separate artifact
+  * Source ZIP-file can now easily be created as a separate artifact
+  * No DocBook and Octave dependency anymore and faster builds 
+    (for the normal user)
+  * Changed the build system configuration to not build documentation and 
+    unit tests by default
+
+ -- Ralf Rettig <info@personalfme.de>  Sat, 18 November 2017 21:00:00 +0100
+
+personalfme (0.2.3-1) xenial; urgency=medium
+
+  * Integrated a gateway for starting external programs / scripts 
+    triggered by alarms
+
+ -- Ralf Rettig <info@personalfme.de>  Sun, 10 December 2016 15:00:00 +0200
+
+personalfme (0.2.2-1) xenial; urgency=medium
+
+  * Official release for embedded application on Debian-based Linux
+   (especially Debian 8 Jessie, Raspbian 8 Jessie and Ubuntu 16.04 LTS)
+
+ -- Ralf Rettig <info@personalfme.de>  Fri, 29 July 2016 19:00:00 +0200
+ 
+personalfme (0.2.1-1) trusty; urgency=medium
+
+  * Initial release for Ubuntu, Debian and Raspbian
+
+ -- Ralf Rettig <info@personalfme.de>  Sun, 19 June 2016 17:00:00 +0200
+

@@ -1,0 +1,62 @@
+#!/bin/sh
+# postinst script for test
+#
+# see: dh_installdeb(1)
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+# source debconf library
+. /usr/share/debconf/confmodule
+
+# Source dbconfig-common functions
+if [ -f /usr/share/dbconfig-common/dpkg/postinst.pgsql  ]; then
+  . /usr/share/dbconfig-common/dpkg/postinst.pgsql
+fi
+
+case "$1" in
+
+	configure)
+		# create a new user (if not already existing)
+		adduser --system --disabled-password --disabled-login --quiet --no-create-home --home /var/empty --group fme-daemon
+	
+		# set up the daemon
+		deb-systemd-helper unmask personalfme.service >/dev/null || true
+
+		if deb-systemd-helper --quiet was-enabled personalfme.service; then
+			deb-systemd-helper enable personalfme.service >/dev/null || true
+		else
+			deb-systemd-helper update-state personalfme.service >/dev/null || true
+		fi
+
+		if [ -d /run/systemd/system ]; then
+			systemctl --system daemon-reload >/dev/null || true
+			deb-systemd-invoke start personalfme.service >/dev/null || true
+		fi
+		;;
+
+	abort-upgrade|abort-remove|abort-deconfigure)
+		exit 0
+		;;
+
+  *)
+		echo "postinst called with unknown argument \`$1'" >&2
+		exit 1
+		;;
+
+esac
+
+db_stop
+
+exit 0

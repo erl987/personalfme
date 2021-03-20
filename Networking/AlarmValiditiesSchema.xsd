@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!-- PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>-->
+
+<xs:schema	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.personalfme.de/v1"
+			xmlns="http://www.personalfme.de/v1"
+			elementFormDefault="qualified">
+
+<xs:include schemaLocation="InfoalarmDecoratorSchema.xsd"/>
+<xs:include schemaLocation="GroupalarmMessageSchema.xsd"/>
+<xs:include schemaLocation="EmailMessageSchema.xsd"/>
+<xs:include schemaLocation="ExternalProgramMessageSchema.xsd"/>
+<xs:include schemaLocation="WeeklyValiditySchema.xsd"/>
+<xs:include schemaLocation="MonthlyValiditySchema.xsd"/>
+<xs:include schemaLocation="SingleTimeValiditySchema.xsd"/>
+
+<xs:complexType name="alarmsBaseType">
+	<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		<xs:choice>
+			<xs:element name="infoalarm" type="infoalarmDecoratorType" maxOccurs="unbounded"/>
+			<xs:element name="groupalarm" type="groupalarmMessageType" maxOccurs="unbounded"/>
+			<xs:element name="email" type="emailMessageType" maxOccurs="unbounded"/>
+			<xs:element name="external" type="externalProgramMessageType" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:sequence>
+</xs:complexType>
+							
+<xs:complexType name="alarmValiditiesType">
+	<xs:sequence>
+		<xs:element name="default">
+			<xs:complexType>
+				<xs:all>
+					<xs:element name="alarms" type="alarmsBaseType" minOccurs="0"/>
+				</xs:all>
+			</xs:complexType>
+		</xs:element>
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:choice>
+				<xs:element name="weeklyException" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="validity" type="weeklyValidityType"/>
+							<xs:element name="alarms" type="alarmsBaseType"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="monthlyException" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="validity" type="monthlyValidityType"/>
+							<xs:element name="alarms" type="alarmsBaseType"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="singleTimeException" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="validity" type="singleTimeValidityType"/>
+							<xs:element name="alarms" type="alarmsBaseType"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:sequence>
+</xs:complexType>
+
+</xs:schema> 

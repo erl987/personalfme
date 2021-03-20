@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!-- PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>-->
+
+<xs:schema	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.personalfme.de/v1"
+			xmlns="http://www.personalfme.de/v1"
+			elementFormDefault="qualified">
+
+<xs:include schemaLocation="CustomTimeDateTypesSchema.xsd"/>
+			
+<xs:complexType name="monthlyValidityType">
+	<xs:all>
+		<xs:element name="validMonths">
+			<xs:complexType>
+				<xs:choice>
+					<xs:element name="all">
+						<xs:complexType/>
+					</xs:element>
+					<xs:sequence>
+						<xs:element name="month" maxOccurs="12">
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:minInclusive value="1"/>
+									<xs:maxInclusive value="12"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:choice>
+			</xs:complexType>
+		</xs:element>
+		<xs:element name="day">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="31"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:element>
+		<xs:element name="begin" type="noFracTime"/>    
+		<xs:element name="end" type="noFracTime"/> 
+	</xs:all>
+</xs:complexType>
+
+</xs:schema> 

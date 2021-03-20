@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>-->
+
+<!-- This is a UNIX manpage. -->
+<refentry 	xml:id="personalfme" 
+			xml:lang="en" 
+			xmlns="http://docbook.org/ns/docbook" 
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			version="5.0">
+	<refmeta>
+		<refentrytitle>personalfme</refentrytitle>
+		<manvolnum>1</manvolnum>
+		    <refmiscinfo class='date'>@PROJECT_DATE@</refmiscinfo>
+		    <refmiscinfo class='source'>SOURCE TEXT</refmiscinfo>
+		    <refmiscinfo class='manual'>MANUAL TEXT</refmiscinfo>
+	</refmeta>
+
+	<refnamediv>
+		<refname>personalfme</refname>
+		<refpurpose>Gateway for forwarding selcalls to internet services</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv id='synopsis'>
+		<cmdsynopsis><command>personalfme</command><arg choice="opt">--daemon</arg> --run <replaceable class="parameter">FILE</replaceable></cmdsynopsis>
+		<cmdsynopsis><command>personalfme</command> --test <replaceable class="parameter">FILE</replaceable></cmdsynopsis>
+		<cmdsynopsis><command>personalfme</command> --audiodevices</cmdsynopsis>
+		<cmdsynopsis><command>personalfme</command> --printworkingdir</cmdsynopsis>
+		<cmdsynopsis><command>personalfme</command> --version</cmdsynopsis>
+		<cmdsynopsis><command>personalfme</command> --help</cmdsynopsis>	
+	</refsynopsisdiv>
+
+	<refsect1 id='description'><title>Description</title>
+		<para>
+			<command>personalfme</command> is a gateway for forwarding selcalls from the analog radio network of the German Security Services ("BOS-Funk") to internet services. Currently implemented are e-mails, SMS / app messages via the external service <link>www.groupalarm.de</link> and any external program calls. It requires an external radio device connected to the sound card of the computer.
+		</para>
+	</refsect1>
+
+	<refsect1 id='options'><title>Options</title>
+		<variablelist>
+			<varlistentry>
+				<term><option>-r</option></term>
+				<term><option>--run</option></term>
+				<listitem><para>Load the configuration file <replaceable class="parameter">FILE</replaceable> (*.xml) and start the detection of selcalls via the sound card. The location of the file is relative to the working directory (see option <option>-pwd</option>) or an absolute path has to be given.</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-d</option></term>
+				<term><option>--daemon</option></term>
+				<listitem><para>Start the program as a background daemon. This option is only possible together with the option <option>-r</option>.</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-t</option></term>
+				<term><option>--test</option></term>
+				<listitem><para>Verify the syntax of the configuration file <replaceable class="parameter">FILE</replaceable> (*.xml) WITHOUT starting the detection of selcalls. The location of the file is relative to the working directory (see option <option>-pwd</option>) or an absolute path has to be given.</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-a</option></term>
+				<term><option>--audiodevices</option></term>
+				<listitem><para>List all available audio devices. This information is used to specify an audio device in the configuration file.</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-pwd</option></term>
+				<term><option>--printworkingdir</option></term>
+				<listitem><para>Print the working directory for the configuration file used in option <option>-r</option> and <option>-t</option>.</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-v</option></term>
+				<term><option>--version</option></term>
+				<listitem><para>Print version and copyright informations.</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-h</option></term>
+				<term><option>--help</option></term>
+				<listitem><para>Print help.</para></listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1 id='author'><title>Author</title>
+		<para>
+			Written by Ralf Rettig.
+		</para>
+	</refsect1>
+
+	<refsect1 id='bugs'><title>Reporting bugs</title>
+		<para>
+			Report bugs to <email>support@personalfme.de</email>.
+		</para>
+	</refsect1>
+
+	<refsect1 id='copyright'><title>Copyright</title>
+		<para>
+		       Copyright © 2010-2021 Ralf Rettig. License GPLv3+: GNU
+		       GPL version 3 or later <link>http://gnu.org/licenses/gpl.html</link>.
+		       This is free software: you are free to change and redistribute it.
+		       There is NO WARRANTY, to the extent permitted by law.
+		</para>
+	</refsect1>
+
+	<refsect1 id='also'><title>See also</title>
+		<para>
+			The full documentation for <command>personalfme</command> is maintained on <link>http://www.personalfme.de</link> and as a PDF-document in <link>/usr/share/doc/personalfme</link>. 
+		</para>
+	</refsect1>
+</refentry>

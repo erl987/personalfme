@@ -1,0 +1,57 @@
+PersonalFME 1.0.0 (revision f75a0a4, 17 January 2021):
+
+- supporting now Debian / Raspberry Pi OS 10, Ubuntu 20.04 LTS and Windows 7 and higher
+- dropped support for previous Linux versions
+- refactored the CMake build system to be target-based
+- using now the vcpkg package manager on Windows
+- migrated the version control system to Git
+- updated the audio library Portaudio-version on Windows, this fixes problems that some users experienced with their attached audio devices
+- made the source code available on Github
+
+
+PersonalFME 0.2.4 (r618, 18 November 2017):
+
+- supporting now Debian / Raspbian 9, Debian / Raspbian 8, Ubuntu 16.04 LTS and Windows 7 and higher
+- implemented alarms that are triggered for any sequence
+- implemented fallback alarms that are triggered if no other alarm is valid
+- fixing errors when the user name on Windows has spaces or special characters
+- fixing missing UTF-8 encoding of e-mail subject lines
+- split the README-files into separate ones for the supported OS
+- fixing broken manpage layout on Ubuntu 16.04 LTS
+- fixing a bug that using the default audio device on sound cards with less than 96 kHz sampling rate failed
+- made the documentation for the different gateways more easily accessible in the handbook
+- documentation can now be created as a separate artifact
+- source ZIP-file can now easily be created as a separate artifact
+- no DocBook and Octave dependency anymore and faster builds (for the normal user)
+- changed the build system configuration to not build documentation and unit tests by default
+- fixing a bug that on Windows error responses from the Groupalarm server displayed "bad cast"
+
+
+PersonalFME 0.2.3 (r437, 10 December 2016):
+
+- integrated a gateway for starting external programs / scripts triggered by alarms
+
+
+PersonalFME 0.2.2 (r427, 29 July 2016):
+
+- first official Linux version (Debian, Raspbian, Ubuntu)
+
+
+PersonalFME 0.2.1 (r417, 19 June 2016):
+
+- improved the syntax of the XML-configuration file for defining Groupalarm.de alarms
+- first experimental Linux version (Debian, Ubuntu)
+
+
+PersonalFME 0.2.0 (r372, 05 March 2016):
+
+- first public release
+- e-mail sending implemented
+- XML-configuration file implemented
+- audio plugin architecture implemented
+- minor improvements of the alarm detection algorithm
+
+
+PersonalFME 0.1.0 (r137, 23 December 2014):
+
+- first release, non-public

@@ -1,0 +1,182 @@
+'\" t
+.\"     Title: personalfme
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 03/20/2021
+.\"    Manual: MANUAL TEXT
+.\"    Source: SOURCE TEXT
+.\"  Language: English
+.\"
+.TH "PERSONALFME" "1" "03/20/2021" "SOURCE TEXT" "MANUAL TEXT"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+
+
+
+.SH "NAME"
+personalfme \- Gateway for forwarding selcalls to internet services
+
+
+.SH "SYNOPSIS"
+
+.HP \w'\fBpersonalfme\fR\ 'u
+\fBpersonalfme\fR [\-\-daemon] \-\-run \fIFILE\fR
+
+.HP \w'\fBpersonalfme\fR\ 'u
+\fBpersonalfme\fR \-\-test \fIFILE\fR
+
+.HP \w'\fBpersonalfme\fR\ 'u
+\fBpersonalfme\fR \-\-audiodevices
+
+.HP \w'\fBpersonalfme\fR\ 'u
+\fBpersonalfme\fR \-\-printworkingdir
+
+.HP \w'\fBpersonalfme\fR\ 'u
+\fBpersonalfme\fR \-\-version
+
+.HP \w'\fBpersonalfme\fR\ 'u
+\fBpersonalfme\fR \-\-help
+
+
+
+.SH "DESCRIPTION"
+
+.PP
+\fBpersonalfme\fR
+is a gateway for forwarding selcalls from the analog radio network of the German Security Services ("BOS\-Funk") to internet services\&. Currently implemented are e\-mails, SMS / app messages via the external service
+www\&.groupalarm\&.de
+and any external program calls\&. It requires an external radio device connected to the sound card of the computer\&.
+
+
+
+.SH "OPTIONS"
+
+
+
+.PP
+\fB\-r\fR, \fB\-\-run\fR
+.RS 4
+
+
+
+Load the configuration file
+\fIFILE\fR
+(*\&.xml) and start the detection of selcalls via the sound card\&. The location of the file is relative to the working directory (see option
+\fB\-pwd\fR) or an absolute path has to be given\&.
+
+.RE
+.PP
+\fB\-d\fR, \fB\-\-daemon\fR
+.RS 4
+
+
+
+Start the program as a background daemon\&. This option is only possible together with the option
+\fB\-r\fR\&.
+
+.RE
+.PP
+\fB\-t\fR, \fB\-\-test\fR
+.RS 4
+
+
+
+Verify the syntax of the configuration file
+\fIFILE\fR
+(*\&.xml) WITHOUT starting the detection of selcalls\&. The location of the file is relative to the working directory (see option
+\fB\-pwd\fR) or an absolute path has to be given\&.
+
+.RE
+.PP
+\fB\-a\fR, \fB\-\-audiodevices\fR
+.RS 4
+
+
+
+List all available audio devices\&. This information is used to specify an audio device in the configuration file\&.
+
+.RE
+.PP
+\fB\-pwd\fR, \fB\-\-printworkingdir\fR
+.RS 4
+
+
+
+Print the working directory for the configuration file used in option
+\fB\-r\fR
+and
+\fB\-t\fR\&.
+
+.RE
+.PP
+\fB\-v\fR, \fB\-\-version\fR
+.RS 4
+
+
+
+Print version and copyright informations\&.
+
+.RE
+.PP
+\fB\-h\fR, \fB\-\-help\fR
+.RS 4
+
+
+
+Print help\&.
+
+.RE
+
+
+
+.SH "AUTHOR"
+
+.PP
+Written by Ralf Rettig\&.
+
+
+
+.SH "REPORTING BUGS"
+
+.PP
+Report bugs to
+<support@personalfme\&.de>\&.
+
+
+
+.SH "COPYRIGHT"
+
+.PP
+Copyright \(co 2010\-2021 Ralf Rettig\&. License GPLv3+: GNU GPL version 3 or later
+http://gnu\&.org/licenses/gpl\&.html\&. This is free software: you are free to change and redistribute it\&. There is NO WARRANTY, to the extent permitted by law\&.
+
+
+
+.SH "SEE ALSO"
+
+.PP
+The full documentation for
+\fBpersonalfme\fR
+is maintained on
+http://www\&.personalfme\&.de
+and as a PDF\-document in
+/usr/share/doc/personalfme\&.
+
+

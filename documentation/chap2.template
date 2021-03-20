@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--	PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>-->
+
+<chapter 	xml:id="first_steps_windows"
+			xml:lang="de" 
+			xmlns="http://docbook.org/ns/docbook" 
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			version="5.0">
+	<title>Erste Schritte</title>	
+	<section xml:id="installation">
+		<title>Installation und Voraussetzungen</title>
+		<para>
+			Das Programm benötigt für die Auswertung des Funksignals eine Soundkarte. Prinzipiell sind Soundkarten mit 48 000 Hz Maximalfrequenz geeignet. 
+			Die beste Rauschbeständigkeit bei schlechtem Empfang ergibt sich bei mindestens 96 000 Hz Maximalfrequenz. PC-Soundkarten erfüllen dies in der Regel.
+		</para>		
+		<warning>
+			<emphasis>Rechtlicher Hinweis</emphasis>: Es wird darauf hingewiesen, dass das willentliche unbefugte Erlangen von Informationen aus nicht-öffentlichen Funkdiensten, z.B. der 
+			Behörden und Organisationen mit Sicherheitsaufgaben (BOS) strafbar ist. Dies gilt auch für die Auswertung von Fünftonfolgen. Die vorschriftsgemäße Benutzung des 
+			Programms liegt allein in der Verantwortung des Nutzers.
+		</warning>
+			
+		<section xml:id="install_linux">
+			<title>Linux</title>
+			<para>
+				Die Software stellt folgende Voraussetzungen an Ihr System:
+				<itemizedlist>
+					<listitem>
+						fertig eingerichtetes Linux-System inklusive Soundkarte (z.B. Raspberry Pi 3 Modell B mit Cirrus Logic Audio Card), siehe <xref linkend="raspberry_configuration"/>		
+					</listitem>
+					<listitem>
+						<acronym>pulseaudio</acronym> Soundserver eingerichtet im <emphasis>Systemmodus</emphasis> mit hoher Prozesspriorität, siehe <xref linkend="pulseaudio_configuration"/>
+					</listitem>						
+					<listitem>
+						kompiliertes Binärpaket von <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> für Ihr System
+					</listitem>
+				</itemizedlist>
+			</para>
+			
+			<para>
+				Ohne eine Konfiguration des Soundservers <acronym>pulseaudio</acronym> im <emphasis>Systemmodus</emphasis> ist lediglich ein Betrieb von <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> 
+				im Vordergrund möglich.
+			</para>
+			
+			<para>
+				Unter Rasberry Pi OS (Debian) 10 Buster ist die Erzeugung des Binärpakets aus dem Quellcode relativ einfach. Laden Sie diesen zunächst herunter:
+				<screen>
+					$ sudo apt install git
+					$ git clone https://gitlab.com/meteoradix/personalfme.git
+					$ cd ./personalfme
+				</screen>
+			</para>
+			<para>
+				Kompilieren und installieren Sie nun manuell die Bibliothek Poco Version 1.8.1. Dies ist notwendig da die aktuelle Version 1.9.0, die
+				als Paket in Betriebssystem verfügbar ist, einen kritischen Fehler enthält der das Versenden von E-Mails verhindert.
+				<screen>
+					$ sudo apt-get -y update 
+					$ sudo apt-get -y install git g++ make cmake libssl-dev
+					$ git clone -b master https://github.com/pocoproject/poco.git
+					$ cd poco
+					$ git checkout tags/poco-1.8.1-release
+					$ mkdir cmake-build
+					$ cd cmake-build
+					$ cmake ..
+					$ cmake --build . --config Release -j n
+					$ sudo cmake --build . --target install
+				</screen>
+				Im Buildkommando für CMake gibt die Option "-j n" dabei die Anzahl der eingesetzten CPU-Kerne "n" an.
+			</para>
+			<para>			
+				 Konfigurieren Sie dann das Buildsystem:
+				<screen>
+					$ sudo apt install build-essential cmake openssl libssl-dev 
+					$ sudo apt install portaudio19-dev libxerces-c-dev libsndfile-dev 
+					$ sudo apt install libalglib-dev ncurses-dev 
+					$ sudo apt install libboost-all-dev
+					$ cd path/to/personalfme
+					$ mkdir build
+					$ cd build
+					$ cmake -DCMAKE_BUILD_TYPE=Release ..
+				</screen>
+				
+				Jetzt kann <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> übersetzt und das Binärpaket erzeugt werden ("n" steht dabei für die Anzahl der eingesetzten CPU-Kerne):
+				<screen>
+					$ make -jn
+					$ sudo make package
+				</screen>
+				
+				Unter Raspbian (Debian) 8 Jessie und Ubuntu 16.04 LTS fehlen ausreichend neue Versionen der Bibliotheken Boost und Poco, vor Ausführung der oben genannten Schritte müssen daher aktuelle Versionen dieser
+				Bibliotheken installiert werden, siehe <xref linkend="dependencies_linux"/>. Beachten Sie, dass diese Linuxversionen ab <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> 1.0.0 nicht mehr unterstützt werden.
+			</para>
+				
+			<para>
+				Weil <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> für den Betrieb als Hintergrunddienst etliche Einstellungen benötigt, empfiehlt sich unbedingt die Installation über das Binärpaket. Danach
+				sollte der Hintergrunddienst <command>@LINUX_PROJECT_SOFTWARE_NAME@</command> laufen und beim Systemstart automatisch gestartet werden.
+				<screen>
+					$ sudo dpkg -i @LINUX_PROJECT_SOFTWARE_NAME@_@CPACK_PACKAGE_VERSION@-1_amd64.deb
+					$ sudo apt-get -f install
+				</screen>
+				
+				Sofern das Audiosystem noch nicht für den <emphasis>Systemmodus</emphasis> von Pulseaudio eingerichtet wurde, wird der Hintergrunddienst von <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> zunächst nicht laufen.
+				Nähere Informationen zur Einrichtung finden sich hier: <xref linkend="pulseaudio_configuration"/>.		
+			</para>
+			<para>				
+				Entfernt werden kann das Paket durch folgenden Befehl (ohne die Konfigurationsdateien):
+				<screen>
+					$ sudo apt-get remove @LINUX_PROJECT_SOFTWARE_NAME@
+				</screen>
+				Oder vollständig durch:
+				<screen>
+					$ sudo apt-get purge @LINUX_PROJECT_SOFTWARE_NAME@
+				</screen>
+			</para>			
+				
+			<para>
+				Aufgrund der Vielzahl von Distributionen und Architekturen werden für <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> keine fertigen Binärpakete zur Verfügung gestellt. Das Programm wurde für 
+				Rasperry Pi OS 10, Debian 10 Buster und Ubuntu 20.04 LTS getestet.
+			</para>
+		</section>
+		
+		<section xml:id="install_windows">
+			<title>Windows</title>
+			<para>
+				Die Software benötigt die Laufzeitbibliothek für C++ 2019 (Visual C++ Redistributable for Visual Studio 2019, x86). Falls noch nicht vorhanden, kann die Installationsdatei <filename>vc_redist.x86.exe</filename>
+				unter folgender Internetadresse heruntergeladen werden: <ulink url="https://support.microsoft.com/de-de/help/2977003/the-latest-supported-visual-c-downloads"></ulink>. Nach dessen Installation wird die Software <acronym>@PROJECT_SOFTWARE_NAME@</acronym> 
+				selbst durch Ausführen des Installationspaketes <filename>@PROJECT_SOFTWARE_NAME@-@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@-@PROJECT_VERSION_TYPE@-win32.exe</filename> 
+				installiert. Sie läuft unter 32-bit und 64-bit <acronym>Microsoft Windows Vista</acronym> und allen neueren <acronym>Windows</acronym>-Betriebssystemen. Das Programm lässt sich durch die 
+				Verknüpfung im Startmenü vollständig deinstallieren. Dabei werden die Daten und Einstellungen im Arbeitsverzeichnis nicht gelöscht.
+			</para>
+		</section>
+	</section>
+	
+	<section xml:id="configuration_first_steps">	
+		<title>Konfiguration für die erste Benutzung</title>
+		<para>
+			Die Bedienung des Programms ist auf allen Betriebssystemen identisch. Es wird über die zentrale XML-Konfigurationsdatei <filename>config.xml</filename> gesteuert. Unter Linux wird diese Datei im Verzeichnis
+			<filename class="directory">/etc/@LINUX_PROJECT_SOFTWARE_NAME@</filename> und unter Windows im Verzeichnis <filename class="directory">@PROJECT_SOFTWARE_NAME@</filename> innnerhalb des 
+			Ordners <filename class="directory">Dokumente und Einstellungen</filename> des Benutzers (z.B. <filename class="directory">C:\Users\UserName\Documents\@PROJECT_SOFTWARE_NAME@</filename>) gespeichert. Vorlagen für die Konfiguration liegen im Ordner 
+			<filename class="directory">@PROJECT_SOFTWARE_NAME@\beispiele</filename> bereit.
+		</para>
+		<note>
+			Falls bei einem Update schon eine XML-Konfigurationsdatei <filename>config.xml</filename> vorhanden war, wird diese bei der Installation nicht überschrieben. Eventuelle Syntaxänderungen aufgrund der neuen Version
+			müssen manuell durchgeführt werden. Das Installationsprogramm informiert darüber, ob dies nötig sein könnte. Die jeweils aktuelle Konfiguration ist in diesem Handbuch beschrieben.
+		</note>	
+		<para>
+			Das Programm ist mit den installierten Standardeinstellungen bereits lauffähig und zeichnet damit sämtliche Alarmierungen auf. <emphasis>Beachten Sie dazu die rechtlichen Hinweise!</emphasis> 
+			Eine Quelle für Verzögerungen bei der Alarmierung kann die tägliche Resynchronisation eines DSL-Anschlusses sein. Allerdings versucht <acronym>@PROJECT_SOFTWARE_NAME@</acronym> automatisch über einen 
+			längeren Zeitraum die Alarmierung zuzustellen. Falls das Programm nicht läuft, erhalten Sie im nächsten Kapitel Hinweise für die Eingrenzung des Problems.
+		</para>
+			
+		<section xml:id="test_linux">
+			<title>Linux</title>
+			<para>
+				Der Demon <command>@LINUX_PROJECT_SOFTWARE_NAME@</command> wird über <command>systemd</command> gesteuert. Mit dem folgenden Befehl kann die Funktionsfähigkeit überprüft werden:
+				<screen>
+					$ sudo systemctl status @LINUX_PROJECT_SOFTWARE_NAME@
+				</screen>
+				Die Ausgabe sollte als Status <emphasis>active (running)</emphasis> ergeben, z.B.:
+				<screen>
+					@LINUX_PROJECT_SOFTWARE_NAME@.service - Selcall internet gateway daemon
+					   Loaded: loaded (/lib/systemd/system/@LINUX_PROJECT_SOFTWARE_NAME@.service; ...
+					   Active: active (running) since Fr 2016-07-22 19:58:10 ...
+					  Process: 948 ExecStart=/usr/bin/@LINUX_PROJECT_SOFTWARE_NAME@ -r config.xml ... 
+							(code=exited, status=0/SUCCESS)
+					 Main PID: 971 (@LINUX_PROJECT_SOFTWARE_NAME@)
+					   CGroup: /system.slice/@LINUX_PROJECT_SOFTWARE_NAME@.service
+							   └─971 /usr/bin/@LINUX_PROJECT_SOFTWARE_NAME@ -r config.xml --daemon
+
+					Jul 22 19:58:09 ubuntu systemd[1]: Starting Selcall internet ...
+					Jul 22 19:58:10 ubuntu systemd[1]: Started Selcall internet ...
+				</screen>
+				Sofern nicht schon vorher der Benutzer <command>fme-daemon</command> für die Benutzung der Soundkarte freigegeben wurde, wird <command>@LINUX_PROJECT_SOFTWARE_NAME@</command> zunächst nicht starten. In diesem
+				Fall muss die im Kapitel <xref linkend="pulseaudio_configuration"/> beschriebene Konfiguration noch umgesetzt werden.
+			</para>
+		</section>
+		
+		<section xml:id="test_windows">
+			<title>Windows</title>
+			<para>
+				Achten Sie darauf, dass für den nun folgenden Funktionstest das Audiokabel eingesteckt ist. Testen Sie, ob das Programm über die Desktopverknüpfung <command>@PROJECT_SOFTWARE_NAME@</command> startet.
+				<para>
+					<acronym>@PROJECT_SOFTWARE_NAME@</acronym> eignet sich für den Dauerbetrieb. Daher hat es einen Eintrag im <command>Autostart</command>-Menü. Damit erfolgt automatisch ein Start des Programms 
+					(mit der Konfigurationsdatei <filename>config.xml</filename>) nach einem Neustart. Bedenken Sie, dass automatische Updates bei Windows regelmäßig zu Neustarts führen. 
+					Währenddessen ist <acronym>@PROJECT_SOFTWARE_NAME@</acronym> nicht verfügbar. 
+				</para>
+			</para>
+		</section>
+	</section>
+	
+	<section xml:id="usage_first_steps">
+		<title>Bedienung des Programms</title>
+		<para>
+			<acronym>@PROJECT_SOFTWARE_NAME@</acronym> ist als Gateway für den Dauerbetrieb konzipiert und wird daher unter aller Betriebssystemen über die Kommandozeile gesteuert. 
+			Unter Windows gibt es eine Desktopverknüpfung <command>PersonalFME Kommandozeile</command>, die automatisch in das richtige Verzeichnis für die Bedienung führt. Die Programmbefehle lauten unter
+			allen Betriebssystemen:
+		</para>
+		<informaltable>
+			<tgroup cols="2">
+				<thead>
+					<row>
+						<entry>Befehl</entry>
+						<entry>Beschreibung</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>
+							<para><command>@LINUX_PROJECT_SOFTWARE_NAME@ -r config.xml</command></para>
+							<para>oder:</para>
+							<para><command>@LINUX_PROJECT_SOFTWARE_NAME@ -r „/etc/@LINUX_PROJECT_SOFTWARE_NAME@/config.xml“</command></para>							
+							<para>bzw.</para>
+							<para><command>@LINUX_PROJECT_SOFTWARE_NAME@ -r „C:\Users\config.xml“</command></para>
+						</entry>
+						<entry>
+							<emphasis role="underline">Startet</emphasis> die Auswertung des Funksignals. Wenn die Konfigurationsdatei ohne Pfad angegeben ist, wird davon ausgegangen, dass sie 
+							im Konfigurationsverzeichnis (siehe <command>@LINUX_PROJECT_SOFTWARE_NAME@ –pwd</command>) liegt.
+						</entry>
+					</row>
+					<row>
+						<entry><command>@LINUX_PROJECT_SOFTWARE_NAME@ -a</command></entry>
+						<entry>
+							Gibt die verfügbaren Audiogeräte aus. Achten Sie darauf, dass das Audiokabel eingesteckt ist.
+						</entry>
+					</row>		
+					<row>
+						<entry><command>@LINUX_PROJECT_SOFTWARE_NAME@ -h</command></entry>
+						<entry>Gibt eine Hilfe aus.</entry>
+					</row>	
+					<row>
+						<entry><command>@LINUX_PROJECT_SOFTWARE_NAME@ -pwd</command></entry>
+						<entry>Gibt das Konfigurationsverzeichnis des Programms (den Ordner <filename>@LINUX_PROJECT_SOFTWARE_NAME@</filename>) aus.</entry>
+					</row>	
+					<row>
+						<entry>
+							<para><command>@LINUX_PROJECT_SOFTWARE_NAME@ -t config.xml</command></para>
+							<para>oder:</para>
+							<para><command>@LINUX_PROJECT_SOFTWARE_NAME@ -t „/etc/@LINUX_PROJECT_SOFTWARE_NAME@/config.xml“</command></para>		
+							<para>bzw.</para>							
+							<para><command>@LINUX_PROJECT_SOFTWARE_NAME@ -t „C:\Users\config.xml“</command></para>
+						</entry>
+						<entry>
+							<para>
+								<emphasis role="underline">Testet</emphasis> die Konfigurationsdatei <emphasis>ohne</emphasis> die Auswertung zu starten. Wenn die Konfigurationsdatei ohne Pfad angegeben ist, wird 
+								davon ausgegangen, dass sie im Konfigurationsverzeichnis (siehe <command>@LINUX_PROJECT_SOFTWARE_NAME@ –pwd</command>) liegt.
+							</para>
+						</entry>
+					</row>	
+					<row>
+						<entry><command>@LINUX_PROJECT_SOFTWARE_NAME@ -v</command></entry>
+						<entry>Gibt die Versions- und Copyright-Informationen aus.</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</informaltable>
+		
+		<para>
+			Die Alarmierungen und alle relevanten Vorgänge und Fehlermeldungen werden in der Datei <filename>@LINUX_PROJECT_SOFTWARE_NAME@_log.txt</filename> unter Linux im Log-Verzeichnis <filename class='directory'>/var/log/@LINUX_PROJECT_SOFTWARE_NAME@</filename>
+			bzw. unter Windows im Arbeitsverzeichnis <filename class='directory'>@PROJECT_SOFTWARE_NAME@</filename> protokolliert. Die Datei ist als UTF-8 kodiert. Für eine korrekte Darstellung der Umlaute benötigen Sie einen 
+			UTF-8 fähigen Editor, unter Windows z.B. Notepad++. Der Standardeditor von Windows ist dafür nicht geeignet.
+		</para>
+		<para>
+			Testen Sie zunächst eine neu erstellte Konfigurationsdatei über den Aufruf von <command>@LINUX_PROJECT_SOFTWARE_NAME@ –t “config.xml”</command>. Damit lassen sich mögliche Fehler 
+			in der XML-Datei ermitteln. Bei einer expliziten Angabe des kompletten Pfades kann die Konfigurationsdatei in jedem Ordner liegen.
+		</para>
+		<para>
+			Schließen Sie vor dem Start des Programms unter Windows zunächst das Audiokabel an die Soundkarte an, andernfalls werden die Soundgeräte nicht erkannt und 
+			Sie erhalten eine Fehlermeldung.
+		</para>			
+		<note>
+			Stellen Sie <emphasis>Lautstärke</emphasis> Ihres Funkempfängers bzw. die Verstärkung durch die Soundkarte eher leise und <emphasis>keinesfalls zu hoch</emphasis> ein. Wenn das Eingangssignal 
+			übersteuert ist, könnten Alarmierungen nicht korrekt erkannt werden. Wenn Sie starke Verzerrungen und Knacken in den Aufnahmen Ihrer Alarmdurchsagen haben, ist dies ein 
+			deutlicher Hinweis. Ein zu leises Signal wird automatisch digital auf die optimale Lautstärke angepasst. Soundkarten haben einen analogen und einen digitalen Verstärker, unter Linux ist
+			die Einstellung der analogen Verstärkung (PGA) eventuell schwierig zu finden.
+		</note>
+		
+		<para>
+			Die folgende Tabelle gibt einen Überblick über die relevanten Verzeichnisse unter verschiedenen Betriebssystemen:
+			
+			<informaltable>
+				<tgroup cols="3">
+					<thead>
+						<row>
+							<entry>Beschreibung</entry>
+							<entry>Linux</entry>
+							<entry>Windows</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>
+								Konfigurationsverzeichnis. Enthält die XML-Konfigurationsdatei <filename>config.xml</filename>.
+							</entry>
+							<entry>
+								<filename>/etc/@LINUX_PROJECT_SOFTWARE_NAME@</filename>
+							</entry>
+							<entry>
+								<filename>C:\Users\UserName\Documents\@PROJECT_SOFTWARE_NAME@</filename>
+							</entry>							
+						</row>
+						<row>
+							<entry>
+								Log-Dateiverzeichnis. Enthält die Protokolldatei von <acronym>@PROJECT_SOFTWARE_NAME@</acronym>.
+							</entry>
+							<entry>
+								<filename>/var/log/@LINUX_PROJECT_SOFTWARE_NAME@</filename>
+							</entry>	
+							<entry>
+								<filename>C:\Users\UserName\Documents\@PROJECT_SOFTWARE_NAME@</filename>
+							</entry>								
+						</row>
+						<row>
+							<entry>
+								Datenverzeichnis. Enthält die aufgezeichneten Audiodateien der Alarmierungen.
+							</entry>
+							<entry>
+								<filename>/var/lib/@LINUX_PROJECT_SOFTWARE_NAME@</filename>
+							</entry>	
+							<entry>
+								<filename>C:\Users\UserName\Documents\@PROJECT_SOFTWARE_NAME@</filename>
+							</entry>								
+						</row>
+					</tbody>
+				</tgroup>
+			</informaltable>
+		</para>
+		
+		<section xml:id="usage_linux">
+			<title>Linux</title>		
+			<para>
+				Unter Linux wird der Dauerbetrieb über einen <command>systemd</command>-Demon sichergestellt. In Übereinstimmung mit den Konventionen wird unter Linux
+				der Programmname <command>@LINUX_PROJECT_SOFTWARE_NAME@</command> benutzt. Weitere Informationen können nach der Installation auch der manpage <command>man @LINUX_PROJECT_SOFTWARE_NAME@</command>
+				entnommen werden.
+				
+				<note>
+					Das Programm kann auch im Vordergrund, z.B. mit <command>@LINUX_PROJECT_SOFTWARE_NAME@ -r config.xml</command> gestartet werden.
+				</note>	
+				
+				Der Systemdienst kann folgendermaßen gestartet bzw. gestoppt werden:
+				<screen>
+					$ sudo systemctl start @LINUX_PROJECT_SOFTWARE_NAME@
+					$ sudo systemctl stop @LINUX_PROJECT_SOFTWARE_NAME@
+				</screen>
+				
+				Überprüfen Sie nach jedem Start, ob der Dienst auch wirklich läuft:
+				<screen>
+					$ sudo systemctl status @LINUX_PROJECT_SOFTWARE_NAME@
+				</screen>
+				Der Status sollte <emphasis>active (running)</emphasis> sein.
+				
+				Ein Neustart des Dienstes ist nach einer Anpassung der XML-Konfigurationsdatei nötig, damit die Änderungen wirksam werden:
+				<screen>
+					$ sudo systemctl restart @LINUX_PROJECT_SOFTWARE_NAME@
+				</screen>
+			</para>
+		</section>
+	</section>
+</chapter>

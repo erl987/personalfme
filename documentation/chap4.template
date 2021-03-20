@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--	PersonalFME - Gateway linking analog radio selcalls to internet communication services
+Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+
+This program is free software: you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>-->
+
+<chapter 	xml:id="linux_system"
+			xml:lang="de" 
+			xmlns="http://docbook.org/ns/docbook" 
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			version="5.0">
+	<title>Konfiguration eines Linux-Systems für @LINUX_PROJECT_SOFTWARE_NAME@</title>
+	<para>
+		<acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> unterstützt ab Version 0.2.1 Linux. Ein zuverlässiger Dauerbetrieb ist möglich. Unter Linux ist eine spezielle Konfiguration des Soundsystems notwendig, 
+		damit <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> als Hintergrundprozess laufen kann. Dieses Kapitel bezieht sich auf Raspberry Pi OS 10 und Debian 10 Buster. <emphasis>Versionen vor <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> 1.0.0 unterstützen auch Raspbian (Debian) 9 Stretch, Raspbian (Debian) 8 Jessie sowie Ubuntu 16.04 LTS.</emphasis>
+		Im Falle eines Minicomputers ist eventuell die Nachrüstung unbedingt benötigter Komponenten nötig.
+	</para>
+	<section xml:id="dependencies_linux">
+		<title>Abhängigkeiten</title>
+		<acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> benötigt die folgenden Abhängigkeiten zu anderen Paketen:
+		<informaltable>
+			<tgroup cols="4">
+				<thead>
+					<row>
+						<entry>Paket</entry>
+						<entry>Version</entry>
+						<entry>verfügbar in Debian 8 Jessie</entry>
+						<entry>verfügbar in Debian 9/10</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>libalglib-dev</entry>
+						<entry>>= 3.8</entry>
+						<entry>ja</entry>
+						<entry>ja</entry>
+					</row>
+					<row>
+						<entry>libboost-dev</entry>
+						<entry>>= 1.59</entry>
+						<entry><emphasis>nein</emphasis></entry>
+						<entry>ja</entry>
+					</row>
+					<row>
+						<entry>libc6 </entry>
+						<entry>>= 2.14</entry>
+						<entry>ja</entry>
+						<entry>ja</entry>
+					</row>
+					<row>
+						<entry>libgcc1 </entry>
+						<entry>>= 1:4.0</entry>
+						<entry>ja</entry>
+						<entry>ja</entry>
+					</row>
+					<row>
+						<entry>libncurses5</entry>
+						<entry>>= 5.5</entry>
+						<entry>ja</entry>
+						<entry>ja</entry>
+					</row>
+					<row>
+						<entry>libpoco-dev (libpocofoundation, libpoconet, libpoconetssl, libpocoutil)</entry>
+						<entry>>= 1.6.0</entry>
+						<entry><emphasis>nein</emphasis></entry>
+						<entry>ja</entry>
+					</row>
+					<row>
+						<entry>libportaudio2</entry>
+						<entry>>= 19+svn20101113</entry>
+						<entry>ja</entry>
+						<entry>ja</entry>
+					</row>
+					<row>
+						<entry>libsndfile1</entry>
+						<entry>>= 1.0.20</entry>
+						<entry>ja</entry>
+						<entry>ja</entry>
+					</row>
+					<row>
+						<entry>libstdc++6</entry>
+						<entry>>= 5</entry>
+						<entry>ja</entry>
+						<entry>ja</entry>
+					</row>
+					<row>
+						<entry>libxerces-c3.1</entry>
+						<entry>>= 3.1</entry>
+						<entry>ja</entry>
+						<entry>ja</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</informaltable>
+		Unter Raspberry Pi OS 10 und Debian 10 Buster können alle Abhängigkeiten automatisch installiert werden. Jedoch stehen unter Raspbian (Debian) 8 Jessie und Ubuntu 16.04 LTS für die Boost- und die
+		Poco-Bibliothek keine ausreichend neuen Versionen zur Verfügung.
+		
+		<para>
+			Anmerkung: Im Folgenden symbolisiert "$" einen Befehl in einem Linux-Terminal, es ist kein Teil des Befehls und darf nicht mit eingegeben werden.
+		</para>
+		<para><emphasis>Empfehlung zur Auflösung dieser beiden Abhängigkeiten unter Raspbian (Debian) 8 Jessie bzw. Ubuntu 16.04 LTS:</emphasis></para>
+		Es werden diverse Pakete für das Kompilieren benötigt: 
+		<screen>
+			$ sudo apt-get install gcc build-essential openssl libssl-dev
+		</screen>
+		<itemizedlist>
+			<listitem>
+				Boost: Die Version 1.61.0 ist auf der Internet-Seite <ulink url="http://www.boost.org"/> verfügbar. Aufgrund von Abhängigkeiten von CMake kann keine neuere Version installiert werden.
+				Nach dem Entpacken in ein temporäres Verzeichnis kann die Bibliothek wie folgt kompiliert und anschließend installiert werden:
+				<screen>
+					$ cd path/to/boost_X_Y_Z
+					$ ./bootstrap.sh
+					$ sudo ./b2 install
+				</screen>
+			</listitem>
+			<listitem>
+				Poco: Die aktuelle Version ist auf der Internet-Seite <ulink url="http://www.pocoproject.org"/> verfügbar. Nach dem Entpacken in ein temporäres Verzeichnis
+				kann die Bibliothek wie folgt kompiliert und anschließend installiert werden:
+				<screen>
+					$ cd path/to/poco_X_Y_Z
+					$ ./configure
+					$ make
+					$ sudo make install
+				</screen>
+			</listitem>
+		</itemizedlist>
+	</section>
+	<section xml:id="pulseaudio_configuration">
+		<title>Pulseaudio-Konfiguration im Systemmodus</title>
+		<para>
+			Hintergrunddienste können vom <acronym>pulseaudio</acronym>-Soundserver ausschließlich im <emphasis>Systemmodus</emphasis> Daten von der Soundkarte erhalten. Deshalb muss die Standardinstallation von
+			<acronym>pulseaudio</acronym> umkonfiguriert werden.
+			
+			<warning>
+				Die Entwickler von <acronym>pulseaudio</acronym> raten auf allen Systemen - ausgenommen eingebetteten Systemen - aus Sicherheitsgründen von der Nutzung des Systemmodus ab. Aus
+				diesem Grund sollte <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> ausschließlich auf eingebetteten Systemen ohne echte Benutzer (z.B. auf einem Minicomputer) als Hintergrundprozess genutzt werden.
+			</warning>
+			
+			<para>
+				<acronym>pulseaudio</acronym> wird zunächst standardmäßig wie folgt installiert (sofern noch nicht vorhanden):
+				<screen>
+					$ sudo apt-get install pulseaudio
+				</screen>
+
+				Für den Systemmodus sind die folgenden Neueinträge in der Datei <filename>/etc/pulse/daemon.conf</filename> nötig, welche die entsprechenden Standardeinstellungen überschreiben:
+				
+				<screen>
+					daemonize = yes
+					system-instance = yes
+					exit-idle-time = -1			
+				</screen>
+
+				Nur auf dem Raspberry Pi sind die folgenden zusätzlichen Änderungen sinnvoll:
+				<screen>
+					resample-method = speex-fixed-4
+					default-sample-rate = 96000
+				</screen>
+
+				Weiterhin muss in der Datei <filename>/etc/pulse/client.conf</filename> der folgende Eintrag hinzugefügt werden:
+				<screen>
+					autospawn = no
+				</screen>
+				
+				Damit <acronym>pulseaudio</acronym> zuverlässig auch bei hoher Systemlast läuft, muss eine hohe Prozesspriorität zugelassen werden.
+				Dazu muss der Benutzer <command>pulse</command> in die Datei <filename>/etc/security/limits.conf</filename> eingetragen werden:
+				<screen>
+					pulse 	- nice		-11
+					pulse 	- rtprio	99
+				</screen>
+				
+
+				Im Systemmodus werden die für die Soundkarte zugelassenen Benutzer über die Mitgliedschaft in der Gruppe <command>fme-daemon</command> gesteuert. Fügen Sie den Benutzer des 
+				<command>@LINUX_PROJECT_SOFTWARE_NAME@</command> Demons zu dieser Gruppe zu:
+				<screen>
+					$ sudo usermod -a -G pulse-access fme-daemon
+				</screen>
+				Dieser Benutzer wird bei der Installation der Software neu angelegt.
+				
+				Anschließend kann für <acronym>pulseaudio</acronym> ein Demon installiert werden. Standardmäßig ist keiner vorhanden, eine <command>systemd</command> Konfigurationsdatei liegt im Verzeichnis
+				<filename class='directory'>/linux/debian</filename> des Sourcecodes von <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> bereit.
+				<screen>
+					$ sudo cp ./linux/debian/pulseaudio.service /lib/systemd/system
+					$ sudo systemctl enable pulseaudio.service
+					$ sudo systemctl start pulseaudio.service
+					$ sudo systemctl status pulseaudio.service
+				</screen>
+				
+				<acronym>pulseaudio</acronym> sollte nun im <emphasis>Systemmodus</emphasis> laufen und beim Systemstart automatisch gestartet werden.
+			</para>
+		</para>					
+	</section>
+	
+	<section xml:id="raspberry_configuration">
+		<title>Raspberry Pi</title>
+		<para>
+			Die Software <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> kann zuverlässig auf Minicomputern eingesetzt werden. In diesem Kapitel werden Hinweise zur Installation auf einem Raspberry Pi 3 gegeben. Die Systemlast
+			im Hintergrundbetrieb liegt bei etwa 5 - 10%. Als Besonderheit verfügt der Raspberry Pi über keine Soundkarte und keine Echtzeituhr. Diese müssen entsprechend nachgerüstet werden. Als geeignet hat sich z.B. folgende
+			Konfiguration erwiesen:
+			
+			<itemizedlist>
+				<listitem>
+					Raspberry Pi 3 Modell B
+				</listitem>
+				<listitem>
+					Cirrus Logic Audio Card
+				</listitem>
+				<listitem>
+					PiFace SHIM Realtime Clock Board für Raspberry Pi
+				</listitem>
+			</itemizedlist>
+			
+			Als Betriebssystem bietet sich Raspberry Pi OS 10 an. Mittlerweile steht für die Cirrus Logic Audio Card ein Treiber im Standardkernel zur Verfügung. Damit ist die Installation relativ einfach geworden.
+			Eine genaue Beschreibung findet sich auf dieser Webseite: <ulink url="http://www.horus.com/~hias/cirrus-driver.html"></ulink>.
+			
+			Für den Betrieb als Audiorecorder ist es notwendig, einmal ein "Use Case Script" <filename>Record_from_Linein.sh</filename> auszuführen, um die Soundkarte entsprechend zu konfigurieren. Näheres ist im oben 
+			genannten Link beschrieben.
+			
+			<note>
+				Sollte es zu Übersteuerungen kommen, welche sich durch starkes Knacken im Audiosignal äußern, kann die analoge Verstärkung ("Volume") durch Anpassung des "Use Case Scripts" <filename>Record_from_Linein.sh
+				</filename> verändert werden. Die digitale Verstärkung ("Digital Volume") spielt dabei keine Rolle, da <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> die Lautstärke automatisch anpasst.
+				<screen>
+					# Datei "Record_from_Linein.sh"
+					record_from_line 0
+					# Beispiel für eine analoge Verstärkung von 0 dB
+				</screen>
+				Die Standardeinstellung ist +8 dB und kann laut Datenblatt des Soundchips von 0 dB bis +31 dB in 1dB-Stufen angepasst werden. Es ist zweckmäßig, die analoge Verstärkung beim Auftreten von Übersteuerungen
+				auf 0 dB zu reduzieren, d.h. abzuschalten.
+			</note>
+			
+			<para>
+				Die Echtzeituhr muss zunächst ebenfalls konfiguriert werden: <ulink url="http://www.piface.org.uk/assets/piface_clock/PiFaceClockguide.pdf"></ulink>. Ohne Echtzeituhr startet der Raspberry Pi mit der letzten
+				gespeicherten Zeit und aktualisiert seine Zeit nur über das Internet. Für eine zuverlässige Alarmierung und Bewertung von Probealarmen muss aber zu jedem Zeitpunkt die korrekte Zeit vorliegen.
+			</para>
+		</para>		
+	</section>
+</chapter>
