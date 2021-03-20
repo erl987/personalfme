@@ -69,13 +69,13 @@ Note that you should **not** have `libpoco-dev` being installed via `apt` on thi
 Clone the source code:
 ```shell
 cd source/code/root/path
-git clone https://gitlab.com/meteoradix/personalfme.git
-cd ./personalfme
+git clone -b master https://github.com/erl987/personalfme
+cd personalfme
+git checkout tags/personalfme-1.0.0-release
 ```
 
 Configure your build. Note that you should set the `CMAKE_BUILD_TYPE` `Release` (or `Debug` in special cases):	
 ```shell
-cd ./personalfme
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
