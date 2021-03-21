@@ -61,7 +61,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				<screen>
 					$ sudo apt-get -y update 
 					$ sudo apt install -y git
-					$ git clone -b master https://github.com/erl987/personalfme
+					$ git clone https://github.com/erl987/personalfme
 					$ cd personalfme
 					$ git checkout tags/personalfme-1.0.0-release
 				</screen>
