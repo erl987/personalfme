@@ -72,7 +72,7 @@ Note that you should **not** have `libpoco-dev` being installed via `apt` on thi
 Clone the source code:
 ```shell
 cd source/code/root/path
-git clone -b master https://github.com/erl987/personalfme
+git clone https://github.com/erl987/personalfme
 cd personalfme
 git checkout tags/personalfme-1.0.0-release
 ```
