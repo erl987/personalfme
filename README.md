@@ -167,7 +167,7 @@ pkg install -forge signal
 
 ### 1. General
 
-For Windows it is recommended to download and install the pre-compiled binary [pre-compiled binary](http://personalfme.de/download.html). **Due to license issues, the required runtime libraries for Microsoft C++ 2019 are not included.** If you have not already installed them, you have to download and install the Visual C++ Redistributable for Visual Studio 2019 for x86: https://support.microsoft.com/de-de/help/2977003/the-latest-supported-visual-c-downloads
+For Windows it is recommended to download and install the [pre-compiled binary](http://personalfme.de/download.html). **Due to license issues, the required runtime libraries for Microsoft C++ 2019 are not included.** If you have not already installed them, you have to download and install the Visual C++ Redistributable for Visual Studio 2019 for x86: https://support.microsoft.com/de-de/help/2977003/the-latest-supported-visual-c-downloads
 
 
 ### 2. Compiling the program including the installer
