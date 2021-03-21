@@ -8,7 +8,7 @@ personalfme (1.0.0-1) focal; urgency=medium
  * updated the audio library Portaudio-version on Windows, this fixes problems that some users experienced with their attached audio devices
  * made the source code available on Github
 
- -- Ralf Rettig <info@personalfme.de>  Sun, 17 January 2021 21:00:00 +0100
+ -- Ralf Rettig <info@personalfme.de>  Sa, 27 March 2021 21:00:00 +0100
 
 personalfme (0.2.4-1) xenial; urgency=medium
 
