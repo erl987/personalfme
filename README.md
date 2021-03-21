@@ -6,9 +6,9 @@
 
 *PersonalFME* is developed for the selcalls used by the German BOS, but may be adaptable to selcalls defined by the standards in other countries.
 
-**Dies ist der Quellcode von *PersonalFME* und richtet sich an technisch ausgebildete Personen, daher ist der Inhalt vollständig in englischer Sprache. Eine ausführliche Anwenderdokumentation für die Allgemeinheit in deutscher Sprache findet sich hier:** `./documentation/benutzerhandbuch.pdf`
+**Dies ist der Quellcode von *PersonalFME* und richtet sich an technisch ausgebildete Personen, daher ist der Inhalt vollständig in englischer Sprache. Eine ausführliche Anwenderdokumentation für die Allgemeinheit in deutscher Sprache findet sich im [Handbuch](documentation/benutzerhandbuch.pdf).**
 
-Detailed documentation about the configuration and operation of the program is available in the handbook (only in German): `./documentation/benutzerhandbuch.pdf`
+Detailed documentation about the configuration and operation of the program is available in the [handbook](documentation/benutzerhandbuch.pdf) (only in German).
 
 
 ## Supported platforms:
