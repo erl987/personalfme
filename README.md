@@ -1,6 +1,6 @@
 # PersonalFME - Gateway linking analog radio selcalls to internet communication services
 
-*PersonalFME* is detecting selcalls ("Fünftonfolgen") within the analogue radio network of the German emergency services ("BOS") and is forwarding them in various ways such as SMS, e-mail and via external program calls. It requires an external radio receiver such as a radio device or a radio scanner that needs to be connected to the applied computer via a sound card.
+*PersonalFME* is detecting selcalls ("Fünftonfolgen") within the analog radio network of the German emergency services ("BOS") and is forwarding them in various ways such as SMS, e-mail and via external program calls. It requires an external radio receiver such as a radio device or a radio scanner that needs to be connected to the applied computer via a sound card.
 
 *PersonalFME* can even run on mini-computers such as RaspberryPi in continuous operation.
 
@@ -64,7 +64,7 @@ cmake --build . --config Release -j n
 sudo cmake --build . --target install
 ```
 
-By specifying `-j n` in the build command, more than one core can be used which can speed up the compilation on multi-core machines.
+By specifying `-j n` in the build command (replace `n` by a number such as `-j 2`), more than one core can be used which can speed up the compilation on multi-core machines.
 
 Note that you should **not** have `libpoco-dev` being installed via `apt` on this machine.
 
@@ -89,7 +89,7 @@ Now you can build *personalfme*:
 make -jn
 ```
 
-**Note:** You may use the option `-jn` to build on n cores in parallel. This may require a large main memory.
+**Note:** You may use the option `-jn` to build on n cores in parallel (replace `n` by a number such as `-j2`). This may require a large main memory.
 
 Generate the package by executing:
 ```shell
@@ -108,7 +108,7 @@ The package can be installed using:
 sudo dpkg -i personalfme_#.#.#-#_amd64.deb
 ```
 
-Further details about the installation can be found in the PDF or online handbook.
+Further details about the installation can be found in the [pdf](documentation/benutzerhandbuch.pdf) or [online handbook](http://personalfme.de/handbuch.html).
 
 
 ## Expert options, not for general usage
@@ -167,7 +167,7 @@ pkg install -forge signal
 
 ### 1. General
 
-For Windows it is recommended to download and install the pre-compiled binary. **Due to license issues, the required runtime libraries for Microsoft C++ 2019 are not included.** If you have not already installed them, you have to download and install the Visual C++ Redistributable for Visual Studio 2019 for x86: https://support.microsoft.com/de-de/help/2977003/the-latest-supported-visual-c-downloads
+For Windows it is recommended to download and install the pre-compiled binary [pre-compiled binary](http://personalfme.de/download.html). **Due to license issues, the required runtime libraries for Microsoft C++ 2019 are not included.** If you have not already installed them, you have to download and install the Visual C++ Redistributable for Visual Studio 2019 for x86: https://support.microsoft.com/de-de/help/2977003/the-latest-supported-visual-c-downloads
 
 
 ### 2. Compiling the program including the installer
@@ -217,7 +217,7 @@ vcpkg install boost-accumulators boost-test
 	
 #### Configure CMake and build the project:
 
-* download the PersonalFME code base, you could either check the Github project out using Git or download the `zip`-file from Github
+* download the PersonalFME code base, you could either check the Github project (https://github.com/erl987/personalfme.git) out using Git or download the `zip`-file of the latest release from Github (https://github.com/erl987/personalfme/)
 * start the CMake GUI
 * provide the source code path, i.e. the root path of the PersonalFME code base on your machine
 * enter the binary path, it should be a folder `./build` being a subfolder in the code base root directory
@@ -233,7 +233,7 @@ vcpkg install boost-accumulators boost-test
 ### 3. Installation
 
 The program is now simply installed by running the installer `PersonalFME-#.#.#-win32.exe` that has been created by Visual Studio
-building the project `PACKAGE`. It is located in the directory "./build/Release".
+building the project `PACKAGE`. It is located in the directory `./build/Release`.
 
 The required CMake option `Option_CREATE_INSTALLER` should be enabled by default.
 
