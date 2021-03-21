@@ -1,4 +1,4 @@
-PersonalFME 1.0.0 (revision f75a0a4, 17 January 2021):
+PersonalFME 1.0.0 (27 March 2021):
 
 - supporting now Debian / Raspberry Pi OS 10, Ubuntu 20.04 LTS and Windows 7 and higher
 - dropped support for previous Linux versions
