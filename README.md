@@ -11,7 +11,7 @@
 Detailed documentation about the configuration and operation of the program is available in the [handbook](documentation/benutzerhandbuch.pdf) (only in German).
 
 
-## Supported platforms:
+## Supported platforms
 * Raspberry Pi OS 10 (Raspberry Pi 2 Model B and higher, only Raspberry Pi 3 Model B is actually tested)
 * Debian 10 Buster
 * Ubuntu 20.04 LTS
@@ -19,7 +19,7 @@ Detailed documentation about the configuration and operation of the program is a
 
 Previous versions of Linux are no longer supported. They can only be used with a previous version of *PersonalFME*.
 
-## Webpage:
+## Webpage
 http://www.personalfme.de
 
 
