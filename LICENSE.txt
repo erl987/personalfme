@@ -1,11 +1,17 @@
-Dieses Programm steht unter der GNU General Public License Version 3 oder einer neueren Version. Das Programm darf daher frei weitergegeben und verändert werden, solange der Quellcode frei zugänglich bleibt. Der Autor übernimmt keinerlei Verantwortung für das korrekte Funktionieren der Software und eventuelle Folgen aus einem Programmfehler.
+Dieses Programm steht unter der GNU General Public License Version 3 oder einer neueren Version. Das Programm darf daher frei weitergegeben und verÃ¤ndert werden, 
+solange der Quellcode frei zugÃ¤nglich bleibt. Der Autor Ã¼bernimmt keinerlei Verantwortung fÃ¼r das korrekte Funktionieren der Software und eventuelle Folgen aus 
+einem Programmfehler.
 
 Warnhinweis:
-Es wird darauf hingewiesen, dass das willentliche unbefugte Erlangen von Informationen aus nicht-öffentlichen Funkdiensten, z.B. der Behörden und Organisationen mit Sicherheitsaufgaben (BOS) strafbar ist. Dies gilt auch für die Auswertung von Fünftonfolgen. Die vorschriftsgemäße Nutzung des Programms liegt allein in der Verantwortung des Nutzers.
+Es wird darauf hingewiesen, dass das willentliche unbefugte Erlangen von Informationen aus nicht-Ã¶ffentlichen Funkdiensten, z.B. der BehÃ¶rden und Organisationen 
+mit Sicherheitsaufgaben (BOS) strafbar ist. Dies gilt auch fÃ¼r die Auswertung von FÃ¼nftonfolgen. Die vorschriftsgemÃ¤ÃŸe Nutzung des Programms liegt allein in der 
+Verantwortung des Nutzers.
 
 Copyright (c) 2010-2021 Ralf Rettig
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software 
+Foundation, either version 3 of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
