@@ -104,38 +104,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				</tbody>
 			</tgroup>
 		</informaltable>
-		Unter Raspberry Pi OS 10 und Debian 10 Buster können alle Abhängigkeiten automatisch installiert werden. Jedoch stehen unter Raspbian (Debian) 8 Jessie und Ubuntu 16.04 LTS für die Boost- und die
-		Poco-Bibliothek keine ausreichend neuen Versionen zur Verfügung.
-		
-		<para>
-			Anmerkung: Im Folgenden symbolisiert "$" einen Befehl in einem Linux-Terminal, es ist kein Teil des Befehls und darf nicht mit eingegeben werden.
-		</para>
-		<para><emphasis>Empfehlung zur Auflösung dieser beiden Abhängigkeiten unter Raspbian (Debian) 8 Jessie bzw. Ubuntu 16.04 LTS:</emphasis></para>
-		Es werden diverse Pakete für das Kompilieren benötigt: 
-		<screen>
-			$ sudo apt-get install gcc build-essential openssl libssl-dev
-		</screen>
-		<itemizedlist>
-			<listitem>
-				Boost: Die Version 1.61.0 ist auf der Internet-Seite <ulink url="http://www.boost.org"/> verfügbar. Aufgrund von Abhängigkeiten von CMake kann keine neuere Version installiert werden.
-				Nach dem Entpacken in ein temporäres Verzeichnis kann die Bibliothek wie folgt kompiliert und anschließend installiert werden:
-				<screen>
-					$ cd path/to/boost_X_Y_Z
-					$ ./bootstrap.sh
-					$ sudo ./b2 install
-				</screen>
-			</listitem>
-			<listitem>
-				Poco: Die aktuelle Version ist auf der Internet-Seite <ulink url="http://www.pocoproject.org"/> verfügbar. Nach dem Entpacken in ein temporäres Verzeichnis
-				kann die Bibliothek wie folgt kompiliert und anschließend installiert werden:
-				<screen>
-					$ cd path/to/poco_X_Y_Z
-					$ ./configure
-					$ make
-					$ sudo make install
-				</screen>
-			</listitem>
-		</itemizedlist>
+		Beachten Sie, dass unter Raspberry Pi OS / Debian 10 zwar prinzipiell eine ausreichend neue Version der Poco-Bibliothek zur Verfügung steht, diese jedoch aufgrund eines
+		Bugs beim E-Mailversand nicht genutzt werden kann.
 	</section>
 	<section xml:id="pulseaudio_configuration">
 		<title>Pulseaudio-Konfiguration im Systemmodus</title>
