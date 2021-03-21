@@ -251,6 +251,8 @@ Note: The documentation (and some other revision dependent files) can only be cr
 * the Saxon XSLT processor (version HE9-7-0)
 * the CLASSPATH environment variable for Java has to be set similar to: `C:\Program Files\Saxonica\SaxonHE9-7-0_1J\saxon9he.jar;C:\DocBook\xslthl-2.1.3\xslthl-2.1.3.jar`
 
+It is necessary to update the Git-repository submodule `CMakeModules/externals/CMake-gitinfo` before building the project.
+
 Check the options `Option_CREATE_DOCUMENTATION` and `Option_USE_GIT` in the CMake-GUI to generate the documentation target. This will create a project `PdfDocumentation` in Visual Studio that can be run to create the documentation.
 
 
