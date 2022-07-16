@@ -15,25 +15,14 @@
 #along with this program.If not, see <http://www.gnu.org/licenses/>
 
 # on Windows the SChannel-library is used for SSL, otherwise OpenSSL (which is a system library on Linux)
-if( WIN32 )
-	find_package( Poco COMPONENTS
-		Foundation
-		Net
-		NetSSL_Win
-		Util
-		JSON  # only required on Windows
-		XML
-	REQUIRED )
-else()
-	find_package( Poco COMPONENTS
-		Foundation
-		Net
-		Crypto
-		NetSSL_OpenSSL
-		Util
-		XML
-	REQUIRED )
-endif()
+find_package( Poco COMPONENTS
+	Foundation
+	Net
+	NetSSL
+	Util
+	JSON  # only required on Windows
+	XML
+REQUIRED )
 
 find_package( Boost COMPONENTS
 	filesystem
