@@ -74,7 +74,7 @@ void External::Email::CEmailGateway::CEmailGatewayImpl::LoadRootCertificatesFrom
 
 	#if defined _WIN32
 		// Windows SChannel-SSL
-		sslContext = new Poco::Net::Context( Context::CLIENT_USE, "", Context::VERIFY_RELAXED, Context::OPT_DEFAULTS, Context::CERT_STORE_ROOT );
+		sslContext = new Poco::Net::Context( Context::CLIENT_USE, "", Context::VerificationMode::VERIFY_RELAXED, 9, true );
 	#else
 		// OpenSSL (system library on Linux)
 		sslContext = new Poco::Net::Context( Context::CLIENT_USE, "", Context::VERIFY_RELAXED, 9, true, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH" );
