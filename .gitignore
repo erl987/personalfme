@@ -11,3 +11,4 @@ documentation/manpage.xml
 /cmake-build-debug-visual-studio/
 /cmake-build-debug-visual-studio-event-trace/
 /cmake-build-release-visual-studio/
+/rust/target/

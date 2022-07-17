@@ -20,7 +20,7 @@ find_package( Poco COMPONENTS
 	Net
 	NetSSL
 	Util
-	JSON  # only required on Windows
+	JSON
 	XML
 REQUIRED )
 
@@ -128,7 +128,7 @@ set( HEADERS
 	XMLSerializableMonthlyValidity.h
 	XMLSerializableSingleTimeValidity.h
 	XMLSerializableWeeklyValidity.h
-)
+	rust.h)
 
 add_library( Networking SHARED ${SOURCE} ${HEADERS} )
 target_include_directories( Networking PUBLIC ${PROJECT_SOURCE_DIR}/Networking )
@@ -145,6 +145,15 @@ target_link_libraries( Networking PUBLIC Utilities )
 
 target_include_directories( Networking PRIVATE ${Poco_INCLUDE_DIRS} )
 
+target_link_libraries(Networking PRIVATE personalfme_lib)
+# native dependencies of the Rust libary `lettre`
+if ( WIN32 )
+	# TODO
+elseif ( UNIX )
+	target_link_libraries(Networking PRIVATE "-framework CoreFoundation" "-framework Security")
+endif()
+
+# TODO: still required???
 # copy the required external third-party library files to the binary directory (only required for Windows)
 if( WIN32 )
 	if( Poco_BINS_DEBUG AND Poco_BINS_RELEASE )

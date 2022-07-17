@@ -44,6 +44,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "german_local_date_time.h"
 #include "EmailLoginData.h"
 #include "EmailGatewayImpl.h"
+#include "rust.h"
 
 
 /** @brief		Standard constructor
@@ -108,6 +109,9 @@ void External::Email::CEmailGateway::CEmailGatewayImpl::SendSMTP( const Poco::Ne
 	string hostName, senderAddress, userName, password;
 	unique_ptr<SMTPClientSession> mailSession;
 	map< AuthType, vector<SMTPClientSession::LoginMethod> > possibleLoginMethods;
+
+    // TODO: some simple dummy code calling a Rust function
+    std::cout << "From Rust: " << rust_function(5) << std::endl;
 
 	// possible SMTP-login methods
 	possibleLoginMethods[NO_AUTH].push_back( SMTPClientSession::AUTH_NONE );

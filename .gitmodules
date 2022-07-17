@@ -1,3 +1,6 @@
 [submodule "CMakeModules/externals/CMake-gitinfo"]
 	path = CMakeModules/externals/CMake-gitinfo
 	url = git://github.com/RWTH-HPC/CMake-gitinfo.git
+[submodule "libraries/corrosion"]
+	path = libraries/corrosion
+	url = https://github.com/corrosion-rs/corrosion.git
