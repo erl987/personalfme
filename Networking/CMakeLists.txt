@@ -147,9 +147,9 @@ target_include_directories( Networking PRIVATE ${Poco_INCLUDE_DIRS} )
 
 target_link_libraries(Networking PRIVATE personalfme_lib)
 # native dependencies of the Rust libary `lettre`
-if ( WIN32 )
-	# TODO
-elseif ( UNIX )
+if (WIN32)
+	target_link_libraries(Networking PRIVATE Crypt32 Secur32 Ncrypt)
+elseif (APPLE)
 	target_link_libraries(Networking PRIVATE "-framework CoreFoundation" "-framework Security")
 endif()
 
