@@ -98,10 +98,6 @@ if ( WIN32 )
 	add_subdirectory( libraries/Alglib )
 endif()
 
-# integrate Rust source code
-add_subdirectory(libraries/corrosion)
-corrosion_import_crate(MANIFEST_PATH rust/Cargo.toml)
-
 # generate the version information header of the project
 if ( ${Option_USE_GIT} )
 	find_package( GitInfo REQUIRED )
