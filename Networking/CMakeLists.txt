@@ -172,14 +172,3 @@ install( TARGETS Networking
 	COMPONENT ${PROJECT_NAME}
 	CONFIGURATIONS Release
 )
-
-if( WIN32 )
-	# DLL installation is only required for Windows
-	install(
-		FILES 
-			${Poco_BINS_RELEASE}
-		DESTINATION bin
-		COMPONENT ${PROJECT_NAME}
-		CONFIGURATIONS Release
-	)
-endif()

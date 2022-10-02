@@ -61,8 +61,6 @@ target_link_libraries( Middleware PUBLIC
 	Networking
 )
 
-target_include_directories( Middleware PRIVATE ${Poco_INCLUDE_DIRS} )
-
 # installer settings
 install( TARGETS Middleware
 	RUNTIME DESTINATION bin
