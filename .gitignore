@@ -8,6 +8,3 @@ documentation/chap2.xml
 documentation/chap4.xml
 documentation/manpage.xml
 /libraries/Alglib/libalglib/alglibversion.h
-/cmake-build-debug-visual-studio/
-/cmake-build-debug-visual-studio-event-trace/
-/cmake-build-release-visual-studio/
