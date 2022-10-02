@@ -18,7 +18,7 @@ find_package( Poco COMPONENTS
 	Foundation
 REQUIRED )
 
-find_package( Libsndfile CONFIG REQUIRED )
+find_package( SndFile CONFIG REQUIRED )
 
 set( SOURCE
 	OGGAudioPlugin.cpp
@@ -34,9 +34,9 @@ add_library( OGGAudioPlugin SHARED ${SOURCE} ${HEADERS} )
 
 target_link_libraries( OGGAudioPlugin PRIVATE
 	Utilities
-	
-	${Poco_LIBRARIES}
-	sndfile-shared
+
+	SndFile::sndfile
+	Poco::Foundation
 )
 
 target_include_directories( OGGAudioPlugin PRIVATE ${Poco_INCLUDE_DIRS} )

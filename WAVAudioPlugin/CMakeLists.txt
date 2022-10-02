@@ -20,7 +20,7 @@ find_package( Poco COMPONENTS
 	Foundation
 REQUIRED )
 
-find_package( Libsndfile CONFIG REQUIRED )
+find_package( SndFile CONFIG REQUIRED )
 
 set( SOURCE
 	WAVAudioPlugin.cpp
@@ -36,9 +36,9 @@ add_library( WAVAudioPlugin SHARED ${SOURCE} ${HEADERS} )
 
 target_link_libraries( WAVAudioPlugin PRIVATE 
 	Utilities
-	
-	${Poco_LIBRARIES}
-	sndfile-shared
+
+	SndFile::sndfile
+	Poco::Foundation
 )
 
 # installer settings (on Windows the required filesystem structure is not available here)

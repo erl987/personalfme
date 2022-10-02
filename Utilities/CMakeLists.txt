@@ -92,8 +92,11 @@ target_link_libraries( Utilities PRIVATE
 	Boost::locale
 	XercesC::XercesC
 )	
-target_link_libraries( Utilities PUBLIC 
-	${Poco_LIBRARIES}
+target_link_libraries( Utilities PUBLIC
+	Poco::Foundation
+	Poco::Util
+	Poco::XML
+
 	Boost::date_time
 )
 

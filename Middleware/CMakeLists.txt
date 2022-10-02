@@ -51,7 +51,10 @@ target_link_libraries( Middleware PRIVATE
 	
 	Boost::date_time
 	Boost::filesystem
-	${Poco_LIBRARIES}
+
+	Poco::Foundation
+	Poco::Util
+	Poco::XML
 )
 target_link_libraries( Middleware PUBLIC
 	Core

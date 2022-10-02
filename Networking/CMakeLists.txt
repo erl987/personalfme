@@ -19,7 +19,7 @@ if( WIN32 )
 	find_package( Poco COMPONENTS
 		Foundation
 		Net
-		NetSSL_Win
+		NetSSLWin
 		Util
 		JSON  # only required on Windows
 		XML
@@ -28,8 +28,7 @@ else()
 	find_package( Poco COMPONENTS
 		Foundation
 		Net
-		Crypto
-		NetSSL_OpenSSL
+		NetSSL
 		Util
 		XML
 	REQUIRED )
@@ -150,29 +149,21 @@ target_link_libraries( Networking PRIVATE
 	Boost::thread 
 	Boost::serialization 
 	Boost::locale
-	${Poco_LIBRARIES}
+
+	Poco::Foundation
+	Poco::Net
+	Poco::Util
+	Poco::JSON
+	Poco::XML
 )
-target_link_libraries( Networking PUBLIC Utilities )
 
-target_include_directories( Networking PRIVATE ${Poco_INCLUDE_DIRS} )
-
-# copy the required external third-party library files to the binary directory (only required for Windows)
 if( WIN32 )
-	if( Poco_BINS_DEBUG AND Poco_BINS_RELEASE )
-		list( LENGTH Poco_BINS_DEBUG len1 )
-		math( EXPR len2 "${len1} - 1" )
-		foreach( val RANGE ${len2} )
-			list( GET Poco_BINS_DEBUG ${val} Poco_BIN_DEBUG )
-			list( GET Poco_BINS_RELEASE ${val} Poco_BIN_RELEASE )
-			
-			add_custom_command( TARGET Networking POST_BUILD
-			   COMMAND ${CMAKE_COMMAND} -E copy
-					$<$<CONFIG:debug>:${Poco_BIN_DEBUG}>$<$<CONFIG:release>:${Poco_BIN_RELEASE}>
-				   $<TARGET_FILE_DIR:Networking>
-			)
-		endforeach()
-	endif()
+	target_link_libraries( Networking PRIVATE Poco::NetSSLWin )
+else()
+	target_link_libraries( Networking PRIVATE Poco::NetSSL )
 endif()
+
+target_link_libraries( Networking PUBLIC Utilities )
 
 # installer settings
 install( TARGETS Networking
