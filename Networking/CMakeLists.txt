@@ -32,6 +32,7 @@ else()
 		Util
 		XML
 	REQUIRED )
+	find_package( OpenSSL REQUIRED )
 endif()
 
 find_package( Boost COMPONENTS
