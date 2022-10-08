@@ -67,7 +67,11 @@ namespace External {
 
 				#ifndef _WIN32
 					// manual memory freeing (fixing a bug of Poco) - however by design 36 bytes cannot be freed by the OpenSSL-library
-					FIPS_mode_set( 0 );
+				#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+					EVP_default_properties_enable_fips(nullptr, 0);
+				#else
+					FIPS_mode_set(0);
+				#endif
 					ENGINE_cleanup();
 					CONF_modules_unload( 1 );
 					EVP_cleanup();
