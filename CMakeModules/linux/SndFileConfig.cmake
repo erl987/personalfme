@@ -45,7 +45,7 @@ include( determine_compiler )
 determine_compiler( COMPILER_ID )
 
 find_path(
-	LibSndfile_DIR
+	Sndfile_DIR
 	NAMES sndfile.h
 	HINTS
 		/usr/include
