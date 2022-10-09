@@ -67,7 +67,7 @@ namespace PortaudioTests {
 
 
 	// Test section
-	BOOST_AUTO_TEST_SUITE( Portaudio_test_suite, *label("basic") );
+	BOOST_AUTO_TEST_SUITE( Portaudio_test_suite, *label("audio") );
 
 	BOOST_AUTO_TEST_CASE( portaudio_available_devices_test_case )
 	{

@@ -22,7 +22,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "EmailGateway.h"
 #include "GroupalarmMessage.h"
 
-using boost:unit_test::label;
+using boost::unit_test::label;
 
 
 /*@{*/
