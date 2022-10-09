@@ -77,7 +77,7 @@ cd personalfme
 git checkout tags/personalfme-1.0.0-release
 ```
 
-Configure your build. Note that you should set the `CMAKE_BUILD_TYPE` `Release` (or `Debug` in special cases):	
+Configure your build. Note that you should set the `CMAKE_BUILD_TYPE` `Release` (or `Debug` in special cases):
 ```shell
 mkdir build
 cd build
@@ -143,11 +143,12 @@ cmake -DCMAKE_BUILD_TYPE=Release -DOption_USE_GIT=ON -DOption_CREATE_DOCUMENTATI
 make PdfDocumentation
 make ManpageDocumentation
 ```
-	
+
 
 ### 6. Running the unit tests
 
-The unit tests are only built if the CMake option `-DOption_BUILD_UNITTESTS=ON` is set. Some unit tests require the numerical calculation software Octave for comparison purposes. 
+The unit tests are only built if the CMake option `-DOption_BUILD_UNITTESTS=ON` is set. Some unit tests with the label 
+`basic` require the numerical calculation software Octave for comparison purposes.
 You may deactivate these tests if not required  by commenting them out in the file `UnitTests/runner.cpp`.
 
 On Linux you can install Octave from the package sources:
@@ -161,8 +162,31 @@ octave --no-gui
 pkg install -forge control
 pkg install -forge signal
 ```
-	
-	
+
+The tests are grouped by different labels. All tests with a single label can be run like this:
+
+```shell
+./Unittests --run-test=@basic
+```
+
+The following labels are available:
+
+| Label    | Contained Tests                                                                          |
+|----------|------------------------------------------------------------------------------------------|
+| basic    | All tests that should always work, even if no audio device is available[^1]              |
+| advanced | Brute-force testing of the selcall detection algorithm, not requiring an audio device[^2]|
+| audio    | All tests requiring an active audio device on the test machine                           |
+| realtime | Testing of realtime selcall detection                                                    |
+
+[^1]: Some tests require Octave.
+[^2]: Some tests at very low signal-to-noise ratio will always fail, this is expected.
+
+
+The label `basic` contains the tests that can be run even on a cloud machine without an audio device
+and covers all relevant use cases. **Running the tests with this label is sufficient to ensure the
+correct functionality of the software.**
+
+
 ## Windows
 
 ### 1. General
@@ -208,13 +232,13 @@ vcpkg install boost-accumulators boost-test
 * fix one file in the source code according to this pull request: https://github.com/pocoproject/poco/pull/3191/files
 * enable the option `NetSSL Windows` in CMake
 * build the project for *Win32* using CMake in a subfolder `./build` (both `Debug` and `Release` build)
-* move everything in the root directory of Poco into a new directory `MSVC-14.0` on the root level (i.e. the directory 
+* move everything in the root directory of Poco into a new directory `MSVC-14.0` on the root level (i.e. the directory
   structure should then be such as `Poco_DIR/MSVC-14.0/ApacheConnector` and so on)
 * inform CMake about this root directory of Poco in one of the following ways:
 	- define the Poco-library root path in the evironment variable `POCO_ROOT`
 	- specify the path of `Poco_DIR` directly in CMake (the others paths are chosen automatically)
 
-	
+
 #### Configure CMake and build the project:
 
 * download the PersonalFME code base, you could either check the Github project (https://github.com/erl987/personalfme.git) out using Git or download the `zip`-file of the latest release from Github (https://github.com/erl987/personalfme/)
@@ -243,14 +267,14 @@ The required CMake option `Option_CREATE_INSTALLER` should be enabled by default
 
 ### 4. Regenerating the documentation
 
-Normally the documentation PDF-file is already provided in the source code ZIP-file and does not need to be created separately. 
+Normally the documentation PDF-file is already provided in the source code ZIP-file and does not need to be created separately.
 The documentation can be regenerated if you have a running DocBook installation.
 
 Note: The documentation (and some other revision dependent files) can only be created if the source code tree used is under Git-version control.
 
 * install DocBook, then you have to set the environment variable DOCBOOK_ROOT, for example to: `C:/DocBook/stylesheets/docbook-xsl-ns-1.79.1`
 * Java
-* the FOP-processor (version 2.0) 
+* the FOP-processor (version 2.0)
 * the Saxon XSLT processor (version HE9-7-0)
 * the CLASSPATH environment variable for Java has to be set similar to: `C:\Program Files\Saxonica\SaxonHE9-7-0_1J\saxon9he.jar;C:\DocBook\xslthl-2.1.3\xslthl-2.1.3.jar`
 
@@ -261,7 +285,7 @@ Check the options `Option_CREATE_DOCUMENTATION` and `Option_USE_GIT` in the CMak
 
 ### 5. Running the unit tests
 
-The unit tests are only built if the CMake option `Option_BUILD_UNITTESTS` is set to ON. Some unit tests require the numerical calculation software Octave for comparison purposes. 
+The unit tests are only built if the CMake option `Option_BUILD_UNITTESTS` is set to ON. Some unit tests require the numerical calculation software Octave for comparison purposes.
 You may deactivate these tests if not required by commenting them out in the file `UnitTests/runner.cpp`.
 
 You have to install the required signal-package and its dependencies within Octave. This may take a while.
