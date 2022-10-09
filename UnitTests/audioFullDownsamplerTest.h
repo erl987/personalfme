@@ -20,9 +20,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <random>
 #include <chrono>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "FIRfilter.h"
 #include "AudioFullDownsampler.h"
+
+using boost::unit_test::label;
+
 
 /**	\defgroup	UnitTest	Unit test module.
 */
@@ -48,7 +52,7 @@ namespace Audio {
 		const double transWidthRec = 1000; // Hz
 
 		// test section
-		BOOST_AUTO_TEST_SUITE( CAudioFullDownsampler_test_suite );
+		BOOST_AUTO_TEST_SUITE( CAudioFullDownsampler_test_suite, *label("basic") );
 
 		/**	@brief		Test of set and get functions
 		*/

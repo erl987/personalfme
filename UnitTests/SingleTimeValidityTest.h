@@ -18,6 +18,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include <memory>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "DefaultValidity.h"
 #include "SingleTimeValidity.h"
 #include "BoostStdTimeConverter.h"
@@ -56,7 +57,7 @@ namespace Networking {
 			const Utilities::CDateTime endTimeSet7 = Utilities::CDateTime( 01, 07, 2016, Utilities::CTime( 06, 00, 00 ) );
 
 			// Test section
-			BOOST_AUTO_TEST_SUITE( SingleTimeValidity_test_suite );
+			BOOST_AUTO_TEST_SUITE( SingleTimeValidity_test_suite, *label("basic") );
 
 			/**	@brief		Testing of the construction of the single time validity exception
 			*/

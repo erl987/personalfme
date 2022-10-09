@@ -27,11 +27,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <vector>
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "PortaudioWrapper.h"
 #include "ProduceFMECode.h"
 #include "PluginLoader.h"
 #include "AudioPlugin.h"
 #include "basicFunctions.h"
+
+using boost::unit_test::label;
 
 
 /**	\defgroup	PortaudioTests	Unit tests for the Portaudio-library.
@@ -64,7 +67,7 @@ namespace PortaudioTests {
 
 
 	// Test section
-	BOOST_AUTO_TEST_SUITE( Portaudio_test_suite );
+	BOOST_AUTO_TEST_SUITE( Portaudio_test_suite, *label("basic") );
 
 	BOOST_AUTO_TEST_CASE( portaudio_available_devices_test_case )
 	{

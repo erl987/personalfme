@@ -23,9 +23,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <chrono>
 #include <iostream>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/filesystem.hpp> 
 #include "PluginLoader.h"
 #include "AudioPlugin.h"
+
+using boost::unit_test::label;
 
 
 /*@{*/
@@ -41,7 +44,7 @@ namespace Utilitites {
 		*/
 		namespace OGGHandler {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( OGGHandler_test_suite );
+			BOOST_AUTO_TEST_SUITE( OGGHandler_test_suite, *label("basic") );
 
 			/**	@brief		Testing storage of OGG-files
 			*/

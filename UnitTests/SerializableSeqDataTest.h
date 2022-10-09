@@ -20,9 +20,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/archive/text_oarchive.hpp> 
 #include <boost/archive/text_iarchive.hpp> 
 #include "SerializableSeqData.h"
+
+using boost::unit_test::label;
 
 
 /*@{*/
@@ -38,7 +41,7 @@ namespace Utilitites {
 	*/
 	namespace SerializableSeqData {
 		// Test section
-		BOOST_AUTO_TEST_SUITE( SerializableSeqData_test_suite );
+		BOOST_AUTO_TEST_SUITE( SerializableSeqData_test_suite, *label("basic") );
 
 		/**	@brief		Testing of serialization of the class
 		*/

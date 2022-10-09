@@ -29,9 +29,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <vector>
 #include <complex>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "basicFunctions.h"
 #include "FFT.h"
+
+using boost::unit_test::label;
 
 
 /**	\defgroup	fftTests	Unit tests for the FFT-library.
@@ -52,7 +55,7 @@ namespace FFTTests {
 
 
 	// Test section
-	BOOST_AUTO_TEST_SUITE( fft_test_suite );
+	BOOST_AUTO_TEST_SUITE( fft_test_suite, *label("basic") );
 
 	// Amplitude FFT calculation
 	BOOST_AUTO_TEST_CASE( amplitude_fft_test_case )

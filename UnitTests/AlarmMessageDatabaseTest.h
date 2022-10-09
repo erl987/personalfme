@@ -19,6 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <memory>
 #include <set>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "AlarmMessagesDatabase.h"
 #include "GroupalarmMessage.h"
 #include "EmailMessage.h"
@@ -31,6 +32,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "german_local_date_time.h"
 #include "BoostStdTimeConverter.h"
 
+using boost::unit_test::label;
 
 
 /*@{*/
@@ -126,7 +128,7 @@ namespace Networking {
 
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( AlarmMessageDatabase_test_suite );
+		BOOST_AUTO_TEST_SUITE( AlarmMessageDatabase_test_suite, *label("basic") );
 
 		/**	@brief		Testing of addition and removal of the data to the database
 		*/

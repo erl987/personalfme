@@ -20,9 +20,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include "EmailMessage.h"
 #include "SendStatusMessage.h"
+
+using boost::unit_test::label;
+
 
 /*@{*/
 /** \ingroup Utility
@@ -35,7 +39,7 @@ namespace Utilitites {
 	namespace Messages {
 		namespace SendStatusMessage {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( SendStatusMessage_test_suite );
+			BOOST_AUTO_TEST_SUITE( SendStatusMessage_test_suite, *label("basic") );
 
 			/**	@brief		Testing of setting and getting functions of the class
 			*/

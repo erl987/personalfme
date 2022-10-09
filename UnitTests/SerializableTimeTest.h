@@ -21,9 +21,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include <sstream>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include "SerializableTime.h"
+
+using boost::unit_test::label;
 
 
 /*@{*/
@@ -39,7 +42,7 @@ namespace Utilitites {
 	*/
 	namespace SerializableStartTime {
 		// Test section
-		BOOST_AUTO_TEST_SUITE( SerializableTime_test_suite );
+		BOOST_AUTO_TEST_SUITE( SerializableTime_test_suite, *label("basic") );
 
 		/**	@brief		Testing of serialization of the class
 		*/

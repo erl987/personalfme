@@ -17,9 +17,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #pragma once
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "ExternalProgramMessage.h"
 #include "ExternalProgramGateway.h"
 #include "GroupalarmMessage.h"
+
+using boost::unit_test::label;
 
 /*@{*/
 /** \ingroup UnitTests
@@ -37,7 +40,7 @@ namespace Networking {
 
 
 			// Test section
-			BOOST_AUTO_TEST_SUITE( ExternalProgramMessage_test_suite );
+			BOOST_AUTO_TEST_SUITE( ExternalProgramMessage_test_suite, *label("basic") );
 
 			/**	@brief		Testing of the constructors
 			*/

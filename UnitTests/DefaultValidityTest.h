@@ -18,9 +18,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include <memory>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "DefaultValidity.h"
 #include "SingleTimeValidity.h"
 
+using boost::unit_test::label;
 
 
 /*@{*/
@@ -33,7 +35,7 @@ namespace Networking {
 	namespace ValiditiesTest {
 		namespace DefaultValidityTest {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( DefaultValidity_test_suite );
+			BOOST_AUTO_TEST_SUITE( DefaultValidity_test_suite, *label("basic") );
 
 			/**	@brief		Testing of the default validity exception
 			*/

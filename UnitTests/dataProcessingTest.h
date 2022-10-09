@@ -22,8 +22,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <numeric>
 #include <math.h>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/math/constants/constants.hpp>
 #include "DataProcessing.h"
+
+using boost::unit_test::label;
 
 
 /*@{*/
@@ -58,7 +61,7 @@ namespace ProcessingTests {
 
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( DataProcessing_test_suite );
+		BOOST_AUTO_TEST_SUITE( DataProcessing_test_suite, *label("basic") );
 
 
 

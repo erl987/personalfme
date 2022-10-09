@@ -23,7 +23,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "SeqDataComplete.h"
+
+using boost::unit_test::label;
 
 
 /**	\defgroup	Utility				Unit tests for the Utility-library
@@ -42,7 +45,7 @@ namespace Utilitites {
 	*/
 	namespace SeqDataComplete {
 		// Test section
-		BOOST_AUTO_TEST_SUITE( SeqDataComplete_test_suite );
+		BOOST_AUTO_TEST_SUITE( SeqDataComplete_test_suite, *label("basic") );
 
 		/**	@brief		Testing of setting and getting functions of the class
 		*/

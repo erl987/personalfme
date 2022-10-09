@@ -19,10 +19,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <chrono>
 #include <thread>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include "BoostStdTimeConverter.h"
 #include "ConnectionMocks.h"
 #include "ConnectionThread.h"
+
+using boost::unit_test::label;
+
 
 /*@{*/
 /** \ingroup UnitTests
@@ -52,7 +56,7 @@ namespace Networking {
 
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( ConnectionThread_test_suite );
+		BOOST_AUTO_TEST_SUITE( ConnectionThread_test_suite, *label("basic") );
 
 		/**	@brief		Testing of the construction of the class
 		*/

@@ -20,7 +20,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "DateTime.h"
+
+using boost::unit_test::label;
 
 
 /*@{*/
@@ -40,7 +43,7 @@ namespace Utilitites {
 		const Utilities::CTime timeOfDaySet( 11, 7, 20, 205 );
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( DateTime_test_suite );
+		BOOST_AUTO_TEST_SUITE( DateTime_test_suite, *label("basic") );
 
 		/**	@brief		Testing of setting and getting functions of the class
 		*/

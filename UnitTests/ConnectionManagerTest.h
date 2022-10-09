@@ -22,12 +22,16 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <random>
 #include <algorithm>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include "ConnectionMocks.h"
 #include "SendStatusMessage.h"
 #include "BoostStdTimeConverter.h"
 #include "ConnectionManager.h"
+
+using boost::unit_test::label;
+
 
 /*@{*/
 /** \ingroup UnitTests
@@ -83,7 +87,7 @@ namespace Networking {
 
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( ConnectionManager_test_suite );
+		BOOST_AUTO_TEST_SUITE( ConnectionManager_test_suite, *label("basic") );
 
 		/**	@brief		Testing of the construction of the class
 		*/

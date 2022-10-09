@@ -17,10 +17,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #pragma once
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "EmailMessage.h"
 #include "GroupalarmMessage.h"
 #include "GroupalarmGateway.h"
 #include "AlarmMessage.h"
+
+using boost::unit_test::label;
+
 
 /*@{*/
 /** \ingroup UnitTests
@@ -56,7 +60,7 @@ namespace Networking {
 
 
 			// Test section
-			BOOST_AUTO_TEST_SUITE( GroupalarmMessage_test_suite );
+			BOOST_AUTO_TEST_SUITE( GroupalarmMessage_test_suite, *label("basic") );
 
 			/**	@brief		Testing of the CGroupalarmMessage constructors
 			*/

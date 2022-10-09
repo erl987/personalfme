@@ -175,11 +175,11 @@ namespace Networking {
 
 			
 		// Test section
-		BOOST_AUTO_TEST_SUITE( AlarmGatewaysManager_test_suite );
+		BOOST_AUTO_TEST_SUITE( AlarmGatewaysManager_test_suite, *label("basic") );
 
 		/**	@brief		Testing the login database handling
 		*/
-		BOOST_AUTO_TEST_CASE( loginDatabase_test_case, *label("basic") )
+		BOOST_AUTO_TEST_CASE( loginDatabase_test_case )
 		{
 			External::CGatewayLoginDatabase loginDatabase, getLoginDatabase;
 			External::CAlarmGatewaysManager gateways( OnStatusChange, OnException );
@@ -200,7 +200,7 @@ namespace Networking {
 
 		/**	@brief		Testing the alarm message database handling
 		*/
-		BOOST_AUTO_TEST_CASE( alarmMessagesDatabase_test_case, *label("basic") )
+		BOOST_AUTO_TEST_CASE( alarmMessagesDatabase_test_case )
 		{
 			External::CAlarmMessageDatabase messageDatabase, getMessageDatabase;
 			External::CAlarmGatewaysManager gateways( OnStatusChange, OnException );
@@ -220,7 +220,7 @@ namespace Networking {
 
 		/**	@brief		Testing the sending method
 		*/
-		BOOST_AUTO_TEST_CASE( send_test_case, *label("basic") )
+		BOOST_AUTO_TEST_CASE( send_test_case )
 		{
 			using namespace std;
 			using namespace External;

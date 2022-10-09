@@ -20,7 +20,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "CTime.h"
+
+using boost::unit_test::label;
 
 
 /*@{*/
@@ -41,7 +44,7 @@ namespace Utilitites {
 		const int millisecSet1 = 951;
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( Time_test_suite );
+		BOOST_AUTO_TEST_SUITE( Time_test_suite, *label("basic") );
 
 		/**	@brief		Testing of setting and getting functions of the class
 		*/

@@ -20,6 +20,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "XMLGatewayLoginDatabaseTest.h"
 #include "XMLSettingsParamTest.h"
 #include "XMLEmailLoginDataTest.h"
@@ -34,6 +35,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "XMLSingleTimeValidityTest.h"
 #include "XMLAlarmMessagesDatabaseTest.h"
 
+using boost::unit_test::label;
+
+
 // the XML headers require wrapping into a cpp-file because the Poco AbstractConfiguration.hpp seems to expose windows.h which causes problems
 
 
@@ -46,7 +50,7 @@ namespace Utilitites {
 	*/
 	namespace XMLTest {
 		// Test section
-		BOOST_AUTO_TEST_SUITE( XML_Test_test_suite );
+		BOOST_AUTO_TEST_SUITE( XML_Test_test_suite, *label("basic") );
 
 		/**	@brief		Testing XML serialization and deserialization of the CGatewayLoginDatabase class
 		*/

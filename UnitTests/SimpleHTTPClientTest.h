@@ -19,7 +19,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <string>
 #include <iostream>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "SimpleHTTPClient.h"
+
+using boost::unit_test::label;
+
 
 /*@{*/
 /** \ingroup UnitTests
@@ -35,7 +39,7 @@ namespace Networking {
 		std::string path = "/webin.php?log_user=user&log_pass=pass&listcode=4&text=5&flash=1";
 		
 		// Test section
-		BOOST_AUTO_TEST_SUITE( HTTP_test_suite );
+		BOOST_AUTO_TEST_SUITE( HTTP_test_suite, *label("basic") );
 
 		/**	@brief		Testing of HTTP without proxies
 		*/

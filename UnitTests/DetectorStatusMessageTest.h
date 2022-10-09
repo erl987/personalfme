@@ -20,8 +20,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include "DetectorStatusMessage.h"
+
+using boost:unit_test::label;
+
 
 /*@{*/
 /** \ingroup Utility
@@ -34,7 +38,7 @@ namespace Utilitites {
 	namespace Messages {
 		namespace DetectorStatusMessage {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( DetectorStatusMessage_test_suite );
+			BOOST_AUTO_TEST_SUITE( DetectorStatusMessage_test_suite, *label("basic") );
 
 			/**	@brief		Testing of setting and getting functions of the class
 			*/

@@ -20,6 +20,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "AudioDevice.h"
 #include "GatewayLoginDatabase.h"
 #include "EmailGateway.h"
@@ -33,13 +34,16 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "DefaultValidity.h"
 #include "SettingsParam.h"
 
+using boost::unit_test::label;
+
+
 /*@{*/
 /** \ingroup Middleware
 */
 namespace Middleware {
 	namespace SettingsParamTest {
 		// Test section
-		BOOST_AUTO_TEST_SUITE( SettingsParam_test_suite );
+		BOOST_AUTO_TEST_SUITE( SettingsParam_test_suite, *label("basic") );
 
 		/**	@brief		Testing of the class
 		*/

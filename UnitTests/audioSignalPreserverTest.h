@@ -23,12 +23,16 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <mutex>
 #include <thread>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "BoostStdTimeConverter.h"
 #include "SeqData.h"
 #include "SeqDataComplete.h"
 #include "AudioSignalPreserver.h"
 #include "basicFunctions.h"
+
+using boost::unit_test::label;
+
 
 /**	\defgroup	UnitTest	Unit test module.
 */
@@ -98,7 +102,7 @@ namespace Audio {
 
 
 		// test section
-		BOOST_AUTO_TEST_SUITE( CAudioSignalPreserver_test_suite );
+		BOOST_AUTO_TEST_SUITE( CAudioSignalPreserver_test_suite, *label("basic") );
 
 		/**	@brief		Test of set and get functions
 		*/

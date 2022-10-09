@@ -18,8 +18,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include <memory>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "GroupalarmGateway.h"
 #include "EmailGateway.h"
+
+using boost::unit_test::label;
+
 
 /*@{*/
 /** \ingroup UnitTests
@@ -31,7 +35,7 @@ namespace Networking {
 	namespace EmailTest {
 		namespace EmailGatewayTest {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( EmailGateway_test_suite );
+			BOOST_AUTO_TEST_SUITE( EmailGateway_test_suite, *label("basic") );
 
 			/**	@brief		Testing of the e-mail gateway
 			*/

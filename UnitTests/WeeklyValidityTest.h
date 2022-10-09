@@ -18,9 +18,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include <memory>
 #include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "DefaultValidity.h"
 #include "WeeklyValidity.h"
 #include "BoostStdTimeConverter.h"
+
+using boost::unit_test::label;
+
 
 /*@{*/
 /** \ingroup UnitTests
@@ -52,7 +56,7 @@ namespace Networking {
 
 
 			// Test section
-			BOOST_AUTO_TEST_SUITE( WeeklyValidity_test_suite );
+			BOOST_AUTO_TEST_SUITE( WeeklyValidity_test_suite, *label("basic") );
 
 
 			/**	@brief		Systematic testing of the validity times considering special cases
