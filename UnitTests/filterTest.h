@@ -31,11 +31,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <memory>
 #include <boost/lexical_cast.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 #include "basicFunctions.h"
 #include "IIRfilter.h"
 #include "FIRfilter.h"
+
+using boost::unit_test::label;
 
 
 /**	\defgroup	FilterTests		Unit tests for the filtering functions in the Core-library.
@@ -197,7 +200,7 @@ namespace FilterTests {
 
 
 	// Test section - the specific filter settings are defined by the MATLAB script
-	BOOST_FIXTURE_TEST_SUITE( Filter_test_suite, Fixture )
+	BOOST_FIXTURE_TEST_SUITE( Filter_test_suite, Fixture, *label("basic") )
 
 	BOOST_AUTO_TEST_CASE( transition_width_test_case )
 	{
