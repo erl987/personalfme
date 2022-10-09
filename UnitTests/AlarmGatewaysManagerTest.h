@@ -24,6 +24,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <mutex>
 #include <condition_variable>
 #include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "BoostStdTimeConverter.h"
 #include "DefaultValidity.h"
 #include "SingleTimeValidity.h"
@@ -37,6 +38,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "AlarmMessagesDatabase.h"
 #include "SendStatusMessage.h"
 #include "AlarmGatewaysManager.h"
+
+using boost::unit_test::label;
+
 
 /*@{*/
 /** \ingroup UnitTests
@@ -175,7 +179,7 @@ namespace Networking {
 
 		/**	@brief		Testing the login database handling
 		*/
-		BOOST_AUTO_TEST_CASE( loginDatabase_test_case )
+		BOOST_AUTO_TEST_CASE( loginDatabase_test_case, *label("basic") )
 		{
 			External::CGatewayLoginDatabase loginDatabase, getLoginDatabase;
 			External::CAlarmGatewaysManager gateways( OnStatusChange, OnException );
@@ -196,7 +200,7 @@ namespace Networking {
 
 		/**	@brief		Testing the alarm message database handling
 		*/
-		BOOST_AUTO_TEST_CASE( alarmMessagesDatabase_test_case )
+		BOOST_AUTO_TEST_CASE( alarmMessagesDatabase_test_case, *label("basic") )
 		{
 			External::CAlarmMessageDatabase messageDatabase, getMessageDatabase;
 			External::CAlarmGatewaysManager gateways( OnStatusChange, OnException );
@@ -216,7 +220,7 @@ namespace Networking {
 
 		/**	@brief		Testing the sending method
 		*/
-		BOOST_AUTO_TEST_CASE( send_test_case )
+		BOOST_AUTO_TEST_CASE( send_test_case, *label("basic") )
 		{
 			using namespace std;
 			using namespace External;

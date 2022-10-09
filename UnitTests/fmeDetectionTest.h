@@ -38,6 +38,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "PortaudioWrapper.h"
 #include "SeqDataComplete.h"
 
+using boost::unit_test::label;
+
 /**	\defgroup	UnitTest	Unit test module.
 */
 
@@ -426,7 +428,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Single non-realtime testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( single_non_realtime_case )
+	BOOST_AUTO_TEST_CASE( single_non_realtime_case, *label("basic") )
 	{
 		using namespace std;
 		boost::posix_time::ptime startTimeSeq;
@@ -461,7 +463,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Realtime high-throughput testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( multiple_realtime_case )
+	BOOST_AUTO_TEST_CASE( multiple_realtime_case, *label("realtime") )
 	{
 		using namespace std;
 		float SNR;
@@ -536,7 +538,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Non-realtime high-throughput testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( multiple_non_realtime_case )
+	BOOST_AUTO_TEST_CASE( multiple_non_realtime_case, *label("advanced") )
 	{
 		using namespace std;
 		float SNR;
