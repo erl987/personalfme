@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 #pragma once
 
-// Durch Einbeziehen von"SDKDDKVer.h" wird die höchste verfügbare Windows-Plattform definiert.
+// Durch Einbeziehen von"SDKDDKVer.h" wird die hï¿½chste verfï¿½gbare Windows-Plattform definiert.
 
-// Wenn Sie die Anwendung für eine frühere Windows-Plattform erstellen möchten, schließen Sie "WinSDKVer.h" ein, und
-// legen Sie das _WIN32_WINNT-Makro auf die zu unterstützende Plattform fest, bevor Sie "SDKDDKVer.h" einschließen.
+// Wenn Sie die Anwendung fï¿½r eine frï¿½here Windows-Plattform erstellen mï¿½chten, schlieï¿½en Sie "WinSDKVer.h" ein, und
+// legen Sie das _WIN32_WINNT-Makro auf die zu unterstï¿½tzende Plattform fest, bevor Sie "SDKDDKVer.h" einschlieï¿½en.
 
 #include <SDKDDKVer.h>

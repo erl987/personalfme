@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.If not, see <http://www.gnu.org/licenses/>
 */
-// stdafx.h : Includedatei für Standardsystem-Includedateien
-// oder häufig verwendete projektspezifische Includedateien,
-// die nur in unregelmäßigen Abständen geändert werden.
+// stdafx.h : Includedatei fï¿½r Standardsystem-Includedateien
+// oder hï¿½ufig verwendete projektspezifische Includedateien,
+// die nur in unregelmï¿½ï¿½igen Abstï¿½nden geï¿½ndert werden.
 //
 
 #pragma once
@@ -28,4 +28,4 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 
 
-// TODO: Hier auf zusätzliche Header, die das Programm erfordert, verweisen.
+// TODO: Hier auf zusï¿½tzliche Header, die das Programm erfordert, verweisen.

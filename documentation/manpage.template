@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -103,7 +103,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 
 	<refsect1 id='copyright'><title>Copyright</title>
 		<para>
-		       Copyright © 2010-2021 Ralf Rettig. License GPLv3+: GNU
+		       Copyright © 2010-2022 Ralf Rettig. License GPLv3+: GNU
 		       GPL version 3 or later <link>http://gnu.org/licenses/gpl.html</link>.
 		       This is free software: you are free to change and redistribute it.
 		       There is NO WARRANTY, to the extent permitted by law.

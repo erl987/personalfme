@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -334,7 +334,7 @@ template <class In_It1, class Out_It1, class Out_It2, class Out_It3, class Out_I
 	}
 
 	// set output containers
-	transform( begin( time ), end( time ), timeCalcFirst, [=]( auto currTime ) { return ( startTimeCalc + microseconds( static_cast<long>( currTime * 1.0e6 ) ) ); } );	// output time is absolute - conversion errors < 1 µs are not relevant here (ms-range)
+	transform( begin( time ), end( time ), timeCalcFirst, [=]( auto currTime ) { return ( startTimeCalc + microseconds( static_cast<long>( currTime * 1.0e6 ) ) ); } );	// output time is absolute - conversion errors < 1 ï¿½s are not relevant here (ms-range)
 	transform( begin( time ), end( time ), timeRefFirst, [=]( auto currTime ) { return ( startTimeRef + microseconds( static_cast<long>( currTime * 1.0e6 ) ) ); } );	// the reference timestamps are interpolated by calculated timesteps
 	move( begin( peaks ), end( peaks ), peaksFirst );
 	move( begin( absToneLevels ), end( absToneLevels ), absToneLevelsFirst );

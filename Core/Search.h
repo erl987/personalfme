@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -265,7 +265,7 @@ template <class T> void Core::General::CSearch<T>::GetParameters(double& samplin
 *	@param		signalLast							Iterator to one element after the end of the signal data stream corresponding to the sampling frequency
 *	@return 	std::runtime_error					Thrown if the analysis thread was not started before calling the function or was already stopped. Starting is performed with StartThread() from the derived class.
 *	@exception 	std::length_error					Thrown if time and signal container have different lengths
-*	@remarks 										The data size should be at least 100 - 1000. The smaller the datasize, the larger the deviation in length of the calculated time stamps will be (< 2 µs per call of this function)
+*	@remarks 										The data size should be at least 100 - 1000. The smaller the datasize, the larger the deviation in length of the calculated time stamps will be (< 2 ï¿½s per call of this function)
 */
 template <class T> template <class In_It1, class In_It2> void Core::General::CSearch<T>::PutSignalData(In_It1 refTimeFirst, In_It1 refTimeLast, In_It2 signalFirst, In_It2 signalLast)
 {
@@ -288,14 +288,14 @@ template <class T> template <class In_It1, class In_It2> void Core::General::CSe
 	newCalcSignalTime.resize( distance( refTimeFirst, refTimeLast ) );
 	if ( newCalcSignalTime.size() > 0 ) {
 		if ( !( lastCalcTime.is_not_a_date_time() ) ) {
-			newCalcSignalTime[0] = lastCalcTime + microseconds( static_cast<long>( 1.0e6 / samplingFreq ) ); // maximum error is 1 µs
+			newCalcSignalTime[0] = lastCalcTime + microseconds( static_cast<long>( 1.0e6 / samplingFreq ) ); // maximum error is 1 ï¿½s
 		} else {
 			newCalcSignalTime[0] = *refTimeFirst; // the first calculated time stamps is defined here - its absolute value is without any importance
 		}
 		if ( newCalcSignalTime.size() > 1 ) {
 			// calculation of time stamps using the sampling frequency, this is identical to the theoretical time stamp
 			for (size_t i=1; i < newCalcSignalTime.size(); i++) {
-				newCalcSignalTime[i] = newCalcSignalTime[0] + microseconds( static_cast<long>( i * 1.0e6 / samplingFreq ) ); // maximum error is 1 µs
+				newCalcSignalTime[i] = newCalcSignalTime[0] + microseconds( static_cast<long>( i * 1.0e6 / samplingFreq ) ); // maximum error is 1 ï¿½s
 			}
 		}
 		lastCalcTime = newCalcSignalTime.back();

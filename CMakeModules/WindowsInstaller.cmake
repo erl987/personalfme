@@ -1,5 +1,5 @@
 # PersonalFME - Gateway linking analog radio selcalls to internet communication services
-# Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+# Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 #
 # This program is free software: you can redistribute it and / or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ macro( WindowsInstaller )
 	string( REPLACE "/" "\\\\" DOC_FILE_NAME ${DOC_FILE_NAME} )
 	
 	if( ${IS_NEW_CONFIG_FILE_SYNTAX} )
-		set( WARN_TEXT "Die Konfigurationsdatei config.xml existiert bereits und wurde nicht überschrieben. Passen Sie die Datei bei Bedarf an die neuen Features an (siehe Dokumentation)." )
+		set( WARN_TEXT "Die Konfigurationsdatei config.xml existiert bereits und wurde nicht ï¿½berschrieben. Passen Sie die Datei bei Bedarf an die neuen Features an (siehe Dokumentation)." )
 	else()
-		set( WARN_TEXT "Die Konfigurationsdatei config.xml existiert bereits und wurde nicht überschrieben. Sie erfordert keine Anpassung, da die aktuelle Version keine neue Syntax enthält." )
+		set( WARN_TEXT "Die Konfigurationsdatei config.xml existiert bereits und wurde nicht ï¿½berschrieben. Sie erfordert keine Anpassung, da die aktuelle Version keine neue Syntax enthï¿½lt." )
 	endif()
 
 	set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS  "
