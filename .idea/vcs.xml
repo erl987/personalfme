@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/CMakeModules/externals/CMake-gitinfo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libraries/Alglib" vcs="Git" />
   </component>
 </project>
