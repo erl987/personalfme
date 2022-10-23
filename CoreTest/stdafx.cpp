@@ -16,9 +16,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 // stdafx.cpp : Quelldatei, die nur die Standard-Includes einbindet.
 // TestAudioSP.pch ist der vorkompilierte Header.
-// stdafx.obj enth�lt die vorkompilierten Typinformationen.
+// stdafx.obj enthält die vorkompilierten Typinformationen.
 
 #include "stdafx.h"
 
-// TODO: Auf zus�tzliche Header verweisen, die in STDAFX.H
+// TODO: Auf zusätzliche Header verweisen, die in STDAFX.H
 // und nicht in dieser Datei erforderlich sind.

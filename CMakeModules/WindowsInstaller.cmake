@@ -30,9 +30,9 @@ macro( WindowsInstaller )
 	string( REPLACE "/" "\\\\" DOC_FILE_NAME ${DOC_FILE_NAME} )
 	
 	if( ${IS_NEW_CONFIG_FILE_SYNTAX} )
-		set( WARN_TEXT "Die Konfigurationsdatei config.xml existiert bereits und wurde nicht �berschrieben. Passen Sie die Datei bei Bedarf an die neuen Features an (siehe Dokumentation)." )
+		set( WARN_TEXT "Die Konfigurationsdatei config.xml existiert bereits und wurde nicht überschrieben. Passen Sie die Datei bei Bedarf an die neuen Features an (siehe Dokumentation)." )
 	else()
-		set( WARN_TEXT "Die Konfigurationsdatei config.xml existiert bereits und wurde nicht �berschrieben. Sie erfordert keine Anpassung, da die aktuelle Version keine neue Syntax enth�lt." )
+		set( WARN_TEXT "Die Konfigurationsdatei config.xml existiert bereits und wurde nicht überschrieben. Sie erfordert keine Anpassung, da die aktuelle Version keine neue Syntax enthält." )
 	endif()
 
 	set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS  "

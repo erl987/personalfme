@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.If not, see <http://www.gnu.org/licenses/>
 */
-// stdafx.h : Includedatei f�r Standardsystem-Includedateien
-// oder h�ufig verwendete projektspezifische Includedateien,
-// die nur in unregelm��igen Abst�nden ge�ndert werden.
+// stdafx.h : Includedatei für Standardsystem-Includedateien
+// oder häufig verwendete projektspezifische Includedateien,
+// die nur in unregelmäßigen Abständen geändert werden.
 //
 
 #pragma once
@@ -28,4 +28,4 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 
 
-// TODO: Hier auf zus�tzliche Header, die das Programm erfordert, verweisen.
+// TODO: Hier auf zusätzliche Header, die das Programm erfordert, verweisen.
