@@ -205,19 +205,23 @@ PersonalFME is usually compiled for *x86* architecture (although *x64* should wo
 An installer package will be created during the compilation by building the project `PACKAGE` in Visual Studio. Note: This requires that a number of revision dependent files as well as the documentation PDF are existing within the source code. If this is not the case, see below for recreating the documentation.
 
 
-#### Install most dependencies:
+#### Install all dependencies:
 
-The dependencies of *PersonalFME* are on Windows primarily provided using the package manager `vcpkg`. **This is not possible for the Poco library because of a regression bug regarding e-mail sending being present in all later versions of the library.**
+The dependencies of *PersonalFME* are on Windows provided using the package manager `vcpkg`. 
 
-`vcpkg` can be installed anywhere on the machine, for instructions see: https://github.com/microsoft/vcpkg
+`vcpkg` can be installed anywhere on the machine, for instructions see: https://vcpkg.io
 
-**Note:** The usage of `vcpkg` can be problematic, the Boost library is for example not fully compiling on Windows 7 anymore when using this package manager. Usually such issues can be solved by reverting to an earlier version of `vcpkg` or by manually adapting the port-files of the library in question. Please refer to the resources provided by `vcpkg` (for example on Github) in order to resolve any problems related to the packager manager.
-
-Install the following dependencies using `vcpkg` (note that they will be compiled by this command which will take quite some time), the required triplet is `x86-windows` which should be the default:
+Install the following dependencies using `vcpkg` (note that they will be compiled by this command which will take 
+quite some time), the required triplet is `x86-windows` which should be the default:
 
 ```shell
-vcpkg install portaudio boost-asio boost-assign boost-date-time boost-serialization boost-signal2 xerces-c libsndfile
+vcpkg install portaudio boost-asio boost-assign boost-date-time boost-locale boost-math boost-serialization boost-signals2 xerces-c libsndfile[core] poco poco[netssl]
 ```
+
+.. note::
+
+	At the time of writing this documentation, the installation of `poco[netssl]` required the `vcpkg` package `openssl`
+	to be already installed. This package is however only required during the installation and can then be uninstalled.
 
 For the unit tests, these additional dependencies are required:
 
