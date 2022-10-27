@@ -106,7 +106,7 @@ sudo dpkg -i personalfme_#.#.#-#_amd64.deb
 ```
 
 Further details about the installation can be found in 
-the [pdf](documentation/benutzerhandbuch.pdf) or [online handbook](http://personalfme.de/handbuch.html).
+the [pdf](documentation/benutzerhandbuch.pdf) or [online handbook](https://personalfme.de/handbuch.html).
 
 
 ## Expert options, not for general usage
@@ -133,20 +133,20 @@ been initialized (see previous section).
 > under Git-version control.
 
 * install the required programs:
-```shell
-sudo apt install xsltproc fop docbook-xsl default-jre
-```
+  ```shell
+  sudo apt install xsltproc fop docbook-xsl default-jre
+  ```
 
 * generate the documentation target by configuring CMake accordingly:
-```shell
-cmake -DCMAKE_BUILD_TYPE=Release -DOption_USE_GIT=ON -DOption_CREATE_DOCUMENTATION=ON ..
-```
+  ```shell
+  cmake -DCMAKE_BUILD_TYPE=Release -DOption_USE_GIT=ON -DOption_CREATE_DOCUMENTATION=ON ..
+  ```
 
 * run the documentation targets:
-```shell
-make PdfDocumentation
-make ManpageDocumentation
-```
+  ```shell
+  make PdfDocumentation
+  make ManpageDocumentation
+  ```
 
 
 ### 6. Running the unit tests
@@ -172,7 +172,7 @@ pkg install -forge signal
 
 ### 1. General
 
-For Windows, it is recommended to download and install the [pre-compiled binary](http://personalfme.de/download.html). 
+For Windows, it is recommended to download and install the [pre-compiled binary](https://personalfme.de/download.html). 
 **Due to license issues, the required runtime libraries for Microsoft C++ 2022 are not included.** If you have not 
 already installed them, you have to download and install the Visual C++ Redistributable for Visual Studio 2022 for 
 x86: https://aka.ms/vs/17/release/vc_redist.x86.exe
@@ -278,7 +278,7 @@ target. This will create a project `PdfDocumentation` in Visual Studio that can 
 
 ### 5. Running the unit tests
 
-The unit tests are only built if the CMake option `Option_BUILD_UNITTESTS` is set to ON. Some unit tests require the 
+The unit tests are only built if the CMake option `Option_BUILD_UNITTESTS` is set to *ON*. Some unit tests require the 
 numerical calculation software Octave for comparison purposes.
 You may deactivate these tests if not required by commenting them out in the file `UnitTests/runner.cpp`.
 
@@ -336,4 +336,4 @@ version.**
 warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.**
 
 **You should have received a copy of the GNU General Public License along with this program. 
-If not, see <http://www.gnu.org/licenses/>.**
+If not, see <https://www.gnu.org/licenses/>.**
