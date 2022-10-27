@@ -102,7 +102,8 @@ Now you can build *personalfme*:
 make -jn
 ```
 
-> **NOTE**
+> **Note**
+> 
 > You may use the option `-jn` to build on n cores in parallel (replace `n` by a number such as `-j2`). This 
 > may require a large main memory.
 
@@ -114,7 +115,7 @@ sudo make package
 It is recommended to execute the command as root in order to prevent problems with the Debian maintainer script file 
 permissions.
 
-> **NOTE**
+> **Note**
 > 
 > This requires that a number of revision dependent files as well as the documentation PDF are existing within 
 > the source code. If this is not the case, see below for recreating the documentation.
@@ -149,7 +150,7 @@ Normally the documentation PDF is already provided in the Git repository and doe
 The documentation can be regenerated if you have a running DocBook installation and the external Git submodule has 
 been initialized (see previous section).
 
-> **NOTE**
+> **Note**
 > 
 > The documentation (and some other revision dependent files) can only be created if the source code tree used is 
 > under Git-version control.
@@ -237,7 +238,7 @@ configuring the build.
 
 An installer package will be created during the compilation by building the project `PACKAGE` in Visual Studio. 
 
-> **NOTE**
+> **Note**
 > 
 > This requires that a number of revision dependent files as well as the documentation PDF are existing within 
 > the source code. If this is not the case, see below for recreating the documentation.
@@ -256,7 +257,7 @@ quite some time), the required triplet is `x86-windows` which should be the defa
 vcpkg install portaudio boost-asio boost-assign boost-date-time boost-locale boost-math boost-serialization boost-signals2 xerces-c libsndfile[core] poco poco[netssl]
 ```
 
-> **NOTE**
+> **Note**
 >
 > At the time of writing this documentation, the installation of `poco[netssl]` required the `vcpkg` package `openssl`
 > to be already installed. This package is however only required during the installation and can then be uninstalled.
