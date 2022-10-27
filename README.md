@@ -28,7 +28,7 @@ Previous versions of Linux are no longer supported, they can only be used with a
 Windows 7 is no longer supported.
 
 ## Webpage
-http://www.personalfme.de
+https://www.personalfme.de
 
 
 ## Linux
