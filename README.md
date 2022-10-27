@@ -19,12 +19,13 @@ the [handbook](documentation/benutzerhandbuch.pdf) (only in German).
 
 
 ## Supported platforms
-* Raspberry Pi OS 10 (Raspberry Pi 2 Model B and higher, only Raspberry Pi 3 Model B is actually tested)
-* Debian 10 Buster
-* Ubuntu 20.04 LTS
-* Windows 10, 8.1 and 7
+* Raspberry Pi OS 11 (Raspberry Pi 2 Model B and higher, only Raspberry Pi 3 Model B is actually tested)
+* Debian 11 Bullseye
+* Ubuntu 22.04 LTS
+* Windows 11, 10, 8.1
 
-Previous versions of Linux are no longer supported. They can only be used with a previous version of *PersonalFME*.
+Previous versions of Linux are no longer supported, they can only be used with a previous version of *PersonalFME*.
+Windows 7 is no longer supported.
 
 ## Webpage
 http://www.personalfme.de
@@ -40,7 +41,7 @@ For Linux only the source code is currently available, see below for the compila
 ### 2. Compiling the program including the installer
 
 The program uses a CMake-based build system (requires CMake version 3.5.0 or higher). It is using C++14 and is tested 
-to compile with GCC 8.3 and newer under Debian / Ubuntu Linux. The code is written in platform-independent C++ using 
+to compile with GCC 10.2 and newer under Debian / Ubuntu Linux. The code is written in platform-independent C++ using 
 platform-independent libraries. Compilation with other Linux-distributions should be straightforward.
 
 An installer package will be created during the compilation.
@@ -51,35 +52,11 @@ sudo add-apt-repository universe
 sudo apt update
 ``` 
 
-#### Install most dependencies:
-Most dependencies can be conveniently installed via the package manager `apt`:
+#### Install all dependencies:
+All dependencies can be conveniently installed via the package manager `apt`:
 ```shell
-sudo apt install build-essential cmake openssl libssl-dev portaudio19-dev libxerces-c-dev libsndfile-dev libalglib-dev ncurses-dev libboost-all-dev
+sudo apt install build-essential cmake openssl libssl-dev portaudio19-dev libxerces-c-dev libsndfile-dev libalglib-dev ncurses-dev libboost-all-dev libpoco-dev
 ```
-
-#### Install the Poco version 1.8.1 manually:
-The dependency Poco (1.9.0) shipped with Debian 10 / Ubuntu is containing a critical unfixed bug that prevents e-mail 
-sending. The last working version of this library needs therefore to be compiled and installed manually. This will 
-take some time. The installation procedure is described in detail on this webpage: https://github.com/pocoproject/poco
-
-The general installation procedure is as follows (it is important to check out the tag of the last working version):
-
-```shell
-sudo apt-get -y update && sudo apt-get -y install git g++ make cmake libssl-dev
-git clone -b master https://github.com/pocoproject/poco.git
-cd poco
-git checkout tags/poco-1.8.1-release
-mkdir cmake-build
-cd cmake-build
-cmake ..
-cmake --build . --config Release -j n
-sudo cmake --build . --target install
-```
-
-By specifying `-j n` in the build command (replace `n` by a number such as `-j 2`), more than one core can be used 
-which can speed up the compilation on multicore machines.
-
-Note that you should **not** have `libpoco-dev` being installed via `apt` on this machine.
 
 #### Compile the source code
 Clone the source code:
@@ -87,7 +64,7 @@ Clone the source code:
 cd source/code/root/path
 git clone https://github.com/erl987/personalfme
 cd personalfme
-git checkout tags/personalfme-1.0.0-release
+git checkout tags/personalfme-#.#.#-release
 ```
 
 Configure your build. Note that you should set the `CMAKE_BUILD_TYPE` `Release` (or `Debug` in special cases):
@@ -190,38 +167,15 @@ pkg install -forge control
 pkg install -forge signal
 ```
 
-The tests are grouped by different labels. All tests with a single label can be run like this:
-
-```shell
-./Unittests --run-test=@basic
-```
-
-The following labels are available:
-
-| Label    | Contained Tests                                                                           |
-|----------|-------------------------------------------------------------------------------------------|
-| basic    | All tests that should always work, even if no audio device is available[^1]               |
-| advanced | Brute-force testing of the selcall detection algorithm, not requiring an audio device[^2] |
-| audio    | All tests requiring an active audio device on the test machine                            |
-| realtime | Testing of realtime selcall detection                                                     |
-
-[^1]: Some tests require Octave.
-[^2]: Some tests at very low signal-to-noise ratio will always fail, this is expected.
-
-
-The label `basic` contains the tests that can be run even on a cloud machine without an audio device
-and covers all relevant use cases. **Running the tests with this label is sufficient to ensure the
-correct functionality of the software.**
-
 
 ## Windows
 
 ### 1. General
 
 For Windows, it is recommended to download and install the [pre-compiled binary](http://personalfme.de/download.html). 
-**Due to license issues, the required runtime libraries for Microsoft C++ 2019 are not included.** If you have not 
-already installed them, you have to download and install the Visual C++ Redistributable for Visual Studio 2019 for 
-x86: https://support.microsoft.com/de-de/help/2977003/the-latest-supported-visual-c-downloads
+**Due to license issues, the required runtime libraries for Microsoft C++ 2022 are not included.** If you have not 
+already installed them, you have to download and install the Visual C++ Redistributable for Visual Studio 2022 for 
+x86: https://aka.ms/vs/17/release/vc_redist.x86.exe
 
 
 ### 2. Compiling the program including the installer
@@ -229,7 +183,7 @@ x86: https://support.microsoft.com/de-de/help/2977003/the-latest-supported-visua
 **Usually it is not recommended to compile the program manually if using Windows, use the pre-compiled binary instead**.
 
 The program uses a CMake-based build system (requires CMake version 3.5.0 or higher). It is using C++14 and is tested 
-to compile with Visual Studio 2019 Community under Windows. It will not compile with earlier versions of Visual 
+to compile with Visual Studio 2022 Community under Windows. It may not compile with earlier versions of Visual 
 Studio. The code is written in platform-independent C++ using platform-independent libraries.
 
 PersonalFME is usually compiled for *x86* architecture (although *x64* should work as well, but then all libraries 
@@ -269,19 +223,6 @@ vcpkg install boost-accumulators boost-test
 ```
 
 
-#### Install the Poco Complete version 1.7.7 manually:
-
-* download the ZIP-file at: https://github.com/pocoproject/poco/archive/refs/tags/poco-1.7.7-release.zip
-* fix one file in the source code according to this pull request: https://github.com/pocoproject/poco/pull/3191/files
-* enable the option `NetSSL Windows` in CMake
-* build the project for *Win32* using CMake in a sub-folder `./build` (both `Debug` and `Release` build)
-* move everything in the root directory of Poco into a new directory `MSVC-14.0` on the root level (i.e. the directory
-  structure should then be such as `Poco_DIR/MSVC-14.0/ApacheConnector` and so on)
-* inform CMake about this root directory of Poco in one of the following ways:
-	- define the Poco-library root path in the environment variable `POCO_ROOT`
-	- specify the path of `Poco_DIR` directly in CMake (the others paths are chosen automatically)
-
-
 #### Configure CMake and build the project:
 
 * download the PersonalFME code base, you could either check the GitHub 
@@ -305,7 +246,6 @@ The program is now simply installed by running the installer `PersonalFME-#.#.#-
 Visual Studio building the project `PACKAGE`. It is located in the directory `./build/Release`.
 
 The required CMake option `Option_CREATE_INSTALLER` should be enabled by default.
-
 
 
 ## Expert options, not for general usage
@@ -348,6 +288,31 @@ octave
 pkg install -forge control
 pkg install -forge signal
 ```
+
+## Unit tests
+
+The tests are grouped by different labels. All tests with a single label can be run like this:
+
+```shell
+./Unittests --run-test=@basic
+```
+
+The following labels are available:
+
+| Label    | Contained Tests                                                                           |
+|----------|-------------------------------------------------------------------------------------------|
+| basic    | All tests that should always work, even if no audio device is available[^1]               |
+| advanced | Brute-force testing of the selcall detection algorithm, not requiring an audio device[^2] |
+| audio    | All tests requiring an active audio device on the test machine                            |
+| realtime | Testing of realtime selcall detection                                                     |
+
+[^1]: Some tests require Octave.
+[^2]: Some tests at very low signal-to-noise ratio will always fail, this is expected.
+
+
+The label `basic` contains the tests that can be run even on a cloud machine without an audio device
+and covers all relevant use cases. **Running the tests with this label is sufficient to ensure the
+correct functionality of the software.**
 
 
 # License
