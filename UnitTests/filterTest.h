@@ -104,7 +104,7 @@ namespace FilterTests {
         Object::Ptr pObject = result.extract<Object::Ptr>();
 
         downsamplingFactor = pObject->getValue<int>("down_sampling_factor");
-        downsamplingFactor = pObject->getValue<int>("up_sampling_factor");
+        upsamplingFactor = pObject->getValue<int>("up_sampling_factor");
         a = ToVector(pObject->getArray("a"));
         b = ToVector(pObject->getArray("b"));
         isFIR = pObject->getValue<bool>("is_fir");
