@@ -10,3 +10,4 @@ documentation/manpage.xml
 /libraries/Alglib/libalglib/alglibversion.h
 cmake-build-debug
 cmake-build-release
+__pycache__
