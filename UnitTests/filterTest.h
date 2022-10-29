@@ -76,7 +76,7 @@ namespace FilterTests {
 	/** @brief		Preparing the tests by loading the reference data.
 	*	@param		referenceDataFileName   Name of the reference data file
 	*	@param		a						a-Filter parameter container
-	*	@param		b						b-Filter paramater container
+	*	@param		b						b-Filter parameter container
 	*	@param		signal					Signal data container
 	*	@param		referenceData			Reference data
 	*	@param		downsamplingFactor		Downsampling factor
@@ -100,17 +100,16 @@ namespace FilterTests {
         }
 
         Parser parser;
-        Var result = parser.parse(json);
+        auto result = parser.parse(json);
         Object::Ptr pObject = result.extract<Object::Ptr>();
 
         downsamplingFactor = pObject->getValue<int>("down_sampling_factor");
         downsamplingFactor = pObject->getValue<int>("up_sampling_factor");
-        a = pObject->getValue<vector<double>>("a");
-        b = pObject->getValue<vector<double>>("b");
+        a = ToVector(pObject->getArray("a"));
+        b = ToVector(pObject->getArray("b"));
         isFIR = pObject->getValue<bool>("is_fir");
-        referenceData = pObject->getValue<vector<double>>("reference_data");
+        referenceData = ToVector(pObject->getArray("reference_data"));
 
-        // load test data
         LoadVector( testDataFileName, signal );
 	}
 
