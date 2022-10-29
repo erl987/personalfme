@@ -457,7 +457,7 @@ template <class T> template <class OutIt> OutIt Core::Processing::Filter::CFIRfi
 *	@exception	std::runtime_error			Thrown if the filter coefficient container is empty
 *	@exception	std::range_error			Thrown if the next larger power number of two of (2 * 'pointNumber') is smaller than the size of b (i.e. filter size + 1) or the sampling frequency 'samplingFreq' is negative or zero
 *	@remarks								This function may not work correctly for filters which show strong changes near the frequency limits. This problem can be reduced by using datatype T = double.
-*											The filter parameters can be obtained with MATLAB.
+*											The filter parameters can be obtained with Python.
 */
 template <class T> template <class InIt, class OutIt> OutIt Core::Processing::Filter::CFIRfilter<T>::DigitalFilterGain(const long& pointNumber, const T& samplingFreq, InIt bFirst, InIt bLast, OutIt gainFirst)
 {

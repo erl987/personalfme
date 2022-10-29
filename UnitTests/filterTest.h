@@ -34,6 +34,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <boost/test/included/unit_test.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
+#include <Poco/JSON/Parser.h>
 #include "basicFunctions.h"
 #include "IIRfilter.h"
 #include "FIRfilter.h"
@@ -48,15 +49,9 @@ using boost::unit_test::label;
 /** \ingroup FilterTests
 */
 namespace FilterTests {
-	const std::string testDataFileName = "signal.txt";
-	const std::string matlabProcessedFileName = "matlabProcessed.txt";
-	const std::string aFilterParamFileName = "a.txt";
-	const std::string bFilterParamFileName = "b.txt";
-	const std::string downsamplingFactorFileName = "downsamplingFactor.txt";
-	const std::string upsamplingFactorFileName = "upsamplingFactor.txt";
-	const std::string isFIRfileName = "isFIR.txt";
+	const std::string testDataFileName = "test-signal.txt";
 	const std::string outputFileName = "cppProcessed.txt";
-	const double maxAllowedError = 1e-7;	// maximum absolute deviation between CFilter and MATLAB results to be accepted as correct
+	const double maxAllowedError = 1e-7;	// maximum absolute deviation between CFilter and the reference results to be accepted as correct
 	const int minStep = 0;					// minimum random step size for performing the filtering
 	const int maxStep = 2000;				// maximum random step size for performing the filtering
 
@@ -78,12 +73,12 @@ namespace FilterTests {
 	};
 
 
-	/** @brief		Preparing the tests by performing MATLAB calculations and loading the results.
-	*	@param		matlabTestFileName		Name of the MATLAB script performing the reference calculations in MATLAB
+	/** @brief		Preparing the tests by loading the reference data.
+	*	@param		referenceDataFileName   Name of the reference data file
 	*	@param		a						a-Filter parameter container
 	*	@param		b						b-Filter paramater container
 	*	@param		signal					Signal data container
-	*	@param		matlabProcessed			MATLAB filtered / resampled data
+	*	@param		referenceData			Reference data
 	*	@param		downsamplingFactor		Downsampling factor
 	*	@param		upsamplingFactor		Upsampling factor
 	*	@param		isFIR					Flag stating if FIR- (true) or IIR-filtering (false) will be performed
@@ -91,56 +86,60 @@ namespace FilterTests {
 	*	@exception							None
 	*	@remarks							None
 	*/
-	void PrepareTests(std::string matlabTestFileName, std::vector<double>& a, std::vector<double>& b, std::vector<double>& signal, std::vector<double>& matlabProcessed, int& downsamplingFactor, int& upsamplingFactor, bool& isFIR)
+	void PrepareTests(std::string referenceDataFileName, std::vector<double>& a, std::vector<double>& b, std::vector<double>& signal, std::vector<double>& referenceData, int& downsamplingFactor, int& upsamplingFactor, bool& isFIR)
 	{
-		using namespace std;
+        using namespace Poco::JSON;
+        using namespace std;
 
-		auto callResult = system( ( octaveExe + " " + matlabTestFileName ).c_str() );
+        ifstream f(referenceDataFileName);
+        string json;
+        if (f) {
+            ostringstream ss;
+            ss << f.rdbuf();
+            json = ss.str();
+        }
 
-		// load filter parameters
-		LoadVector( aFilterParamFileName, a );
-		LoadVector( bFilterParamFileName, b );
-		
-		// load test data
-		LoadVector( testDataFileName, signal );
+        Parser parser;
+        Var result = parser.parse(json);
+        Object::Ptr pObject = result.extract<Object::Ptr>();
 
-		// load MATLAB processed data
-		LoadVector( matlabProcessedFileName, matlabProcessed );
+        downsamplingFactor = pObject->getValue<int>("down_sampling_factor");
+        downsamplingFactor = pObject->getValue<int>("up_sampling_factor");
+        a = pObject->getValue<vector<double>>("a");
+        b = pObject->getValue<vector<double>>("b");
+        isFIR = pObject->getValue<bool>("is_fir");
+        referenceData = pObject->getValue<vector<double>>("reference_data");
 
-		// load resampling factors
-		LoadSingleNumber( downsamplingFactorFileName, downsamplingFactor );
-		LoadSingleNumber( upsamplingFactorFileName, upsamplingFactor );
-
-		// load filter type
-		LoadSingleNumber( isFIRfileName, isFIR );
+        // load test data
+        LoadVector( testDataFileName, signal );
 	}
 
 
 
-	/** @brief		Calculating the maximum difference between CFilter and MATLAB-filtered results.
+	/** @brief		Calculating the maximum difference between CFilter and reference results.
 	*	@param		cppResultFirst			Iterator to the beginning of the container with the CFilter-results
 	*	@param		cppResultLast			Iterator to one element after the end of the container with the CFilter-results
-	*	@param		matlabResultFirst		Iterator to the beginning of the container storing the MATLAB-results. It must have at least the size of the cppResult-container.
+	*	@param		referenceResultFirst	Iterator to the beginning of the container storing the reference results. It must have at least the size of the cppResult-container.
 	*	@return								Maximum absolute difference.
 	*	@exception							None
 	*	@remarks							None
 	*/
-	template <class InIt1, class InIt2> double CalcMaxError(InIt1 cppResultFirst, InIt1 cppResultLast, InIt2 matlabResultFirst)
+	template <class InIt1, class InIt2> double CalcMaxError(InIt1 cppResultFirst, InIt1 cppResultLast, InIt2 referenceResultFirst)
 	{
 		using namespace std;
 		double error;
-		vector<double> difference, cppResult, matlabResult;
+		vector<double> difference, cppResult, referenceResult;
 
 		// obtain input data
 		cppResult.reserve( distance( cppResultFirst, cppResultLast ) );
-		matlabResult.reserve( distance( cppResultFirst, cppResultLast ) );
+        referenceResult.reserve( distance( cppResultFirst, cppResultLast ) );
 		while ( cppResultFirst != cppResultLast ) {
 			cppResult.push_back( *(cppResultFirst++) );
-			matlabResult.push_back( *(matlabResultFirst++ ) );
+            referenceResult.push_back( *(referenceResultFirst++ ) );
 		}
 
 		// search maximum error
-		transform( cppResult.begin(), cppResult.end(), matlabResult.begin(), back_inserter( difference ), []( double val1, double val2 ){ return ( std::abs( val1 - val2 ) ); } );
+		transform( cppResult.begin(), cppResult.end(), referenceResult.begin(), back_inserter( difference ), []( double val1, double val2 ){ return ( std::abs( val1 - val2 ) ); } );
 		error = *max_element( difference.begin(), difference.end() );
 
 		return error;
@@ -149,16 +148,16 @@ namespace FilterTests {
 
 
 	/** @brief		Performing the CFilter-testing
-	*	@param		matlabTestFileName		Name of the MATLAB-script for performing the MATLAB reference calculations
+	*	@param		referenceDataFileName	Name of the reference data file
 	*	@return								None
 	*	@exception							None
 	*	@remarks							This function is the basis for all unit tests of CFilter and derivatives.
 	*/
-	double PerformTesting(std::string matlabTestFileName)
+	double PerformTesting(std::string referenceDataFileName)
 	{
 		using namespace std;
 
-		vector<double> a, b, signal, downsampledSignal, matlabProcessed;
+		vector<double> a, b, signal, downsampledSignal, referenceSignal;
 		bool isFIR;
 		int oldIndex, newIndex, downsamplingFactor, upsamplingFactor;
 		unique_ptr< Core::Processing::Filter::CFilter<double> > filter;
@@ -169,7 +168,7 @@ namespace FilterTests {
 		function<int()> random = std::bind( std::uniform_int_distribution<>( minStep, maxStep ), generator );
 
 		// prepare testing
-		PrepareTests( matlabTestFileName, a, b, signal, matlabProcessed, downsamplingFactor, upsamplingFactor, isFIR );
+		PrepareTests( referenceDataFileName, a, b, signal, referenceSignal, downsamplingFactor, upsamplingFactor, isFIR );
 
 		// perform testing with random data snippets
 		if ( isFIR ) {
@@ -193,13 +192,13 @@ namespace FilterTests {
 		}
 		out.close();
 
-		// calculate maximum difference to MATLAB result
-		return CalcMaxError( downsampledSignal.begin(), downsampledSignal.end(), matlabProcessed.begin() );
+		// calculate maximum difference to the reference result
+		return CalcMaxError( downsampledSignal.begin(), downsampledSignal.end(), referenceSignal.begin() );
 	}
 
 
 
-	// Test section - the specific filter settings are defined by the MATLAB script
+	// Test section - the specific filter settings are defined by the reference data
 	BOOST_FIXTURE_TEST_SUITE( Filter_test_suite, Fixture, *label("basic") )
 
 	BOOST_AUTO_TEST_CASE( transition_width_test_case )
@@ -350,9 +349,9 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( iir_filter_high_fc_test_case )
 	{
 		double error;
-		std::string matlabTestFileName = "iirFilterHighFCtestCase.m";
+		std::string referenceDataFileName = "reference-data/iir-filter-high-fc.json";
 
-		error = PerformTesting( matlabTestFileName );
+		error = PerformTesting( referenceDataFileName );
 		BOOST_REQUIRE( error < maxAllowedError );
 	}
 
@@ -360,99 +359,99 @@ namespace FilterTests {
 
 	BOOST_AUTO_TEST_CASE( fir_filter_upsampling_test_case )
 	{
-		double error;
-		std::string matlabTestFileName = "firFilterUpsamplingTestCase.m";
+        double error;
+        std::string referenceDataFileName = "data/fir-filter-up-sampling.json";
 
-		error = PerformTesting( matlabTestFileName );
-		BOOST_REQUIRE( error < maxAllowedError );
+        error = PerformTesting( referenceDataFileName );
+        BOOST_REQUIRE( error < maxAllowedError );
 	}
 
 
 
 	BOOST_AUTO_TEST_CASE( iir_filter_upsampling_test_case )
 	{
-		double error;
-		std::string matlabTestFileName = "iirFilterUpsamplingTestCase.m";
+        double error;
+        std::string referenceDataFileName = "data/iir-filter-up-sampling.json";
 
-		error = PerformTesting( matlabTestFileName );
-		BOOST_REQUIRE( error < maxAllowedError );
+        error = PerformTesting( referenceDataFileName );
+        BOOST_REQUIRE( error < maxAllowedError );
 	}
 
 
 
 	BOOST_AUTO_TEST_CASE( fir_filter_high_fc_test_case )
 	{
-		double error;
-		std::string matlabTestFileName = "firFilterHighFCtestCase.m";
+        double error;
+        std::string referenceDataFileName = "data/fir-filter-high-fc.json";
 
-		error = PerformTesting( matlabTestFileName );
-		BOOST_REQUIRE( error < maxAllowedError );
+        error = PerformTesting( referenceDataFileName );
+        BOOST_REQUIRE( error < maxAllowedError );
 	}
 
 
 
 	BOOST_AUTO_TEST_CASE( fir_filter_low_fc_test_case )
 	{
-		double error;
-		std::string matlabTestFileName = "firFilterLowFCtestCase.m";
+        double error;
+        std::string referenceDataFileName = "data/fir-filter-low-fc.json";
 
-		error = PerformTesting( matlabTestFileName );
-		BOOST_REQUIRE( error < maxAllowedError );
+        error = PerformTesting( referenceDataFileName );
+        BOOST_REQUIRE( error < maxAllowedError );
 	}
 
 
 
 	BOOST_AUTO_TEST_CASE( iir_filter_low_fc_test_case )
 	{
-		double error;
-		std::string matlabTestFileName = "iirFilterLowFCtestCase.m";
+        double error;
+        std::string referenceDataFileName = "data/iir-filter-low-fc.json";
 
-		error = PerformTesting( matlabTestFileName );
-		BOOST_REQUIRE( error < maxAllowedError );
+        error = PerformTesting( referenceDataFileName );
+        BOOST_REQUIRE( error < maxAllowedError );
 	}
 
 
 
 	BOOST_AUTO_TEST_CASE( fir_filter_downsampling_test_case )
 	{
-		double error;
-		std::string matlabTestFileName = "firFilterDownsamplingTestCase.m";
+        double error;
+        std::string referenceDataFileName = "data/fir-filter-down-sampling.json";
 
-		error = PerformTesting( matlabTestFileName );
-		BOOST_REQUIRE( error < maxAllowedError );
+        error = PerformTesting( referenceDataFileName );
+        BOOST_REQUIRE( error < maxAllowedError );
 	}
 
 
 
 	BOOST_AUTO_TEST_CASE( iir_filter_downsampling_test_case )
 	{
-		double error;
-		std::string matlabTestFileName = "iirFilterDownsamplingTestCase.m";
+        double error;
+        std::string referenceDataFileName = "data/iir-filter-down-sampling.json";
 
-		error = PerformTesting( matlabTestFileName );
-		BOOST_REQUIRE( error < maxAllowedError );
+        error = PerformTesting( referenceDataFileName );
+        BOOST_REQUIRE( error < maxAllowedError );
 	}
 
 
 
 	BOOST_AUTO_TEST_CASE( fir_filter_resampling_test_case )
 	{
-		double error;
-		std::string matlabTestFileName = "firFilterResamplingTestCase.m";
+        double error;
+        std::string referenceDataFileName = "data/fir-filter-re-sampling.json";
 
-		error = PerformTesting( matlabTestFileName );
-		BOOST_REQUIRE( error < maxAllowedError );
+        error = PerformTesting( referenceDataFileName );
+        BOOST_REQUIRE( error < maxAllowedError );
 	}
 
 
 
 	BOOST_AUTO_TEST_CASE( iir_filter_resampling_test_case )
 	{
-		double error;
-		std::string matlabTestFileName = "iirFilterResamplingTestCase.m";
+        double error;
+        std::string referenceDataFileName = "data/iir-filter-re-sampling.json";
 
-		error = PerformTesting( matlabTestFileName );
-		BOOST_REQUIRE( error < maxAllowedError );
+        error = PerformTesting( referenceDataFileName );
+        BOOST_REQUIRE( error < maxAllowedError );
 	}
 
 
@@ -493,19 +492,19 @@ namespace FilterTests {
 		using namespace boost::posix_time;
 		using namespace boost::gregorian;
 
-		vector<double> a, b, signal, downsampledSignal, matlabProcessed;
+		vector<double> a, b, signal, downsampledSignal, referenceSignal;
 		vector< boost::posix_time::ptime > time, downsampledTime;
 		int oldIndex, newIndex, downsamplingFactor, upsamplingFactor;
 		bool dummy;
 		random_device rd;
-		string matlabTestFileName = "filterDesignTestCase.m";
+		string referenceDataFileName = "data/filter-design.json";
 
 		// prepare random number generation
 		default_random_engine generator( rd() );
 		function<int()> random = std::bind( std::uniform_int_distribution<>( minStep, maxStep ), generator );
 
 		// prepare testing
-		PrepareTests( matlabTestFileName, a, b, signal, matlabProcessed, downsamplingFactor, upsamplingFactor, dummy );
+		PrepareTests( referenceDataFileName, a, b, signal, referenceSignal, downsamplingFactor, upsamplingFactor, dummy );
 
 		time.resize( signal.size() );
 		for (size_t i=0; i < signal.size(); i++) {
@@ -531,8 +530,8 @@ namespace FilterTests {
 		}
 		out.close();
 
-		// calculate maximum difference to MATLAB result
-		BOOST_REQUIRE( CalcMaxError( downsampledSignal.begin(), downsampledSignal.end(), matlabProcessed.begin() ) < maxAllowedError );
+		// calculate maximum difference to the reference result
+		BOOST_REQUIRE( CalcMaxError( downsampledSignal.begin(), downsampledSignal.end(), referenceSignal.begin() ) < maxAllowedError );
 
 		// check time downsampling
 		for (int i=0; i < oldIndex; i += downsamplingFactor) {
