@@ -152,6 +152,11 @@ add_custom_command( TARGET Unittests
 		"${CMAKE_BINARY_DIR}/UnitTests/signal.txt"
 )
 
+add_custom_command( TARGET Unittests
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/reference-data/test-signal.txt"
+		"${CMAKE_BINARY_DIR}/UnitTests/test-signal.txt"
+		)
+
 add_custom_command( TARGET Unittests POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory
        "${CMAKE_CURRENT_SOURCE_DIR}/fmeDetectionTests"
