@@ -118,5 +118,5 @@ filter_order = 30  # this is a standard setting of the C++ class CFIRfilter<T>
 # standard choice for the CFIRfilter<T>-class
 wn = up_sampling_factor / down_sampling_factor
 a = [1]
-b = fir1(filter_order, wn)
+b = firwin(filter_order, wn)
 create_test_reference_data(down_sampling_factor, up_sampling_factor, a, b, is_fir, DATA_FILE_NAME, reference_file_path)
