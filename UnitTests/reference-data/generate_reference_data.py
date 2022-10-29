@@ -35,7 +35,7 @@ down_sampling_factor = 1
 up_sampling_factor = 3
 is_fir = True
 a = [1]
-b = firwin(30, 0.6666)
+b = firwin(30 + 1, 0.6666, window='hamming', pass_zero='lowpass')
 create_test_reference_data(down_sampling_factor, up_sampling_factor, a, b, is_fir, DATA_FILE_NAME, reference_file_path)
 
 # Data for testing IIR filter with up-sampling
@@ -53,7 +53,7 @@ down_sampling_factor = 1
 up_sampling_factor = 1
 is_fir = True
 a = [1]
-b = firwin(20, 0.3)
+b = firwin(20 + 1, 0.3, window='hamming', pass_zero='lowpass')
 create_test_reference_data(down_sampling_factor, up_sampling_factor, a, b, is_fir, DATA_FILE_NAME, reference_file_path)
 
 # Data for testing FIR filter with low FC
@@ -62,7 +62,7 @@ down_sampling_factor = 1
 up_sampling_factor = 1
 is_fir = True
 a = [1]
-b = firwin(20, 0.1)
+b = firwin(20 + 1, 0.1, window='hamming', pass_zero='lowpass')
 create_test_reference_data(down_sampling_factor, up_sampling_factor, a, b, is_fir, DATA_FILE_NAME, reference_file_path)
 
 # Data for testing IIR filter with low FC
@@ -79,7 +79,7 @@ down_sampling_factor = 3
 up_sampling_factor = 1
 is_fir = True
 a = [1]
-b = firwin(30, 0.333)
+b = firwin(30 + 1, 0.333, window='hamming', pass_zero='lowpass')
 create_test_reference_data(down_sampling_factor, up_sampling_factor, a, b, is_fir, DATA_FILE_NAME, reference_file_path)
 
 # Data for testing IIR filter with down-sampling
@@ -96,7 +96,7 @@ down_sampling_factor = 3
 up_sampling_factor = 2
 is_fir = True
 a = [1]
-b = firwin(30, 0.666)
+b = firwin(30 + 1, 0.666, window='hamming', pass_zero='lowpass')
 create_test_reference_data(down_sampling_factor, up_sampling_factor, a, b, is_fir, DATA_FILE_NAME, reference_file_path)
 
 # Data for testing IIR filter with re-sampling
@@ -118,5 +118,5 @@ filter_order = 30  # this is a standard setting of the C++ class CFIRfilter<T>
 # standard choice for the CFIRfilter<T>-class
 wn = up_sampling_factor / down_sampling_factor
 a = [1]
-b = firwin(filter_order, wn)
+b = firwin(filter_order + 1, wn, window='hamming', pass_zero='lowpass')
 create_test_reference_data(down_sampling_factor, up_sampling_factor, a, b, is_fir, DATA_FILE_NAME, reference_file_path)
