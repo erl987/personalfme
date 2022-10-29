@@ -294,7 +294,7 @@ pkg install -forge signal
 The tests are grouped by different labels. All tests with a single label can be run like this:
 
 ```shell
-./Unittests --run-test=@basic
+./Unittests --run_test=@basic
 ```
 
 The following labels are available:
