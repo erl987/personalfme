@@ -162,7 +162,7 @@ file( GLOB ConfigFiles ${CMAKE_SOURCE_DIR}/UnitTests/reference-data/*.json )
 foreach( ConfigFile ${ConfigFiles} )
 	add_custom_command(TARGET Unittests POST_BUILD
                      COMMAND ${CMAKE_COMMAND} -E
-                         copy ${ConfigFile} "${CMAKE_BINARY_DIR}/UnitTests/reference-data"
+                         copy ${ConfigFile} "${CMAKE_BINARY_DIR}/UnitTests"
 	)
 endforeach()
 

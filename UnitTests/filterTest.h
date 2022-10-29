@@ -348,7 +348,7 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( iir_filter_high_fc_test_case )
 	{
 		double error;
-		std::string referenceDataFileName = "reference-data/iir-filter-high-fc.json";
+		std::string referenceDataFileName = "iir-filter-high-fc.json";
 
 		error = PerformTesting( referenceDataFileName );
 		BOOST_REQUIRE( error < maxAllowedError );
@@ -359,7 +359,7 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( fir_filter_upsampling_test_case )
 	{
         double error;
-        std::string referenceDataFileName = "data/fir-filter-up-sampling.json";
+        std::string referenceDataFileName = "fir-filter-up-sampling.json";
 
         error = PerformTesting( referenceDataFileName );
         BOOST_REQUIRE( error < maxAllowedError );
@@ -370,7 +370,7 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( iir_filter_upsampling_test_case )
 	{
         double error;
-        std::string referenceDataFileName = "data/iir-filter-up-sampling.json";
+        std::string referenceDataFileName = "iir-filter-up-sampling.json";
 
         error = PerformTesting( referenceDataFileName );
         BOOST_REQUIRE( error < maxAllowedError );
@@ -381,7 +381,7 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( fir_filter_high_fc_test_case )
 	{
         double error;
-        std::string referenceDataFileName = "data/fir-filter-high-fc.json";
+        std::string referenceDataFileName = "fir-filter-high-fc.json";
 
         error = PerformTesting( referenceDataFileName );
         BOOST_REQUIRE( error < maxAllowedError );
@@ -392,7 +392,7 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( fir_filter_low_fc_test_case )
 	{
         double error;
-        std::string referenceDataFileName = "data/fir-filter-low-fc.json";
+        std::string referenceDataFileName = "fir-filter-low-fc.json";
 
         error = PerformTesting( referenceDataFileName );
         BOOST_REQUIRE( error < maxAllowedError );
@@ -403,7 +403,7 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( iir_filter_low_fc_test_case )
 	{
         double error;
-        std::string referenceDataFileName = "data/iir-filter-low-fc.json";
+        std::string referenceDataFileName = "iir-filter-low-fc.json";
 
         error = PerformTesting( referenceDataFileName );
         BOOST_REQUIRE( error < maxAllowedError );
@@ -414,7 +414,7 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( fir_filter_downsampling_test_case )
 	{
         double error;
-        std::string referenceDataFileName = "data/fir-filter-down-sampling.json";
+        std::string referenceDataFileName = "fir-filter-down-sampling.json";
 
         error = PerformTesting( referenceDataFileName );
         BOOST_REQUIRE( error < maxAllowedError );
@@ -425,7 +425,7 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( iir_filter_downsampling_test_case )
 	{
         double error;
-        std::string referenceDataFileName = "data/iir-filter-down-sampling.json";
+        std::string referenceDataFileName = "iir-filter-down-sampling.json";
 
         error = PerformTesting( referenceDataFileName );
         BOOST_REQUIRE( error < maxAllowedError );
@@ -436,7 +436,7 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( fir_filter_resampling_test_case )
 	{
         double error;
-        std::string referenceDataFileName = "data/fir-filter-re-sampling.json";
+        std::string referenceDataFileName = "fir-filter-re-sampling.json";
 
         error = PerformTesting( referenceDataFileName );
         BOOST_REQUIRE( error < maxAllowedError );
@@ -447,7 +447,7 @@ namespace FilterTests {
 	BOOST_AUTO_TEST_CASE( iir_filter_resampling_test_case )
 	{
         double error;
-        std::string referenceDataFileName = "data/iir-filter-re-sampling.json";
+        std::string referenceDataFileName = "iir-filter-re-sampling.json";
 
         error = PerformTesting( referenceDataFileName );
         BOOST_REQUIRE( error < maxAllowedError );
@@ -496,7 +496,7 @@ namespace FilterTests {
 		int oldIndex, newIndex, downsamplingFactor, upsamplingFactor;
 		bool dummy;
 		random_device rd;
-		string referenceDataFileName = "data/filter-design.json";
+		string referenceDataFileName = "filter-design.json";
 
 		// prepare random number generation
 		default_random_engine generator( rd() );
