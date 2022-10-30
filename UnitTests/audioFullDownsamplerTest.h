@@ -20,7 +20,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <random>
 #include <chrono>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "FIRfilter.h"
 #include "AudioFullDownsampler.h"

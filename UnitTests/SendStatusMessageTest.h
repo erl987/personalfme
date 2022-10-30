@@ -20,7 +20,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include "EmailMessage.h"
 #include "SendStatusMessage.h"

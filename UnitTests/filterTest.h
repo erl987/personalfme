@@ -31,7 +31,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <memory>
 #include <boost/lexical_cast.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 #include <Poco/JSON/Parser.h>

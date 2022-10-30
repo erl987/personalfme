@@ -19,7 +19,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <memory>
 #include <sstream>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include "EmailGateway.h"
 #include "GroupalarmGateway.h"
 

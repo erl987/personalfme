@@ -26,7 +26,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <algorithm>
 #include <boost/lexical_cast.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include "basicFunctions.h"
 #include "BoostStdTimeConverter.h"
 #include "FME.h"

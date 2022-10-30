@@ -18,7 +18,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include <memory>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include "AlarmValidities.h"
 #include "GroupalarmMessage.h"
 #include "SingleTimeValidity.h"

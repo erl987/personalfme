@@ -17,7 +17,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #pragma once
 
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include "GroupalarmLoginData.h"
 
 using boost::unit_test::label;

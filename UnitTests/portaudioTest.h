@@ -27,7 +27,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <vector>
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include "PortaudioWrapper.h"
 #include "ProduceFMECode.h"
 #include "PluginLoader.h"

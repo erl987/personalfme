@@ -23,7 +23,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <chrono>
 #include <iostream>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include <boost/filesystem.hpp> 
 #include "PluginLoader.h"
 #include "AudioPlugin.h"
@@ -59,9 +58,9 @@ namespace Utilitites {
 				#if defined( _WIN32 )
 					// Windows
 					#ifdef NDEBUG
-						boost::filesystem::path pluginPath = "../Release";
+						boost::filesystem::path pluginPath = "..";
 					#else
-						boost::filesystem::path pluginPath = "../Debug";
+						boost::filesystem::path pluginPath = "..";
 					#endif
 				#elif defined( __linux )
 					// Linux

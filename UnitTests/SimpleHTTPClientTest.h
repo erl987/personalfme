@@ -19,7 +19,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <string>
 #include <iostream>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include "SimpleHTTPClient.h"
 
 using boost::unit_test::label;

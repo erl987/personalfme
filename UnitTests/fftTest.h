@@ -29,7 +29,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <vector>
 #include <complex>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "basicFunctions.h"
 #include "FFT.h"

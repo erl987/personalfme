@@ -18,7 +18,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include <memory>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include "DefaultValidity.h"
 #include "MonthlyValidity.h"
 #include "BoostStdTimeConverter.h"

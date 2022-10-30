@@ -20,7 +20,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include "FileUtils.h"
 
 using boost::unit_test::label;

@@ -19,7 +19,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <chrono>
 #include <thread>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include "BoostStdTimeConverter.h"
 #include "ConnectionMocks.h"

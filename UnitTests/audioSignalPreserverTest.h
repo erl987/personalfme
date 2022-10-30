@@ -23,7 +23,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <mutex>
 #include <thread>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "BoostStdTimeConverter.h"
 #include "SeqData.h"

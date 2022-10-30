@@ -22,7 +22,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <random>
 #include <algorithm>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include "ConnectionMocks.h"
