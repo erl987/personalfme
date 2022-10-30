@@ -99,7 +99,6 @@ namespace FMEdetectionTests {
 	const std::string requirementsFileName = "testRequirements.txt";
 	const std::string resultsFileName = "testResults.txt";
 	const std::string fmeProductionSettingsFileName = "./fmeProductionParams.dat";
-	const std::string plotDiagramPath = octaveExe + " --eval plotDiagram";
 	const std::string parameterFileName = "../params.dat";
 	const std::string specializedParameterFileName = "../fmeParams.dat";
 
@@ -341,7 +340,7 @@ namespace FMEdetectionTests {
 				statisticalAnalyser.PushValues( foundFreq, deltaF, foundLength, deltaLength, foundCycle, deltaCycle, absToneLevel, testCode, SNR );
 			}
 		} else {
-			// no successfull detection
+			// no successful detection
 			resultsFile << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t0\t" << boost::lexical_cast<string>( testID ) << "\n";
 		}
 	}
@@ -376,8 +375,7 @@ namespace FMEdetectionTests {
 			}
 		}
 
-		// plot result diagram
-		auto callResult = system( plotDiagramPath.c_str() );
+        cout << endl << "The test results can be visualized with `python visualize_multiple_detections_result.py` (requires Python)" << endl;
 	}
 
 

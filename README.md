@@ -149,22 +149,12 @@ been initialized (see previous section).
   ```
 
 
-### 6. Running the unit tests
+### 6. Building the unit tests
 
-The unit tests are only built if the CMake option `-DOption_BUILD_UNITTESTS=ON` is set. Some unit tests with the label 
-`basic` require the numerical calculation software Octave for comparison purposes.
-You may deactivate these tests if not required  by commenting them out in the file `UnitTests/runner.cpp`.
+Building the unit tests requires the CMake option `-DOption_BUILD_UNITTESTS=ON`:
 
-On Linux you can install Octave from the package sources:
 ```shell
-sudo apt install octave liboctave-dev
-```
-
-Then you can install the required signal-package and its dependencies within Octave. This may take a while.
-```shell
-octave --no-gui
-pkg install -forge control
-pkg install -forge signal
+cmake -DCMAKE_BUILD_TYPE=Release -DOption_BUILD_UNITTESTS=ON ..
 ```
 
 
@@ -276,18 +266,14 @@ Check the options `Option_CREATE_DOCUMENTATION` and `Option_USE_GIT` in the CMak
 target. This will create a project `PdfDocumentation` in Visual Studio that can be run to create the documentation.
 
 
-### 5. Running the unit tests
+### 5. Building the unit tests
 
-The unit tests are only built if the CMake option `Option_BUILD_UNITTESTS` is set to *ON*. Some unit tests require the 
-numerical calculation software Octave for comparison purposes.
-You may deactivate these tests if not required by commenting them out in the file `UnitTests/runner.cpp`.
+Building the unit tests requires the CMake option `-DOption_BUILD_UNITTESTS=ON`:
 
-You have to install the required signal-package and its dependencies within Octave. This may take a while.
 ```shell
-octave
-pkg install -forge control
-pkg install -forge signal
+cmake -DCMAKE_BUILD_TYPE=Release -DOption_BUILD_UNITTESTS=ON ..
 ```
+
 
 ## Unit tests
 
@@ -301,13 +287,12 @@ The following labels are available:
 
 | Label    | Contained Tests                                                                           |
 |----------|-------------------------------------------------------------------------------------------|
-| basic    | All tests that should always work, even if no audio device is available[^1]               |
-| advanced | Brute-force testing of the selcall detection algorithm, not requiring an audio device[^2] |
+| basic    | All tests that should always work, even if no audio device is available                   |
+| advanced | Brute-force testing of the selcall detection algorithm, not requiring an audio device[^1] |
 | audio    | All tests requiring an active audio device on the test machine                            |
 | realtime | Testing of realtime selcall detection                                                     |
 
-[^1]: Some tests require Octave.
-[^2]: Some tests at very low signal-to-noise ratio will always fail, this is expected.
+[^1]: Some tests at very low signal-to-noise ratio will always fail, this is expected.
 
 
 The label `basic` contains the tests that can be run even on a cloud machine without an audio device

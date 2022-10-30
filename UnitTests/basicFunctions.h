@@ -27,14 +27,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 /** \ingroup UnitTests
 */
 
-
-// Octave command line executable (may be dependent on OS and version)
-#ifdef __linux	
-	const std::string octaveExe = "octave-cli";
-#else
-	const std::string octaveExe = "octave";
-#endif
-
 /** @brief		Loading a vector from a file.
 *	@param		fileName				File name of test data
 *	@param		data					Data container
