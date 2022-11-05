@@ -58,9 +58,9 @@ namespace Utilitites {
 				#if defined( _WIN32 )
 					// Windows
 					#ifdef NDEBUG
-						boost::filesystem::path pluginPath = "..";
+						boost::filesystem::path pluginPath = "../Release";
 					#else
-						boost::filesystem::path pluginPath = "..";
+						boost::filesystem::path pluginPath = "../Debug";
 					#endif
 				#elif defined( __linux )
 					// Linux
