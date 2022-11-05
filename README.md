@@ -198,7 +198,7 @@ Install the following dependencies using `vcpkg` (note that they will be compile
 quite some time), the required triplet is `x86-windows` which should be the default:
 
 ```shell
-vcpkg install portaudio boost-asio boost-assign boost-date-time boost-locale boost-math boost-serialization boost-signals2 xerces-c libsndfile[core] poco poco[netssl]
+vcpkg install portaudio boost-asio boost-assign boost-date-time boost-locale boost-math boost-serialization boost-signals2 xerces-c libsndfile poco poco[netssl]
 ```
 
 > **Note**
