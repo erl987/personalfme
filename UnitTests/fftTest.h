@@ -44,7 +44,7 @@ using boost::unit_test::label;
 */
 namespace FFTTests {
 	const float maxErrorAllowed = 1e-6f;					// acceptable for float precision
-	const double samplingFreq = 44100;						// in Hz
+	const double samplingFreq = 44100.0;					// in Hz
 	const int length = 256;									// number of samples
 	const float maxTestSignalAmpl = 10.0f;					// maximum amplitude of generated test signals
 	const int numRepetitions = 100000;						// number of repetitions of FFT-calculation for better statistics of fast calculations
@@ -133,12 +133,12 @@ namespace FFTTests {
 
 		int stepLength = 50;
 		const int numFreqs = 401;
-		float overlap = 0.0;
+		double overlap = 0.0;
 		vector< boost::posix_time::ptime > time;
 		vector<float> f_STFT, time_STFT, signal;
 		Core::Processing::CFFT<float> fft;
 		std::vector< array<float, numFreqs> > spectrum_STFT;
-	
+
 		// generate test data
 		GenerateTestData( length, maxTestSignalAmpl, samplingFreq, back_inserter( time ), back_inserter( signal ) );
 

@@ -52,7 +52,7 @@ namespace ProcessingTests {
 			numbers.resize( static_cast<int>( endValue / spacing ) + 1 );
 			iota( numbers.begin(), numbers.end(), 0 );
 			x.resize( numbers.size() );
-			transform( numbers.begin(), numbers.end(), x.begin(), [=](float val){ return ( val * spacing ); } );
+			transform( numbers.begin(), numbers.end(), x.begin(), [=](int val){ return ( static_cast<float>(val) * spacing ); } );
 			y.resize( x.size() );
 			transform( x.begin(), x.end(), y.begin(), [](float val){ return ( sin( val ) ); } );
 		}
