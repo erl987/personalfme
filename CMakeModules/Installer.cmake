@@ -84,7 +84,7 @@ macro( Installer )
 	find_package( SndFile )
 	
 	# define the required files for the installation	
-	set( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt" )
+	set( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYRIGHT.txt" )
 	set( AUDIO_SETTINGS_FILE_NAME "${PROJECT_SOURCE_DIR}/audioSettings.dat" )
 	set( FME_PARAMS_FILE_NAME "${PROJECT_SOURCE_DIR}/fmeParams.dat" )
 	set( PARAMS_FILE_NAME "${PROJECT_SOURCE_DIR}/params.dat" )
