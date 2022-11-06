@@ -116,16 +116,16 @@ if ( ${Option_USE_GIT} )
 		"${PROJECT_SOURCE_DIR}/Utilities/version.h"
 	)
 	configure_file ( 
-		"${PROJECT_SOURCE_DIR}/license.template"
-		"${PROJECT_SOURCE_DIR}/LICENSE.txt"
+		"${PROJECT_SOURCE_DIR}/COPYRIGHT.template"
+		"${PROJECT_SOURCE_DIR}/COPYRIGHT.txt"
 	)
 endif()
 
 if( NOT EXISTS "${PROJECT_SOURCE_DIR}/Utilities/version.h" )
 	message( FATAL_ERROR "Necessary source file \"Utilities/version.h\" is missing. Set the option USE_GIT to ON or provide it manually!" )
 endif()
-if( NOT EXISTS "${PROJECT_SOURCE_DIR}/LICENSE.txt" )
-	message( FATAL_ERROR "Necessary source file \"LICENSE.txt\" is missing. Set the option USE_GIT to ON or provide it manually!" )
+if( NOT EXISTS "${PROJECT_SOURCE_DIR}/COPYRIGHT.txt" )
+	message( FATAL_ERROR "Necessary source file \"COPYRIGHT.txt\" is missing. Set the option USE_GIT to ON or provide it manually!" )
 endif()
 
 if ( ${Option_CREATE_INSTALLER} )
