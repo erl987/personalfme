@@ -27,9 +27,9 @@ endif()
 set( CMAKE_PROJECT_NAME ${PROJECT_NAME} )
 
 set( PROJECT_VERSION_MAJOR 1 ) 		 # Adjust here the version number manually
-set( PROJECT_VERSION_MINOR 1 ) 		 # Adjust here the version number manually
-set( PROJECT_VERSION_PATCH 0 ) 		 # Adjust here the version number manually
-set( PROJECT_VERSION_TYPE "pre-release" )	 	 # Adjust here the version number manually (i.e. "" = Release to Manufacturing, "RC1" = Release candidate 1, "pre-release" = Development version)
+set( PROJECT_VERSION_MINOR 0 ) 		 # Adjust here the version number manually
+set( PROJECT_VERSION_PATCH 1 ) 		 # Adjust here the version number manually
+set( PROJECT_VERSION_TYPE "" )	 	 # Adjust here the version number manually (i.e. "" = Release to Manufacturing, "RC1" = Release candidate 1, "pre-release" = Development version)
 set( IS_NEW_CONFIG_FILE_SYNTAX OFF ) # Set this flag to ON in order to warn the user that the syntax of the configuration file config.xml has been changed and his file may require updating
 set( PROJECT_VENDOR_NAME "Ralf Rettig" )
 set( PROJECT_MAINTAINER_CONTACT "Ralf Rettig <info@${PROJECT_NAME}.de>" )
