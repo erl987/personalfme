@@ -1,3 +1,16 @@
+PersonalFME 1.0.1 (19 November 2022):
+
+- supporting now Debian / Raspberry Pi OS 11, Ubuntu 22.04 LTS and Windows 8.1, 10 and 11
+- dropped support for Windows 7
+- fixed e-mail sending that failed for servers with current TLS-versions
+- using now the Poco library provided by vcpkg / Debian packages
+- integrating now the ALGLIB dependency through a Git submodule
+- removed the dependency of the tests to Octave
+- introduced labels for the unit / integration tests
+- updated all library dependencies
+- fixed a UTF-8 encoding issue in source files
+
+
 PersonalFME 1.0.0 (27 March 2021):
 
 - supporting now Debian / Raspberry Pi OS 10, Ubuntu 20.04 LTS and Windows 7 and higher

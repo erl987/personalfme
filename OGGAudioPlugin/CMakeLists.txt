@@ -1,5 +1,5 @@
 #	Ogg Vorbis audio file handler plugin for the software PersonalFME
-#	Copyright(C) 2010 - 2021 Ralf Rettig (www.personalfme.de)
+#	Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 #
 #	This program is free software: you can redistribute it and / or modify
 #	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ find_package( Poco COMPONENTS
 	Foundation
 REQUIRED )
 
-find_package( Libsndfile CONFIG REQUIRED )
+find_package( SndFile CONFIG REQUIRED )
 
 set( SOURCE
 	OGGAudioPlugin.cpp
@@ -34,9 +34,9 @@ add_library( OGGAudioPlugin SHARED ${SOURCE} ${HEADERS} )
 
 target_link_libraries( OGGAudioPlugin PRIVATE
 	Utilities
-	
-	${Poco_LIBRARIES}
-	sndfile-shared
+
+	SndFile::sndfile
+	Poco::Foundation
 )
 
 target_include_directories( OGGAudioPlugin PRIVATE ${Poco_INCLUDE_DIRS} )

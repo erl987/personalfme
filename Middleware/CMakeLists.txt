@@ -1,5 +1,5 @@
 # PersonalFME - Gateway linking analog radio selcalls to internet communication services
-# Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+# Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 #
 # This program is free software: you can redistribute it and / or modify
 # it under the terms of the GNU General Public License as published by
@@ -51,14 +51,15 @@ target_link_libraries( Middleware PRIVATE
 	
 	Boost::date_time
 	Boost::filesystem
-	${Poco_LIBRARIES}
+
+	Poco::Foundation
+	Poco::Util
+	Poco::XML
 )
 target_link_libraries( Middleware PUBLIC
 	Core
 	Networking
 )
-
-target_include_directories( Middleware PRIVATE ${Poco_INCLUDE_DIRS} )
 
 # installer settings
 install( TARGETS Middleware

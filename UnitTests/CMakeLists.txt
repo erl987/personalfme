@@ -1,5 +1,5 @@
 # PersonalFME - Gateway linking analog radio selcalls to internet communication services
-# Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+# Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 #
 # This program is free software: you can redistribute it and / or modify
 # it under the terms of the GNU General Public License as published by
@@ -152,13 +152,18 @@ add_custom_command( TARGET Unittests
 		"${CMAKE_BINARY_DIR}/UnitTests/signal.txt"
 )
 
+add_custom_command( TARGET Unittests
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/reference-data/test-signal.txt"
+		"${CMAKE_BINARY_DIR}/UnitTests/test-signal.txt"
+		)
+
 add_custom_command( TARGET Unittests POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory
        "${CMAKE_CURRENT_SOURCE_DIR}/fmeDetectionTests"
        "${CMAKE_BINARY_DIR}/UnitTests/fmeDetectionTests"
 )
 
-file( GLOB ConfigFiles ${CMAKE_SOURCE_DIR}/UnitTests/*.m )
+file( GLOB ConfigFiles ${CMAKE_SOURCE_DIR}/UnitTests/reference-data/*.json )
 foreach( ConfigFile ${ConfigFiles} )
 	add_custom_command(TARGET Unittests POST_BUILD
                      COMMAND ${CMAKE_COMMAND} -E

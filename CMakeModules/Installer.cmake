@@ -1,5 +1,5 @@
 # PersonalFME - Gateway linking analog radio selcalls to internet communication services
-# Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+# Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 #
 # This program is free software: you can redistribute it and / or modify
 # it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ macro( Installer )
 	endif()
 		
 	# obtain the binaries for the audio plugins
-	find_package( Libsndfile )
+	find_package( SndFile )
 	
 	# define the required files for the installation	
 	set( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt" )
@@ -94,9 +94,9 @@ macro( Installer )
 	set( CONFIG_XSD_FILE_NAME "${PROJECT_SOURCE_DIR}/config.xsd" )
 	set( OGG_PLUGIN_FILE_NAME "${PROJECT_SOURCE_DIR}/build/Release/OGGAudioPlugin.dll" )
 	set( WAV_PLUGIN_FILE_NAME "${PROJECT_SOURCE_DIR}/build/Release/WAVAudioPlugin.dll" )
-	set( SNDFILE_BIN "${Libsndfile_BIN}" )
-	set( SNDFILE_LIC_1_FILE "${Libsndfile_LIC_FILE_1}" )
-	set( SNDFILE_LIC_2_FILE "${Libsndfile_LIC_FILE_2}" )
+	set( SNDFILE_BIN "${SndFile_BIN}" )
+	set( SNDFILE_LIC_1_FILE "${SndFile_LIC_FILE_1}" )
+	set( SNDFILE_LIC_2_FILE "${SndFile_LIC_FILE_2}" )
 	set( DOC_FILE_NAME "${PROJECT_SOURCE_DIR}/documentation/benutzerhandbuch.pdf" )
 
 	# generate the installer

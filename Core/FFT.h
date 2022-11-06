@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -331,7 +331,7 @@ template <class T> template <class InIt, class OutIt1, class OutIt2, class OutIt
 		AmplitudeFFT( f.begin(), pageSpectrum.begin(), pageInput.begin(), pageInput.end(), samplingFreq );
 
 		// convert one-sided amplitude to DFT and then to one-sided power density spectrum [power/Hz]
-		transform( pageSpectrum.begin(), pageSpectrum.end(), pageSpectrum.begin(), [=](T val){ return ( boost::math::pow<2>( val * numSamples / 2.0 ) * k ); } );
+		transform( pageSpectrum.begin(), pageSpectrum.end(), pageSpectrum.begin(), [=](T val){ return ( boost::math::pow<2>( val * static_cast<T>(numSamples) / static_cast<T>(2.0) ) * k ); } );
 		pageSpectrum.front() /= 2;
 		it = find_if( f.begin(), f.end(), [=](T val){ return ( val >= samplingFreq / 2 ); } );
 		pageSpectrum[ distance( f.begin(), it ) ] /= 2;

@@ -1,6 +1,6 @@
 // DO NOT CHANGE THIS FILE MANUALLY. CHANGE INSTEAD "VERSION.TEMPLATE" FROM WHICH IT IS GENERATED AUTOMATICALLY BY SVN.
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 *	Currently the detection of 5-tone sequences is implemented. The detected sequences are logged and further
 *	actions can automatically be started, when detecting a sequence.
 *	@author		Ralf Rettig (info@personalfme.de, www.personalfme.de)
-*	@version	2492ae8
-*	@date		"2021-03-21 17:18:30 +0100"
+*	@version	714e5ef
+*	@date		"2022-11-06 17:33:52 +0100"
 *
 *	The object-oriented code is currently designed for 5-tone sequences only, but it can be flexibly extended to other 
 *	types of sequences, because the basic class "CSearch" is an abstract interface.
@@ -48,13 +48,13 @@ namespace Utilities {
 	/**	@param	MINOR_VERSION		storing the minor version number of the library */
 	const unsigned int MINOR_VERSION = 0;
 	/**	@param	RELEASE_VERSION		storing the release version number of the library */
-	const unsigned int RELEASE_VERSION = 0;
+	const unsigned int RELEASE_VERSION = 1;
 	/**	@param	VERSION_TYPE		storing the version type (i.e. "" = Release to Manufacturing, "RC1" = Release candidate 1, "pre-release" = Development version) */
 	const std::string VERSION_TYPE = "";
 	/**	@param	REVISION			storing the revision number from the current build, automatically updated by SVN */
-	const std::string REVISION = "2492ae8";
+	const std::string REVISION = "714e5ef";
 	/**	@param	DATE_STRING			storing the build date from the current revision, automatically updated by SVN */
-	const std::string DATE_STRING = "2021-03-21 17:18:30 +0100";
+	const std::string DATE_STRING = "2022-11-06 17:33:52 +0100";
 	/**	@param	SOFTWARE_NAME		storing the name of the software, automatically updated by SVN */
 	const std::string SOFTWARE_NAME_STRING = "PersonalFME";
 	/**	@param	VENDOR_NAME			storing the name of the software owner, automatically updated by SVN */

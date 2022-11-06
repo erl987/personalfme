@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -37,6 +37,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "FMEServerDebug.h"
 #include "PortaudioWrapper.h"
 #include "SeqDataComplete.h"
+
+using boost::unit_test::label;
 
 /**	\defgroup	UnitTest	Unit test module.
 */
@@ -96,7 +98,6 @@ namespace FMEdetectionTests {
 	const std::string requirementsFileName = "testRequirements.txt";
 	const std::string resultsFileName = "testResults.txt";
 	const std::string fmeProductionSettingsFileName = "./fmeProductionParams.dat";
-	const std::string plotDiagramPath = octaveExe + " --eval plotDiagram";
 	const std::string parameterFileName = "../params.dat";
 	const std::string specializedParameterFileName = "../fmeParams.dat";
 
@@ -338,7 +339,7 @@ namespace FMEdetectionTests {
 				statisticalAnalyser.PushValues( foundFreq, deltaF, foundLength, deltaLength, foundCycle, deltaCycle, absToneLevel, testCode, SNR );
 			}
 		} else {
-			// no successfull detection
+			// no successful detection
 			resultsFile << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t0\t" << boost::lexical_cast<string>( testID ) << "\n";
 		}
 	}
@@ -373,8 +374,7 @@ namespace FMEdetectionTests {
 			}
 		}
 
-		// plot result diagram
-		auto callResult = system( plotDiagramPath.c_str() );
+        cout << endl << "The test results can be visualized with `python visualize_multiple_detections_result.py` (requires Python)" << endl;
 	}
 
 
@@ -426,7 +426,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Single non-realtime testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( single_non_realtime_case )
+	BOOST_AUTO_TEST_CASE( single_non_realtime_case, *label("basic") )
 	{
 		using namespace std;
 		boost::posix_time::ptime startTimeSeq;
@@ -461,7 +461,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Realtime high-throughput testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( multiple_realtime_case )
+	BOOST_AUTO_TEST_CASE( multiple_realtime_case, *label("realtime") )
 	{
 		using namespace std;
 		float SNR;
@@ -536,7 +536,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Non-realtime high-throughput testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( multiple_non_realtime_case )
+	BOOST_AUTO_TEST_CASE( multiple_non_realtime_case, *label("advanced") )
 	{
 		using namespace std;
 		float SNR;

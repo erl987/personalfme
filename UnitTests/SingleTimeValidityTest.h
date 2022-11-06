@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ namespace Networking {
 			const Utilities::CDateTime endTimeSet7 = Utilities::CDateTime( 01, 07, 2016, Utilities::CTime( 06, 00, 00 ) );
 
 			// Test section
-			BOOST_AUTO_TEST_SUITE( SingleTimeValidity_test_suite );
+			BOOST_AUTO_TEST_SUITE( SingleTimeValidity_test_suite, *label("basic") );
 
 			/**	@brief		Testing of the construction of the single time validity exception
 			*/

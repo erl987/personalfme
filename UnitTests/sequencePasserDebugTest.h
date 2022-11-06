@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -24,6 +24,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include "SeqDataComplete.h"
 #include "SequencePasserDebug.h"
+
+using boost::unit_test::label;
+
 
 /**	\defgroup	UnitTest	Unit test module.
 */
@@ -51,7 +54,7 @@ namespace Audio {
 
 
 		// test section
-		BOOST_AUTO_TEST_SUITE( CSequencePasserDebug_test_suite );
+		BOOST_AUTO_TEST_SUITE( CSequencePasserDebug_test_suite, *label("basic") );
 
 		/**	@brief		Test of set parameter function
 		*/

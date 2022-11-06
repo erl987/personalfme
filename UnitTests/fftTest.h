@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "basicFunctions.h"
 #include "FFT.h"
 
+using boost::unit_test::label;
+
 
 /**	\defgroup	fftTests	Unit tests for the FFT-library.
 */
@@ -42,7 +44,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 namespace FFTTests {
 	const float maxErrorAllowed = 1e-6f;					// acceptable for float precision
-	const double samplingFreq = 44100;						// in Hz
+	const double samplingFreq = 44100.0;					// in Hz
 	const int length = 256;									// number of samples
 	const float maxTestSignalAmpl = 10.0f;					// maximum amplitude of generated test signals
 	const int numRepetitions = 100000;						// number of repetitions of FFT-calculation for better statistics of fast calculations
@@ -52,7 +54,7 @@ namespace FFTTests {
 
 
 	// Test section
-	BOOST_AUTO_TEST_SUITE( fft_test_suite );
+	BOOST_AUTO_TEST_SUITE( fft_test_suite, *label("basic") );
 
 	// Amplitude FFT calculation
 	BOOST_AUTO_TEST_CASE( amplitude_fft_test_case )
@@ -131,12 +133,12 @@ namespace FFTTests {
 
 		int stepLength = 50;
 		const int numFreqs = 401;
-		float overlap = 0.0;
+		double overlap = 0.0;
 		vector< boost::posix_time::ptime > time;
 		vector<float> f_STFT, time_STFT, signal;
 		Core::Processing::CFFT<float> fft;
 		std::vector< array<float, numFreqs> > spectrum_STFT;
-	
+
 		// generate test data
 		GenerateTestData( length, maxTestSignalAmpl, samplingFreq, back_inserter( time ), back_inserter( signal ) );
 

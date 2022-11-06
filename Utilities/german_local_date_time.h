@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ namespace Utilities {
 		const std::vector< std::string > weekdayNameList = boost::assign::list_of("Sonntag")("Montag")("Dienstag")("Mittwoch")("Donnerstag")("Freitag")("Samstag");
 
 		/**	\ingroup Utilities
-		*	Class for formatting time output according to "German Sommerzeitverordnung SoZV issued on 12 July 2001, changed on 3rd July 2008". This is MEZ / MESZ, but during change from DST to standard time according to ง2(2) SoZV, the nomenclatures 2A (MESZ) and 2B (MEZ) are used.
+		*	Class for formatting time output according to "German Sommerzeitverordnung SoZV issued on 12 July 2001, changed on 3rd July 2008". This is MEZ / MESZ, but during change from DST to standard time according to ยง2(2) SoZV, the nomenclatures 2A (MESZ) and 2B (MEZ) are used.
 		*/	
 		class german_local_date_time
 			: public boost::local_time::local_date_time

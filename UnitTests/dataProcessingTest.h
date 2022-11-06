@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <boost/test/unit_test.hpp>
 #include <boost/math/constants/constants.hpp>
 #include "DataProcessing.h"
+
+using boost::unit_test::label;
 
 
 /*@{*/
@@ -50,7 +52,7 @@ namespace ProcessingTests {
 			numbers.resize( static_cast<int>( endValue / spacing ) + 1 );
 			iota( numbers.begin(), numbers.end(), 0 );
 			x.resize( numbers.size() );
-			transform( numbers.begin(), numbers.end(), x.begin(), [=](float val){ return ( val * spacing ); } );
+			transform( numbers.begin(), numbers.end(), x.begin(), [=](int val){ return ( static_cast<float>(val) * spacing ); } );
 			y.resize( x.size() );
 			transform( x.begin(), x.end(), y.begin(), [](float val){ return ( sin( val ) ); } );
 		}
@@ -58,7 +60,7 @@ namespace ProcessingTests {
 
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( DataProcessing_test_suite );
+		BOOST_AUTO_TEST_SUITE( DataProcessing_test_suite, *label("basic") );
 
 
 

@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -24,6 +24,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "EmailMessage.h"
 #include "SendStatusMessage.h"
 
+using boost::unit_test::label;
+
+
 /*@{*/
 /** \ingroup Utility
 */
@@ -35,7 +38,7 @@ namespace Utilitites {
 	namespace Messages {
 		namespace SendStatusMessage {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( SendStatusMessage_test_suite );
+			BOOST_AUTO_TEST_SUITE( SendStatusMessage_test_suite, *label("basic") );
 
 			/**	@brief		Testing of setting and getting functions of the class
 			*/

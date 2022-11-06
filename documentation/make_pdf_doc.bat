@@ -1,5 +1,5 @@
 @REM PersonalFME - Gateway linking analog radio selcalls to internet communication services
-@REM Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+@REM Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 @REM This program is free software: you can redistribute it and / or modify
 @REM it under the terms of the GNU General Public License as published by

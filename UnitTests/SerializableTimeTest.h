@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <boost/archive/text_iarchive.hpp>
 #include "SerializableTime.h"
 
+using boost::unit_test::label;
+
 
 /*@{*/
 /** \ingroup Utility
@@ -39,7 +41,7 @@ namespace Utilitites {
 	*/
 	namespace SerializableStartTime {
 		// Test section
-		BOOST_AUTO_TEST_SUITE( SerializableTime_test_suite );
+		BOOST_AUTO_TEST_SUITE( SerializableTime_test_suite, *label("basic") );
 
 		/**	@brief		Testing of serialization of the class
 		*/

@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -21,18 +21,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <random>
 #include <chrono>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <Poco/JSON/Array.h>
 
 /*@{*/
 /** \ingroup UnitTests
 */
-
-
-// Octave command line executable (may be dependent on OS and version)
-#ifdef __linux	
-	const std::string octaveExe = "octave-cli";
-#else
-	const std::string octaveExe = "octave";
-#endif
 
 /** @brief		Loading a vector from a file.
 *	@param		fileName				File name of test data
@@ -60,6 +53,24 @@ template <class T> void LoadVector(std::string fileName, std::vector<T>& data)
 	in.close();
 }
 
+
+/** @brief		Convert a Poco array to an standard library vector.
+*	@param		pocoArray				The Poco array
+*	@return								None
+*	@exception							None
+*	@remarks							None
+*/
+std::vector<double> ToVector(const Poco::JSON::Array::Ptr& array)
+{
+    std::vector<double> vector;
+
+    vector.reserve(array->size());
+    for (int i=0; i < array->size(); i++) {
+        vector.push_back(array->get(i));
+    }
+
+    return vector;
+}
 
 
 /** @brief		Loading a single number from a file.

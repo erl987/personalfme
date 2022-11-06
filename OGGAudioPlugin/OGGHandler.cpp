@@ -1,5 +1,5 @@
 /*	Ogg Vorbis audio file handler plugin for the software PersonalFME
-Copyright(C) 2010 - 2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -92,14 +92,15 @@ void COGGHandler::GetLibsndfileVersion( std::string& versionString, std::string&
 	versionInfo = sf_version_string();
 	versionString = versionInfo.substr( baseStr.size() );
 
-	if ( versionString == "1.0.26" ) {
+	if (versionString == "1.1.0") {
+		dateString = "Mar 27 2022";
+	} else if (versionString == "1.0.26") {
 		dateString = "Nov 22 2015";
-	} else if ( versionString == "1.0.25" ) {
+	} else if (versionString == "1.0.25") {
 		dateString = "Jul 13 2011";
 	} else {
 		dateString = "unknown";
 	}
 
-	licenseText = "Copyright (c) 2005-2015 Erik de Castro Lopo <erikd@mega-nerd.com>\n";
-	licenseText += "It contains libvorbis:\nCopyright (c) 2002-2015 Xiph.org Foundation\n";
+	licenseText = "Copyright (c) 2005-2022 Erik de Castro Lopo <erikd@mega-nerd.com>\n";
 }

@@ -1,3 +1,6 @@
 [submodule "CMakeModules/externals/CMake-gitinfo"]
 	path = CMakeModules/externals/CMake-gitinfo
 	url = https://github.com/RWTH-HPC/CMake-gitinfo.git
+[submodule "libraries/Alglib"]
+	path = libraries/Alglib
+	url = https://github.com/erl987/alglib.git

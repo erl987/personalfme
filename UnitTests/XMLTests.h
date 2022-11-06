@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -34,6 +34,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "XMLSingleTimeValidityTest.h"
 #include "XMLAlarmMessagesDatabaseTest.h"
 
+using boost::unit_test::label;
+
+
 // the XML headers require wrapping into a cpp-file because the Poco AbstractConfiguration.hpp seems to expose windows.h which causes problems
 
 
@@ -46,7 +49,7 @@ namespace Utilitites {
 	*/
 	namespace XMLTest {
 		// Test section
-		BOOST_AUTO_TEST_SUITE( XML_Test_test_suite );
+		BOOST_AUTO_TEST_SUITE( XML_Test_test_suite, *label("basic") );
 
 		/**	@brief		Testing XML serialization and deserialization of the CGatewayLoginDatabase class
 		*/

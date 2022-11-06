@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -211,7 +211,7 @@ std::string External::Groupalarm::CGroupalarmGateway::CreateOtherMessagesInfo( c
 
 	// add information on the receiver ids (only available for e-mail messages)
 	if ( !receiverIDs.empty() ) {
-		otherMessagesInfo += "für: " + receiverIDs;
+		otherMessagesInfo += "fÃ¼r: " + receiverIDs;
 	}
 
 	// add information on all message types that were used
@@ -219,7 +219,7 @@ std::string External::Groupalarm::CGroupalarmGateway::CreateOtherMessagesInfo( c
 		if ( !receiverIDs.empty() ) {
 			otherMessagesInfo += ". ";
 		}
-		otherMessagesInfo += "Ausgelöst: ";
+		otherMessagesInfo += "AusgelÃ¶st: ";
 		for ( auto type : otherMessageTypes ) {
 			if ( typeCounter > 0 ) {
 				otherMessagesInfo += ", ";

@@ -1,5 +1,5 @@
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2021 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "german_local_date_time.h"
 
+using boost::unit_test::label;
+
 
 /*@{*/
 /** \ingroup Utility
@@ -42,7 +44,7 @@ namespace Utilitites {
 		*/
 		namespace GermanLocalDateTime {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( GermanLocalDateTime_test_suite );
+			BOOST_AUTO_TEST_SUITE( GermanLocalDateTime_test_suite, *label("basic") );
 
 			/**	@brief		Testing of formatted time output for first wintertime of the year
 			*/
