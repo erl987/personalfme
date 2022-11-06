@@ -179,7 +179,7 @@ void Networking::CFMEServer::Run(void)
 	}
 
 	{
-		std::lock_guard<std::mutex> lock(privHandle->isRunningMutex);
+		std::lock_guard<std::mutex> lock( privHandle->isRunningMutex );
 		privHandle->isRunning = false;
 
 		// resetting all networking objects
