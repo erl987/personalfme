@@ -142,7 +142,7 @@ void External::Email::CEmailGateway::CEmailGatewayImpl::SendSMTP( const Poco::Ne
 		}
 		break;
 	case TLS_SSL_CONN:
-		mailSession = make_unique<SMTPClientSession>( SecureStreamSocket( SocketAddress( hostName, currPort ) ) );
+		mailSession = make_unique<SMTPClientSession>( SecureStreamSocket( SocketAddress( hostName, currPort ), hostName ) );
 		break;
 	default:
 		throw std::runtime_error( "The connection type is not supported." );
