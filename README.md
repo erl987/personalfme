@@ -223,8 +223,6 @@ vcpkg install boost-accumulators boost-test
 * enter the binary path, it should be a folder `./build` being a sub-folder in the code base root directory
 * click on the `Configure` button and choose *Win32* as platform and *Specify toolchain file for cross-compiling*
 * provide the `vcpkg` toolchain file: `[vcpkg root]/scripts/buildsystems/vcpkg.cmake`
-* the configuration will fail now, provide the root path of the Poco-library in the variable `Poco_DIR`
-* click on `Configure` again, now the configuration should succeed
 * click on `Generate`
 * click on `Open Project` to open the Visual Studio project
 * build the `Release` and `Debug` version
