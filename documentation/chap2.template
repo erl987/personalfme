@@ -57,7 +57,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			</para>
 			
 			<para>
-				Unter Rasberry Pi OS (Debian) 10 Buster ist die Erzeugung des Binärpakets aus dem Quellcode relativ einfach. Laden Sie diesen zunächst herunter:
+				Unter Rasberry Pi OS (Debian) 11 Bullseye ist die Erzeugung des Binärpakets aus dem Quellcode relativ einfach. Laden Sie diesen zunächst herunter:
 				<screen>
 					$ sudo apt-get -y update 
 					$ sudo apt install -y git
@@ -66,29 +66,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 					$ git checkout tags/personalfme-1.0.0-release
 				</screen>
 			</para>
-			<para>
-				Kompilieren und installieren Sie nun manuell die Bibliothek Poco Version 1.8.1. Dies ist notwendig da die aktuelle Version 1.9.0, die
-				als Paket in Betriebssystem verfügbar ist, einen kritischen Fehler enthält der das Versenden von E-Mails verhindert.
-				<screen>
-					$ sudo apt-get -y install git g++ make cmake libssl-dev
-					$ git clone -b master https://github.com/pocoproject/poco.git
-					$ cd poco
-					$ git checkout tags/poco-1.8.1-release
-					$ mkdir cmake-build
-					$ cd cmake-build
-					$ cmake ..
-					$ cmake --build . --config Release -j n
-					$ sudo cmake --build . --target install
-				</screen>
-				Im Buildkommando für CMake gibt die Option "-j n" dabei die Anzahl der eingesetzten CPU-Kerne "n" an.
-			</para>
+
 			<para>			
 				 Konfigurieren Sie dann das Buildsystem:
 				<screen>
 					$ sudo apt install build-essential cmake openssl libssl-dev 
 					$ sudo apt install portaudio19-dev libxerces-c-dev libsndfile-dev 
 					$ sudo apt install libalglib-dev ncurses-dev 
-					$ sudo apt install libboost-all-dev
+					$ sudo apt install libboost-all-dev libpoco-dev
 					$ cd path/to/personalfme
 					$ mkdir build
 					$ cd build
@@ -100,9 +85,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 					$ make -jn
 					$ sudo make package
 				</screen>
-				
-				Unter Raspbian (Debian) 8 Jessie und Ubuntu 16.04 LTS fehlen ausreichend neue Versionen der Bibliotheken Boost und Poco, vor Ausführung der oben genannten Schritte müssen daher aktuelle Versionen dieser
-				Bibliotheken installiert werden, siehe <xref linkend="dependencies_linux"/>. Beachten Sie, dass diese Linuxversionen ab <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> 1.0.0 nicht mehr unterstützt werden.
 			</para>
 				
 			<para>
@@ -129,17 +111,17 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				
 			<para>
 				Aufgrund der Vielzahl von Distributionen und Architekturen werden für <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> keine fertigen Binärpakete zur Verfügung gestellt. Das Programm wurde für 
-				Rasperry Pi OS 10, Debian 10 Buster und Ubuntu 20.04 LTS getestet.
+				Rasperry Pi OS 11, Debian 11 Bullseye und Ubuntu 22.04 LTS getestet.
 			</para>
 		</section>
 		
 		<section xml:id="install_windows">
 			<title>Windows</title>
 			<para>
-				Die Software benötigt die Laufzeitbibliothek für C++ 2019 (Visual C++ Redistributable for Visual Studio 2019, x86). Falls noch nicht vorhanden, kann die Installationsdatei <filename>vc_redist.x86.exe</filename>
-				unter folgender Internetadresse heruntergeladen werden: <ulink url="https://support.microsoft.com/de-de/help/2977003/the-latest-supported-visual-c-downloads"></ulink>. Nach dessen Installation wird die Software <acronym>@PROJECT_SOFTWARE_NAME@</acronym> 
+				Die Software benötigt die Laufzeitbibliothek für C++ 2022 (Visual C++ Redistributable for Visual Studio 2022, x86). Falls noch nicht vorhanden, kann die Installationsdatei <filename>vc_redist.x86.exe</filename>
+				unter folgender Internetadresse heruntergeladen werden: <ulink url="https://aka.ms/vs/17/release/vc_redist.x86.exe"></ulink>. Nach dessen Installation wird die Software <acronym>@PROJECT_SOFTWARE_NAME@</acronym> 
 				selbst durch Ausführen des Installationspaketes <filename>@PROJECT_SOFTWARE_NAME@-@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@-@PROJECT_VERSION_TYPE@-win32.exe</filename> 
-				installiert. Sie läuft unter 32-bit und 64-bit <acronym>Microsoft Windows Vista</acronym> und allen neueren <acronym>Windows</acronym>-Betriebssystemen. Das Programm lässt sich durch die 
+				installiert. Sie läuft unter 32-bit und 64-bit <acronym>Microsoft Windows 8.1</acronym> und allen neueren <acronym>Windows</acronym>-Betriebssystemen. Das Programm lässt sich durch die 
 				Verknüpfung im Startmenü vollständig deinstallieren. Dabei werden die Daten und Einstellungen im Arbeitsverzeichnis nicht gelöscht.
 			</para>
 		</section>

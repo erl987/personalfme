@@ -24,7 +24,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 	<title>Konfiguration eines Linux-Systems für @LINUX_PROJECT_SOFTWARE_NAME@</title>
 	<para>
 		<acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> unterstützt ab Version 0.2.1 Linux. Ein zuverlässiger Dauerbetrieb ist möglich. Unter Linux ist eine spezielle Konfiguration des Soundsystems notwendig, 
-		damit <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> als Hintergrundprozess laufen kann. Dieses Kapitel bezieht sich auf Raspberry Pi OS 10 und Debian 10 Buster. <emphasis>Versionen vor <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> 1.0.0 unterstützen auch Raspbian (Debian) 9 Stretch, Raspbian (Debian) 8 Jessie sowie Ubuntu 16.04 LTS.</emphasis>
+		damit <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> als Hintergrundprozess laufen kann. Dieses Kapitel bezieht sich auf Raspberry Pi OS 11 und Debian 11 Bullseye. <emphasis>Versionen vor <acronym>@LINUX_PROJECT_SOFTWARE_NAME@</acronym> 1.0.0 unterstützen auch Raspbian (Debian) 9 Stretch, Raspbian (Debian) 8 Jessie sowie Ubuntu 16.04 LTS.</emphasis>
 		Im Falle eines Minicomputers ist eventuell die Nachrüstung unbedingt benötigter Komponenten nötig.
 	</para>
 	<section xml:id="dependencies_linux">
@@ -37,7 +37,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 						<entry>Paket</entry>
 						<entry>Version</entry>
 						<entry>verfügbar in Debian 8 Jessie</entry>
-						<entry>verfügbar in Debian 9/10</entry>
+						<entry>verfügbar in Debian 9/10/11</entry>
 					</row>
 				</thead>
 				<tbody>
@@ -104,8 +104,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				</tbody>
 			</tgroup>
 		</informaltable>
-		Beachten Sie, dass unter Raspberry Pi OS / Debian 10 zwar prinzipiell eine ausreichend neue Version der Poco-Bibliothek zur Verfügung steht, diese jedoch aufgrund eines
-		Bugs beim E-Mailversand nicht genutzt werden kann.
 	</section>
 	<section xml:id="pulseaudio_configuration">
 		<title>Pulseaudio-Konfiguration im Systemmodus</title>
@@ -191,7 +189,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				</listitem>
 			</itemizedlist>
 			
-			Als Betriebssystem bietet sich Raspberry Pi OS 10 an. Mittlerweile steht für die Cirrus Logic Audio Card ein Treiber im Standardkernel zur Verfügung. Damit ist die Installation relativ einfach geworden.
+			Als Betriebssystem bietet sich Raspberry Pi OS 11 an. Mittlerweile steht für die Cirrus Logic Audio Card ein Treiber im Standardkernel zur Verfügung. Damit ist die Installation relativ einfach geworden.
 			Eine genaue Beschreibung findet sich auf dieser Webseite: <ulink url="http://www.horus.com/~hias/cirrus-driver.html"></ulink>.
 			
 			Für den Betrieb als Audiorecorder ist es notwendig, einmal ein "Use Case Script" <filename>Record_from_Linein.sh</filename> auszuführen, um die Soundkarte entsprechend zu konfigurieren. Näheres ist im oben 
@@ -210,7 +208,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			</note>
 			
 			<para>
-				Die Echtzeituhr muss zunächst ebenfalls konfiguriert werden: <ulink url="http://www.piface.org.uk/assets/piface_clock/PiFaceClockguide.pdf"></ulink>. Ohne Echtzeituhr startet der Raspberry Pi mit der letzten
+				Die Echtzeituhr muss zunächst ebenfalls konfiguriert werden: <ulink url="http://www.piface.org.uk/assets/piface_clock/PiFaceClockguide.pdf"></ulink> bzw. <ulink url="https://github.com/piface/PiFace-Real-Time-Clock"></ulink>. Ohne Echtzeituhr startet der Raspberry Pi mit der letzten
 				gespeicherten Zeit und aktualisiert seine Zeit nur über das Internet. Für eine zuverlässige Alarmierung und Bewertung von Probealarmen muss aber zu jedem Zeitpunkt die korrekte Zeit vorliegen.
 			</para>
 		</para>		
