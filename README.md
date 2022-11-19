@@ -65,7 +65,7 @@ cd source/code/root/path
 git clone https://github.com/erl987/personalfme
 cd personalfme
 git submodule update --init --recursive
-git checkout tags/personalfme-#.#.#-release
+git checkout tags/v1.0.1
 ```
 
 Configure your build. Note that you should set the `CMAKE_BUILD_TYPE` `Release` (or `Debug` in special cases):
