@@ -64,7 +64,8 @@ Clone the source code:
 cd source/code/root/path
 git clone https://github.com/erl987/personalfme
 cd personalfme
-git checkout tags/personalfme-#.#.#-release
+git submodule update --init --recursive
+git checkout tags/v1.0.1
 ```
 
 Configure your build. Note that you should set the `CMAKE_BUILD_TYPE` `Release` (or `Debug` in special cases):
@@ -111,17 +112,7 @@ the [pdf](documentation/benutzerhandbuch.pdf) or [online handbook](https://perso
 
 ## Expert options, not for general usage
 
-### 4. Initializing Git submodules
-
-An external Git submodule needs to be initialized before any regeneration of templated strings such as revision number 
-and commit date within the source code is possible. This is required for regenerating the documentation for example:
-```shell
-cd path/to/personalfme
-git submodule update --init --recursive
-```
-
-
-## 5. Regenerating the documentation
+## 4. Regenerating the documentation
 
 Normally the documentation PDF is already provided in the Git repository and does not need to be created separately. 
 The documentation can be regenerated if you have a running DocBook installation and the external Git submodule has 
@@ -149,7 +140,7 @@ been initialized (see previous section).
   ```
 
 
-### 6. Building the unit tests
+### 5. Building the unit tests
 
 Building the unit tests requires the CMake option `-DOption_BUILD_UNITTESTS=ON`:
 
