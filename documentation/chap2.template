@@ -63,7 +63,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 					$ sudo apt install -y git
 					$ git clone https://github.com/erl987/personalfme
 					$ cd personalfme
-					$ git checkout tags/personalfme-1.0.0-release
+					$ git submodule update --init --recursive
+					$ git checkout tags/v@CPACK_PACKAGE_VERSION@
 				</screen>
 			</para>
 
