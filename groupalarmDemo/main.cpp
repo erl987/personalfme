@@ -101,6 +101,35 @@ std::string join(const std::vector<T>& elements, const std::string& delim) {
 	return ss.str();
 }
 
+
+bool hasJsonResponse(const Poco::Net::HTTPResponse& response, const std::string& responseBody) {
+	using namespace std;
+	using namespace Poco::JSON;
+
+	bool hasJsonResponse;
+
+	if (response.has("Content-Type") && response.get("Content-Type").find("application/json") != string::npos) {
+		hasJsonResponse = true;
+
+		Parser parser;
+		auto jsonVar = parser.parse(responseBody);
+		if (!jsonVar.isArray()) {
+			const auto& jsonObj = jsonVar.extract<Object::Ptr>();
+
+			if (jsonObj->has("success") && jsonObj->has("error") && !jsonObj->getValue<bool>("success")) {
+				string message = jsonObj->getValue<string>("message");
+				string details = jsonObj->getValue<string>("error");
+				throw Poco::Exception("Information vom Server Groupalarm.com: " + message + ", Details : " + details);
+			}
+		}
+	}
+	else {
+		hasJsonResponse = false;
+	}
+
+	return hasJsonResponse;
+}
+
 std::vector<unsigned int> parseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, unsigned int organizationId, const std::string& subEndpoint) {
 	using namespace std;
 	using namespace Poco::JSON;
@@ -151,17 +180,25 @@ std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string
 	session.sendRequest(request);
 
 	HTTPResponse response;
-	istream& stream = session.receiveResponse(response);
-	cout << response.getStatus() << " " << response.getReason() << endl;
-	string json(istreambuf_iterator<char>(stream), {});
+	istream& responseStream = session.receiveResponse(response);
+	string responseBody(istreambuf_iterator<char>(responseStream), {});
 
-	return parseResponseJson(json, entityNames, organizationId, subEndpoint);
+	hasJsonResponse(response, responseBody);
+	cout << response.getStatus() << " " << response.getReason() << endl; // TODO: should be like "raise_for_status()"
+
+	return parseResponseJson(responseBody, entityNames, organizationId, subEndpoint);
 }
 
 std::vector<unsigned int> getIdsForUnits(const std::vector<std::string>& unitNames, const unsigned int& organizationId, const std::string& apiToken) {
 	return getEntityIdsFromEndpoint(unitNames, organizationId, apiToken, "units");
 }
 
+Poco::JSON::Object getAlarmResources(const std::string& apiToken, unsigned int organizationId) {
+	Poco::JSON::Object alarmResources;
+	alarmResources.set("allUsers", true);
+
+	return alarmResources;
+}
 
 void sendAlarm(const unsigned int& organizationId, const std::string& apiToken) {
 	using namespace std;
@@ -176,11 +213,8 @@ void sendAlarm(const unsigned int& organizationId, const std::string& apiToken) 
 
 	string currIsoTime = to_iso_extended_string(second_clock::universal_time()) + "Z";
 
-	Object alarmResources;
-	alarmResources.set("allUsers", true);
-
 	Object jsonPayload;
-	jsonPayload.set("alarmResources", alarmResources);
+	jsonPayload.set("alarmResources", getAlarmResources(apiToken, organizationId));
 	jsonPayload.set("message", "Testalarm");
 	jsonPayload.set("organizationID", organizationId);
 	jsonPayload.set("startTime", currIsoTime);
@@ -197,10 +231,11 @@ void sendAlarm(const unsigned int& organizationId, const std::string& apiToken) 
 	jsonPayload.stringify(outStream);
 
 	HTTPResponse response;
-	istream& stream = session.receiveResponse(response);
+	istream& responseStream = session.receiveResponse(response);
+	string responseBody(istreambuf_iterator<char>(responseStream), {});
+
+	hasJsonResponse(response, responseBody);
 	cout << response.getStatus() << " " << response.getReason() << endl << endl;
-	string json(istreambuf_iterator<char>(stream), {});
-	cout << json << endl;
 }
 
 void main(int argc, char** argv)
