@@ -28,7 +28,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <random>
 #include <utility>
 #include "boost/date_time/posix_time/posix_time.hpp"
-#include "Poco/StreamCopier.h"
 #include "Poco/JSON/Parser.h"
 #include "Poco/Net/HTTPRequest.h"
 #include "Poco/Net/HTTPResponse.h"
@@ -37,8 +36,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 
 const std::string groupalarmUri = "https://app.groupalarm.com/api/v1";
-const std::string unitsEndpoint = "/units";
 const std::string alarmEndpoint = "/alarm";
+
+const std::vector<std::string> units{ "B" };
 
 
 std::pair<unsigned int, std::string> readConfigFile(const std::string& configFilePath)
@@ -88,13 +88,59 @@ std::string randomString(const unsigned int& length) {
 	return randomStr;
 }
 
-std::string getUnits(const unsigned int& organizationId, const std::string& apiToken) {
+template <class T>
+std::string join(const std::vector<T>& elements, const std::string& delim) {
+	std::stringstream ss;
+	for (int i = 0; i < elements.size(); i++) {
+		ss << elements[i];
+		if (i < elements.size() - 1) {
+			ss << delim;
+		}
+	}
+
+	return ss.str();
+}
+
+std::vector<unsigned int> parseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, unsigned int organizationId, const std::string& subEndpoint) {
+	using namespace std;
+	using namespace Poco::JSON;
+
+	Parser parser;
+	auto result = parser.parse(json);
+	Array::Ptr jsonObj = result.extract<Array::Ptr>();
+
+	map<string, unsigned int> entityIdMap;
+	for (int i = 0; i < jsonObj->size(); i++) {
+		const auto& entry = jsonObj->get(i).extract<Object::Ptr>();
+		entityIdMap[entry->getValue<string>("name")] = entry->getValue<unsigned int>("id");
+	}
+
+	vector<string> foundEntityNames;
+	vector<unsigned int> entityIds;
+
+	for (const string& entityName : entityNames) {
+		if (entityIdMap.count(entityName) > 0) {
+			entityIds.push_back(entityIdMap[entityName]);
+			foundEntityNames.push_back(entityName);
+		}
+	}
+
+	if (entityIds.size() != entityNames.size()) {
+		vector<string> missingEntities;
+		set_difference(entityNames.begin(), entityNames.end(), foundEntityNames.begin(), foundEntityNames.end(), inserter(missingEntities, missingEntities.begin()));
+
+		throw Poco::Exception("Did not find the following *" + subEndpoint + "* in the Groupalarm organization " + to_string(organizationId) + ": " + join(missingEntities, ", "));
+	}
+
+	return entityIds;
+}
+
+std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const unsigned int& organizationId, const std::string& apiToken, const std::string subEndpoint) {
 	using namespace std;
 	using namespace Poco;
 	using namespace Poco::Net;
-	using namespace Poco::JSON;
 
-	URI uri(groupalarmUri + unitsEndpoint);
+	URI uri(groupalarmUri + "/" + subEndpoint);
 	HTTPSClientSession session(uri.getHost(), uri.getPort());
 	uri.addQueryParameter("organization", to_string(organizationId));
 	string path(uri.getPathAndQuery());
@@ -109,13 +155,13 @@ std::string getUnits(const unsigned int& organizationId, const std::string& apiT
 	cout << response.getStatus() << " " << response.getReason() << endl;
 	string json(istreambuf_iterator<char>(stream), {});
 
-	Parser parser;
-	auto result = parser.parse(json);
-	Array::Ptr pObject = result.extract<Array::Ptr>();
-
-	const auto& firstEntry = pObject->get(0).extract<Object::Ptr>();
-	return firstEntry->getValue<string>("description");
+	return parseResponseJson(json, entityNames, organizationId, subEndpoint);
 }
+
+std::vector<unsigned int> getIdsForUnits(const std::vector<std::string>& unitNames, const unsigned int& organizationId, const std::string& apiToken) {
+	return getEntityIdsFromEndpoint(unitNames, organizationId, apiToken, "units");
+}
+
 
 void sendAlarm(const unsigned int& organizationId, const std::string& apiToken) {
 	using namespace std;
@@ -171,7 +217,7 @@ void main(int argc, char** argv)
 	string apiToken = config.second;
 
 	try {
-		cout << getUnits(organizationId, apiToken) << endl;
+		cout << join(getIdsForUnits(units, organizationId, apiToken), ", ") << endl;
 		sendAlarm(organizationId, apiToken);
 	}
 	catch (const Poco::Exception& e) {
