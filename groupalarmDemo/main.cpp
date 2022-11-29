@@ -184,6 +184,15 @@ std::vector<unsigned int> parseResponseJson(const std::string& json, const std::
 	return entityIds;
 }
 
+void raiseForStatus(const Poco::Net::HTTPResponse& response) {
+	if (response.getStatus() >= 400 && response.getStatus() < 500) {
+		throw Poco::Exception("Client error, status code " + response.getStatus(), ": " + response.getReason());
+	}
+	else if (response.getStatus() >= 500 && response.getStatus() < 600) {
+		throw Poco::Exception("Server error, status code " + response.getStatus(), ": " + response.getReason());
+	}
+}
+
 std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const unsigned int& organizationId, const std::string& apiToken, const std::string& subEndpoint, const std::string& organizationParam) {
 	using namespace std;
 	using namespace Poco;
@@ -204,7 +213,7 @@ std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string
 	string responseBody(istreambuf_iterator<char>(responseStream), {});
 
 	hasJsonResponse(response, responseBody);
-	cout << response.getStatus() << " " << response.getReason() << endl; // TODO: should be like "raise_for_status()"
+	raiseForStatus(response);
 
 	return parseResponseJson(responseBody, entityNames, organizationId, subEndpoint);
 }
@@ -300,7 +309,7 @@ void sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& a
 
 	Object jsonPayload;
 	jsonPayload.set("alarmResources", getAlarmResources(alarmConfig, apiToken, organizationId));
-	jsonPayload.set("organizationID", organizationId);
+	jsonPayload.set("organizationD", organizationId);
 	jsonPayload.set("startTime", currIsoTime);
 	jsonPayload.set("eventName", eventName);
 
@@ -334,7 +343,7 @@ void sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& a
 	string responseBody(istreambuf_iterator<char>(responseStream), {});
 
 	hasJsonResponse(response, responseBody);
-	cout << response.getStatus() << " " << response.getReason() << endl << endl;
+	raiseForStatus(response);
 }
 
 void main(int argc, char** argv)
