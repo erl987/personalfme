@@ -51,16 +51,25 @@ public:
 	std::string messageTemplate;
 };
 
+class Proxy {
+public:
+	std::string address;
+	unsigned short port;
+	std::string username;
+	std::string password;
+};
+
 class AlarmConfig {
 public:
 	Resources resources;
 	Message message;
 	unsigned int closeEventInHours;
+	Proxy proxy;
 };
 
 std::map<std::array<unsigned int, 5>, AlarmConfig> getGroupalarmConfig() {
 	std::map<std::array<unsigned int, 5>, AlarmConfig> alarmConfigs{};
-	alarmConfigs[{1, 2, 3, 4, 5}] = AlarmConfig{ Resources{false, {}, {}, {"B"}, {}}, Message{"Testlarm", ""}, 2};
+	alarmConfigs[{1, 2, 3, 4, 5}] = AlarmConfig{ Resources{false, {}, {}, {"B"}, {}}, Message{"Testlarm", ""}, 2, {"", 0, "", ""}};
 
 	return alarmConfigs;
 }
@@ -288,6 +297,21 @@ Poco::JSON::Object getAlarmResources(const AlarmConfig& alarmConfig, const std::
 	return alarmResources;
 }
 
+void setProxy(Poco::Net::HTTPSClientSession& session, const Proxy& proxyConfig) {
+	if (!proxyConfig.address.empty()) {
+		session.setProxyHost(proxyConfig.address);
+		session.setProxyPort(proxyConfig.port);
+
+		if (!proxyConfig.password.empty()) {
+			session.setProxyUsername(proxyConfig.username);
+			session.setProxyPassword(proxyConfig.password);
+		}
+		else if (!proxyConfig.username.empty()) {
+			session.setProxyUsername(proxyConfig.username);
+		}
+	}
+}
+
 void sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& alarmType, const boost::posix_time::ptime& alarmTimePoint, const AlarmConfig& alarmConfig, const unsigned int& organizationId, const std::string& apiToken, bool doEmitAlarm) {
 	using namespace std;
 	using namespace boost::posix_time;
@@ -297,6 +321,7 @@ void sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& a
 
 	URI uri(groupalarmUri + "/alarm");
 	HTTPSClientSession session(uri.getHost(), uri.getPort());
+	setProxy(session, alarmConfig.proxy);
 	string path(uri.getPathAndQuery());
 	if (!doEmitAlarm)
 	{
@@ -309,7 +334,7 @@ void sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& a
 
 	Object jsonPayload;
 	jsonPayload.set("alarmResources", getAlarmResources(alarmConfig, apiToken, organizationId));
-	jsonPayload.set("organizationD", organizationId);
+	jsonPayload.set("organizationID", organizationId);
 	jsonPayload.set("startTime", currIsoTime);
 	jsonPayload.set("eventName", eventName);
 
