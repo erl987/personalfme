@@ -25,7 +25,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include <fstream>
 #include <iostream>
-#include <random>
 #include <utility>
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include "Poco/JSON/Parser.h"
@@ -36,9 +35,39 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 
 const std::string groupalarmUri = "https://app.groupalarm.com/api/v1";
-const std::string alarmEndpoint = "/alarm";
 
-const std::vector<std::string> units{ "B" };
+class Resources {
+public:
+	bool allUsers;
+	std::map<std::string, unsigned int> labels;
+	std::vector<std::string> scenarios;
+	std::vector<std::string> units;
+	std::vector<std::string> users;
+};
+
+class Message {
+public:
+	std::string messageText;
+	std::string messageTemplate;
+};
+
+class AlarmConfig {
+public:
+	Resources resources;
+	Message message;
+	unsigned int closeEventInHours;
+};
+
+std::map<std::array<unsigned int, 5>, AlarmConfig> getGroupalarmConfig() {
+	std::map<std::array<unsigned int, 5>, AlarmConfig> alarmConfigs{};
+	alarmConfigs[{1, 2, 3, 4, 5}] = AlarmConfig{ Resources{false, {}, {}, {"B"}, {}}, Message{"Testlarm", ""}, 2};
+
+	return alarmConfigs;
+}
+
+std::array<unsigned int, 5> alarmCode{ 1, 2, 3, 4, 5 };
+std::string alarmType = "Einsatzalarmierung";
+bool doEmitAlarm = true;
 
 
 std::pair<unsigned int, std::string> readConfigFile(const std::string& configFilePath)
@@ -75,27 +104,18 @@ std::pair<unsigned int, std::string> readConfigFile(const std::string& configFil
 	return pair<unsigned int, string>(organizationId, apiToken);
 }
 
-std::string randomString(const unsigned int& length) {
-	using namespace std;
-
-	mt19937 generator{ random_device{}() };
-	uniform_int_distribution<int> distribution{ 'a', 'z'};
-
-	string randomStr(length, '\0');
-	for (auto& dis : randomStr)
-		dis = distribution(generator);
-
-	return randomStr;
-}
-
-template <class T>
-std::string join(const std::vector<T>& elements, const std::string& delim) {
+template <class InputIt>
+std::string join(InputIt first, InputIt last, const std::string& delim) {
 	std::stringstream ss;
-	for (int i = 0; i < elements.size(); i++) {
-		ss << elements[i];
-		if (i < elements.size() - 1) {
+	size_t length = std::distance(first, last);
+
+	int i = 0;
+	for (auto it = first; it != last; ++it) {
+		ss << *it;
+		if (i < length - 1) {
 			ss << delim;
 		}
+		i++;
 	}
 
 	return ss.str();
@@ -158,20 +178,20 @@ std::vector<unsigned int> parseResponseJson(const std::string& json, const std::
 		vector<string> missingEntities;
 		set_difference(entityNames.begin(), entityNames.end(), foundEntityNames.begin(), foundEntityNames.end(), inserter(missingEntities, missingEntities.begin()));
 
-		throw Poco::Exception("Did not find the following *" + subEndpoint + "* in the Groupalarm organization " + to_string(organizationId) + ": " + join(missingEntities, ", "));
+		throw Poco::Exception("Did not find the following *" + subEndpoint + "* in the Groupalarm organization " + to_string(organizationId) + ": " + join(missingEntities.cbegin(), missingEntities.cend(), ", "));
 	}
 
 	return entityIds;
 }
 
-std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const unsigned int& organizationId, const std::string& apiToken, const std::string subEndpoint) {
+std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const unsigned int& organizationId, const std::string& apiToken, const std::string& subEndpoint, const std::string& organizationParam) {
 	using namespace std;
 	using namespace Poco;
 	using namespace Poco::Net;
 
 	URI uri(groupalarmUri + "/" + subEndpoint);
 	HTTPSClientSession session(uri.getHost(), uri.getPort());
-	uri.addQueryParameter("organization", to_string(organizationId));
+	uri.addQueryParameter(organizationParam, to_string(organizationId));
 	string path(uri.getPathAndQuery());
 
 	HTTPRequest request(HTTPRequest::HTTP_GET, path, HTTPMessage::HTTP_1_1);
@@ -189,36 +209,115 @@ std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string
 	return parseResponseJson(responseBody, entityNames, organizationId, subEndpoint);
 }
 
+std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const unsigned int& organizationId, const std::string& apiToken, const std::string& subEndpoint) {
+	return getEntityIdsFromEndpoint(entityNames, organizationId, apiToken, subEndpoint, "organization");
+}
+
 std::vector<unsigned int> getIdsForUnits(const std::vector<std::string>& unitNames, const unsigned int& organizationId, const std::string& apiToken) {
 	return getEntityIdsFromEndpoint(unitNames, organizationId, apiToken, "units");
 }
 
-Poco::JSON::Object getAlarmResources(const std::string& apiToken, unsigned int organizationId) {
+std::vector<unsigned int> getIdsForLabels(const std::vector<std::string>& labelNames, const unsigned int& organizationId, const std::string& apiToken) {
+	return getEntityIdsFromEndpoint(labelNames, organizationId, apiToken, "labels");
+}
+
+std::vector<unsigned int> getIdsForUsers(const std::vector<std::string>& userNames, const unsigned int& organizationId, const std::string& apiToken) {
+	return getEntityIdsFromEndpoint(userNames, organizationId, apiToken, "users");
+}
+
+std::vector<unsigned int> getIdsForScenarios(const std::vector<std::string>& scenarioNames, const unsigned int& organizationId, const std::string& apiToken) {
+	return getEntityIdsFromEndpoint(scenarioNames, organizationId, apiToken, "scenarios");
+}
+
+unsigned int getAlarmTemplateId(const std::string& alarmTemplateName, const unsigned int& organizationId, const std::string& apiToken) {
+	return getEntityIdsFromEndpoint({alarmTemplateName}, organizationId, apiToken, "alarms/templates", "organization_id")[0];
+}
+
+Poco::JSON::Object getAlarmResources(const AlarmConfig& alarmConfig, const std::string& apiToken, unsigned int organizationId) {
+	using namespace std;
+
 	Poco::JSON::Object alarmResources;
-	alarmResources.set("allUsers", true);
+
+	if (alarmConfig.resources.allUsers) {
+		alarmResources.set("allUsers", true);
+	}
+	else if (!alarmConfig.resources.labels.empty()) {
+		vector<string> labelNames;
+		for (const auto& entry : alarmConfig.resources.labels) {
+			labelNames.push_back(entry.first);
+		}
+
+		auto labelIds = getIdsForLabels(labelNames, organizationId, apiToken);
+		
+		vector<Poco::JSON::Object> labelsArray;
+		unsigned int index = 0;
+		for (const auto& entry : alarmConfig.resources.labels) {
+			Poco::JSON::Object labelObject;
+			labelObject.set("amount", entry.second);
+			labelObject.set("labelID", labelIds[index]);
+			labelsArray.push_back(labelObject);
+			index++;
+		}
+		alarmResources.set("labels", labelsArray);
+	}
+	else if (!alarmConfig.resources.units.empty()) {
+		auto unitIds = getIdsForUnits(alarmConfig.resources.units, organizationId, apiToken);
+		alarmResources.set("units", unitIds);
+	}
+	else if (!alarmConfig.resources.users.empty()) {
+		auto userIds = getIdsForUsers(alarmConfig.resources.users, organizationId, apiToken);
+		alarmResources.set("users", userIds);
+	}
+	else if (!alarmConfig.resources.scenarios.empty()) {
+		auto scenarioIds = getIdsForScenarios(alarmConfig.resources.scenarios, organizationId, apiToken);
+		alarmResources.set("users", scenarioIds);
+	}
+	else {
+		throw Poco::Exception("Incorrect alarm configuration: no alarm resources");
+	}
 
 	return alarmResources;
 }
 
-void sendAlarm(const unsigned int& organizationId, const std::string& apiToken) {
+void sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& alarmType, const boost::posix_time::ptime& alarmTimePoint, const AlarmConfig& alarmConfig, const unsigned int& organizationId, const std::string& apiToken, bool doEmitAlarm) {
 	using namespace std;
 	using namespace boost::posix_time;
 	using namespace Poco;
 	using namespace Poco::Net;
 	using namespace Poco::JSON;
 
-	URI uri(groupalarmUri + alarmEndpoint);
+	URI uri(groupalarmUri + "/alarm");
 	HTTPSClientSession session(uri.getHost(), uri.getPort());
 	string path(uri.getPathAndQuery());
+	if (!doEmitAlarm)
+	{
+		path += "/preview";
+	}
 
 	string currIsoTime = to_iso_extended_string(second_clock::universal_time()) + "Z";
+	string alarmTimePointStr = to_iso_extended_string(alarmTimePoint);
+	string eventName = "[Funkmelderalarm] Schleife " + join(alarmCode.cbegin(), alarmCode.cend(), "") + " " + alarmTimePointStr + " (" + alarmType + ")";
 
 	Object jsonPayload;
-	jsonPayload.set("alarmResources", getAlarmResources(apiToken, organizationId));
-	jsonPayload.set("message", "Testalarm");
+	jsonPayload.set("alarmResources", getAlarmResources(alarmConfig, apiToken, organizationId));
 	jsonPayload.set("organizationID", organizationId);
 	jsonPayload.set("startTime", currIsoTime);
-	jsonPayload.set("eventName", "Testalarm-" + randomString(4));
+	jsonPayload.set("eventName", eventName);
+
+	if (alarmConfig.closeEventInHours > 0)
+	{
+		jsonPayload.set("scheduledEndTime", to_iso_extended_string(second_clock::universal_time() + hours(alarmConfig.closeEventInHours)) + "Z");
+	}
+
+	if (!alarmConfig.message.messageText.empty())
+	{
+		jsonPayload.set("message", alarmConfig.message.messageText);
+	}
+	else
+	{
+		jsonPayload.set("alarmTemplateID", getAlarmTemplateId(alarmConfig.message.messageTemplate, organizationId, apiToken));
+	}
+
 
 	HTTPRequest request(HTTPRequest::HTTP_POST, path, HTTPMessage::HTTP_1_1);
 	request.setContentType("application/json");
@@ -250,10 +349,10 @@ void main(int argc, char** argv)
 	auto config = readConfigFile(argv[1]);
 	unsigned int organizationId = config.first;
 	string apiToken = config.second;
+	auto alarmTimePoint = boost::posix_time::second_clock::local_time();
 
 	try {
-		cout << join(getIdsForUnits(units, organizationId, apiToken), ", ") << endl;
-		sendAlarm(organizationId, apiToken);
+		sendAlarm(alarmCode, alarmType, alarmTimePoint, getGroupalarmConfig()[alarmCode], organizationId, apiToken, doEmitAlarm);
 	}
 	catch (const Poco::Exception& e) {
 		cout << "Error: " << e.displayText() << endl;
