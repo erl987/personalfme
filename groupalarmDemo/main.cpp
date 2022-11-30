@@ -288,7 +288,7 @@ Poco::JSON::Object getAlarmResources(const AlarmConfig& alarmConfig, const std::
 	}
 	else if (!alarmConfig.resources.scenarios.empty()) {
 		auto scenarioIds = getIdsForScenarios(alarmConfig.resources.scenarios, organizationId, apiToken);
-		alarmResources.set("users", scenarioIds);
+		alarmResources.set("scenarios", scenarioIds);
 	}
 	else {
 		throw Poco::Exception("Incorrect alarm configuration: no alarm resources");
