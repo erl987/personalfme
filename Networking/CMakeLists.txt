@@ -68,6 +68,7 @@ set( SOURCE
 	GatewayLoginDatabase.cpp
 	GroupalarmGateway.cpp
 	Groupalarm2Gateway.cpp
+	Groupalarm2GatewayImpl.cpp
 	GroupalarmLoginData.cpp	
 	GroupalarmMessage.cpp
 	InfoalarmMessageDecorator.cpp
@@ -122,7 +123,9 @@ set( HEADERS
 	GatewayLoginDatabase.h
 	GroupalarmGateway.h
 	Groupalarm2Gateway.h
+	Groupalarm2GatewayImpl.h
 	GroupalarmLoginData.h	
+	Groupalarm2LoginData.h
 	GroupalarmMessage.h
 	InfoalarmMessageDecorator.h
 	MonthlyValidity.h

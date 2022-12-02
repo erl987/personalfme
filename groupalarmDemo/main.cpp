@@ -31,13 +31,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <iostream>
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include "Poco/JSON/Parser.h"
-#include "Poco/Net/NetException.h"
 #include "Groupalarm2Gateway.h"
+#include "Groupalarm2LoginData.h"
 
 
-std::map<std::array<unsigned int, 5>, AlarmConfig> getGroupalarmConfig() {
-	std::map<std::array<unsigned int, 5>, AlarmConfig> alarmConfigs{};
-	alarmConfigs[{1, 2, 3, 4, 5}] = AlarmConfig{ Resources{false, {}, {}, {"B"}, {}}, Message{"Testlarm", ""}, 2, {"", 0, "", ""}};
+std::map<std::array<unsigned int, 5>, External::Groupalarm2::AlarmConfig> getGroupalarmConfig() {
+	std::map<std::array<unsigned int, 5>, External::Groupalarm2::AlarmConfig> alarmConfigs{};
+	alarmConfigs[{1, 2, 3, 4, 5}] = External::Groupalarm2::AlarmConfig{ External::Groupalarm2::Resources{false, {}, {}, {"B"}, {}}, External::Groupalarm2::Message{"Testlarm", ""}, 2, {"", 0, "", ""}};
 
 	return alarmConfigs;
 }
@@ -95,7 +95,7 @@ void main(int argc, char** argv)
 	string apiToken = config.second;
 	auto alarmTimePoint = boost::posix_time::second_clock::local_time();
 
-	auto groupalarm = External::CGroupalarm2Gateway(organizationId, apiToken);
+	External::CGroupalarm2Gateway groupalarm(organizationId, apiToken);
 
 	try {
 		groupalarm.sendAlarm(alarmCode, alarmType, alarmTimePoint, getGroupalarmConfig()[alarmCode], isTest);

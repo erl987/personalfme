@@ -16,7 +16,6 @@
 
 find_package( Poco COMPONENTS
 	JSON
-	NetSSLWin
 REQUIRED )
 
 find_package( Boost COMPONENTS
@@ -35,9 +34,6 @@ target_include_directories( Groupalarm PUBLIC ${PROJECT_SOURCE_DIR}/groupalarmDe
 
 target_link_libraries( Groupalarm PRIVATE 
 	Networking	
-
 	Poco::JSON
-	Poco::NetSSLWin
-
 	Boost::date_time
 )

@@ -16,11 +16,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <string>
-#include "boost/date_time/posix_time/posix_time.hpp"
-#include "Groupalarm2LoginData.h"
 
 #if defined _WIN32 || defined __CYGWIN__
 	#ifdef NETWORKING_API
@@ -47,13 +42,36 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 
 namespace External {
-	class CGroupalarm2Gateway {
-	public:
-		NETWORKING_API CGroupalarm2Gateway(const unsigned int& organizationId, const std::string& apiToken);
-		NETWORKING_API virtual ~CGroupalarm2Gateway();
-		NETWORKING_API void sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& alarmType, const boost::posix_time::ptime& alarmTimePoint, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest);
-	private:
-		class CGroupalarm2GatewayImpl;
-		std::unique_ptr<CGroupalarm2GatewayImpl> privImpl;
-	};
+	namespace Groupalarm2 {
+		class Resources {
+		public:
+			bool allUsers;
+			std::map<std::string, unsigned int> labels;
+			std::vector<std::string> scenarios;
+			std::vector<std::string> units;
+			std::vector<std::string> users;
+		};
+
+		class Message {
+		public:
+			std::string messageText;
+			std::string messageTemplate;
+		};
+
+		class Proxy {
+		public:
+			std::string address;
+			unsigned short port;
+			std::string username;
+			std::string password;
+		};
+
+		class AlarmConfig {
+		public:
+			Resources resources;
+			Message message;
+			unsigned int closeEventInHours;
+			Proxy proxy;
+		};
+	}
 }
