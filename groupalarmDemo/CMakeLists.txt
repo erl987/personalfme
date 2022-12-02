@@ -15,8 +15,8 @@
 # along with this program.If not, see <http://www.gnu.org/licenses/>
 
 find_package( Poco COMPONENTS
-	NetSSLWin
 	JSON
+	NetSSLWin
 REQUIRED )
 
 find_package( Boost COMPONENTS
@@ -34,8 +34,10 @@ add_executable( Groupalarm ${SOURCE} ${HEADERS} )
 target_include_directories( Groupalarm PUBLIC ${PROJECT_SOURCE_DIR}/groupalarmDemo )
 
 target_link_libraries( Groupalarm PRIVATE 
-	Poco::NetSSLWin
+	Networking	
+
 	Poco::JSON
+	Poco::NetSSLWin
 
 	Boost::date_time
 )

@@ -21,7 +21,7 @@ if( WIN32 )
 		Net
 		NetSSLWin
 		Util
-		JSON  # only required on Windows
+		JSON
 		XML
 	REQUIRED )
 else()
@@ -30,6 +30,7 @@ else()
 		Net
 		NetSSL
 		Util
+		JSON
 		XML
 	REQUIRED )
 	find_package( OpenSSL REQUIRED )
@@ -66,6 +67,7 @@ set( SOURCE
 	GatewayLoginData.cpp
 	GatewayLoginDatabase.cpp
 	GroupalarmGateway.cpp
+	Groupalarm2Gateway.cpp
 	GroupalarmLoginData.cpp	
 	GroupalarmMessage.cpp
 	InfoalarmMessageDecorator.cpp
@@ -119,6 +121,7 @@ set( HEADERS
 	GatewayLoginData.h
 	GatewayLoginDatabase.h
 	GroupalarmGateway.h
+	Groupalarm2Gateway.h
 	GroupalarmLoginData.h	
 	GroupalarmMessage.h
 	InfoalarmMessageDecorator.h
