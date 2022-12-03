@@ -24,9 +24,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #endif
 
 #include <vector>
-#include <map>
 #include <string>
-#include <array>
 #include <fstream>
 #include <iostream>
 #include "boost/date_time/posix_time/posix_time.hpp"
@@ -35,18 +33,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "Time.h"
 #include "Groupalarm2Gateway.h"
 #include "Groupalarm2LoginData.h"
-
-
-std::map<std::vector<int>, External::Groupalarm2::AlarmConfig> getGroupalarmConfig() {
-	std::map<std::vector<int>, External::Groupalarm2::AlarmConfig> alarmConfigs{};
-	alarmConfigs[{1, 2, 3, 4, 5}] = External::Groupalarm2::AlarmConfig{ External::Groupalarm2::Resources{false, {}, {}, {"B"}, {}}, External::Groupalarm2::Message{"Testlarm", ""}, 2, {"", 0, "", ""}};
-
-	return alarmConfigs;
-}
-
-std::vector<int> alarmCode{ 1, 2, 3, 4, 5 };
-bool isRealAlarm = true;
-bool isTest = false;
+#include "Groupalarm2Message.h"
 
 
 std::pair<unsigned int, std::string> readConfigFile(const std::string& configFilePath)
@@ -86,6 +73,7 @@ std::pair<unsigned int, std::string> readConfigFile(const std::string& configFil
 void main(int argc, char** argv)
 {
 	using namespace std;
+	using namespace External::Groupalarm;
 
 	if (argc != 2) {
 		cout << "Required parameter: configuration file path" << endl;
@@ -96,14 +84,34 @@ void main(int argc, char** argv)
 	unsigned int organizationId = config.first;
 	string apiToken = config.second;
 
-	auto currTimePoint = boost::posix_time::second_clock::local_time();
-	Utilities::CTime currTimeOfDay(currTimePoint.time_of_day().hours(), currTimePoint.time_of_day().minutes(), currTimePoint.time_of_day().seconds());
-	Utilities::CDateTime alarmTime(currTimePoint.date().day(), currTimePoint.date().month(), currTimePoint.date().year(), currTimeOfDay);
+	CGroupalarm2LoginData groupalarmLoginData;
+	groupalarmLoginData.Set(organizationId, apiToken, "", 0, "", "");
+	unique_ptr<External::CGatewayLoginData> loginData = make_unique<CGroupalarm2LoginData>(groupalarmLoginData);
 
-	External::CGroupalarm2Gateway groupalarm(organizationId, apiToken);
+	CGroupalarm2Message groupalarmMessage;
+	groupalarmMessage.Set(false, {}, {}, { "B" }, {}, "Testalarm", "", 2);
+	unique_ptr<External::CAlarmMessage> message = make_unique<CGroupalarm2Message>(groupalarmMessage);
+
+	auto currUtcTimePoint = boost::posix_time::second_clock::universal_time();
+	Utilities::CTime currTimeOfDay(
+		static_cast<int>(currUtcTimePoint.time_of_day().hours()),
+		static_cast<int>(currUtcTimePoint.time_of_day().minutes()),
+		static_cast<int>(currUtcTimePoint.time_of_day().seconds())
+	);
+	Utilities::CDateTime alarmTime(
+		static_cast<int>(currUtcTimePoint.date().day()),
+		static_cast<int>(currUtcTimePoint.date().month()),
+		static_cast<int>(currUtcTimePoint.date().year()),
+		currTimeOfDay
+	);
+
+	std::vector<int> alarmCode{ 1, 2, 3, 4, 5 };
+	bool isRealAlarm = true;
+
+	unique_ptr<External::CAlarmGateway> gateway = make_unique<External::Groupalarm::CGroupalarm2Gateway>();
 
 	try {
-		groupalarm.sendAlarm(alarmCode, alarmTime, isRealAlarm, getGroupalarmConfig()[alarmCode], isTest);
+		gateway->Send(alarmCode, alarmTime, isRealAlarm, move(loginData), move(message));
 	}
 	catch (const Poco::Exception& e) {
 		cout << "Error: " << e.displayText() << endl;

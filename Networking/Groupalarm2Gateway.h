@@ -20,7 +20,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <vector>
 #include <string>
 #include "DateTime.h"
-#include "Groupalarm2LoginData.h"
+#include "GatewayLoginData.h"
+#include "AlarmMessage.h"
+#include "AlarmGateway.h"
 
 #if defined _WIN32 || defined __CYGWIN__
 	#ifdef NETWORKING_API
@@ -46,14 +48,27 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #endif
 
 
+/*@{*/
+/** \ingroup Networking
+*/
 namespace External {
-	class CGroupalarm2Gateway {
-	public:
-		NETWORKING_API CGroupalarm2Gateway(const unsigned int& organizationId, const std::string& apiToken);
-		NETWORKING_API virtual ~CGroupalarm2Gateway();
-		NETWORKING_API void sendAlarm(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest);
-	private:
-		class CGroupalarm2GatewayImpl;
-		std::unique_ptr<CGroupalarm2GatewayImpl> privImpl;
-	};
+	namespace Groupalarm {
+		/**	\ingroup Networking
+		*	Class implementing the messenger gateway www.Groupalarm.de. It can be used whenever an internet connection is available.
+		*/
+		class CGroupalarm2Gateway : public CAlarmGateway
+		{
+		public:
+			NETWORKING_API CGroupalarm2Gateway(void);
+			NETWORKING_API virtual ~CGroupalarm2Gateway();
+			NETWORKING_API virtual void Send(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<CGatewayLoginData> loginData, std::unique_ptr<CAlarmMessage> message, const Utilities::CMediaFile& audioFile = Utilities::CMediaFile()) override;
+			NETWORKING_API virtual std::unique_ptr<CAlarmGateway> Clone() const override;
+		protected:
+			virtual bool IsEqual(const CAlarmGateway& rhs) const override;
+		private:
+			class CGroupalarm2GatewayImpl;
+			std::unique_ptr<CGroupalarm2GatewayImpl> privImpl;
+		};
+	}
 }
+/*@}*/

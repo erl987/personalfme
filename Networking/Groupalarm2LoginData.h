@@ -16,64 +16,71 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 #pragma once
 
-#include <map>
-
+#include <string>
+#include "GatewayLoginData.h"
 
 #if defined _WIN32 || defined __CYGWIN__
-	#ifdef NETWORKING_API
-		// All functions in this file are exported
-	#else
-		// All functions in this file are imported
-		// Windows
-		#ifdef __GNUC__
-			// GCC
-			#define NETWORKING_API __attribute__ ((dllimport))
-		#else
-			// Microsoft Visual Studio
-			#define NETWORKING_API __declspec(dllimport)
-		#endif
-	#endif
+#ifdef NETWORKING_API
+// All functions in this file are exported
 #else
-	// Linux
-	#if __GNUC__ >= 4
-		#define NETWORKING_API __attribute__ ((visibility ("default")))
-	#else
-		#define NETWORKING_API
-	#endif		
+// All functions in this file are imported
+// Windows
+#ifdef __GNUC__
+	// GCC
+#define NETWORKING_API __attribute__ ((dllimport))
+#else
+	// Microsoft Visual Studio
+#define NETWORKING_API __declspec(dllimport)
+#endif
+#endif
+#else
+// Linux
+#if __GNUC__ >= 4
+#define NETWORKING_API __attribute__ ((visibility ("default")))
+#else
+#define NETWORKING_API
+#endif		
 #endif
 
 
+/*@{*/
+/** \ingroup Networking
+*/
 namespace External {
-	namespace Groupalarm2 {
-		class Resources {
+	namespace Groupalarm {
+		/** \ingroup Networking
+		*	Class representing the login data for sending alarms via the gateway www.groupalarm.de
+		*/
+		class CGroupalarm2LoginData : public CGatewayLoginData
+		{
 		public:
-			bool allUsers;
-			std::map<std::string, unsigned int> labels;
-			std::vector<std::string> scenarios;
-			std::vector<std::string> units;
-			std::vector<std::string> users;
-		};
-
-		class Message {
-		public:
-			std::string messageText;
-			std::string messageTemplate;
-		};
-
-		class Proxy {
-		public:
-			std::string address;
-			unsigned short port;
-			std::string username;
-			std::string password;
-		};
-
-		class AlarmConfig {
-		public:
-			Resources resources;
-			Message message;
-			unsigned int closeEventInHours;
-			Proxy proxy;
+			NETWORKING_API CGroupalarm2LoginData(void);
+			NETWORKING_API virtual ~CGroupalarm2LoginData(void);
+			NETWORKING_API virtual std::unique_ptr<CGatewayLoginData> Clone(void) const override;
+			NETWORKING_API virtual void Set(const unsigned int& organizationId, const std::string& apiToken, const std::string& proxyAddress, const unsigned short& proxyPort, const std::string& proxyUserName, const std::string& proxyPassword);
+			NETWORKING_API virtual void Get(unsigned int& organizationId, std::string& apiToken, std::string& proxyAddress, unsigned short& proxyPort, std::string& proxyUserName, std::string& proxyPassword) const;
+			NETWORKING_API virtual std::string GetProxyAddress() const;
+			NETWORKING_API virtual unsigned short GetProxyPort() const;
+			NETWORKING_API virtual std::string GetProxyUserName() const;
+			NETWORKING_API virtual std::string GetProxyPassword() const;
+			NETWORKING_API virtual std::string GetApiToken() const;
+			NETWORKING_API virtual unsigned int GetOrganizationId() const;
+			NETWORKING_API virtual bool IsWithProxy() const;
+			NETWORKING_API virtual bool IsWithProxyWithUserNameAndPassword() const;
+			NETWORKING_API virtual bool IsWithProxyWithUserNameOnly() const;
+			NETWORKING_API virtual bool IsValid() const;
+		protected:
+			NETWORKING_API virtual bool IsEqual(const CGatewayLoginData& rhs) const override;
+		private:
+			unsigned int organizationId;
+			std::string apiToken;
+			std::string proxyAddress;
+			unsigned short proxyPort;
+			std::string proxyUserName;
+			std::string proxyPassword;
+			bool isValid;
 		};
 	}
 }
+/*@}*/
+

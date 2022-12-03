@@ -23,31 +23,32 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "Groupalarm2Gateway.h"
 
 
-class External::CGroupalarm2Gateway::CGroupalarm2GatewayImpl {
+/**	\ingroup Networking
+*	Private implementation class for the e-mail gateway
+*/
+class External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl {
 public:
-	CGroupalarm2GatewayImpl(const unsigned int& organizationId, const std::string& apiToken);
+	CGroupalarm2GatewayImpl();
 	virtual ~CGroupalarm2GatewayImpl() {};
-	void sendAlarm(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest);
+	void Send(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<CGatewayLoginData> loginData, std::unique_ptr<CAlarmMessage> message, const Utilities::CMediaFile& audioFile);
 
 private:
 	const std::string GROUPALARM_URI = "https://app.groupalarm.com/api/v1";
 
-	const unsigned int organizationId;
-	const std::string apiToken;
-
-	void setProxy(Poco::Net::HTTPSClientSession& session, const External::Groupalarm2::Proxy& proxyConfig);
-	bool hasJsonResponse(const Poco::Net::HTTPResponse& response, const std::string& responseBody);
-	std::vector<unsigned int> parseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint);
-	void raiseForStatus(const Poco::Net::HTTPResponse& response);
-	Poco::JSON::Object createAlarmConfig(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, const External::Groupalarm2::AlarmConfig& alarmConfig);
-	Poco::JSON::Object getJsonPayload(const External::Groupalarm2::AlarmConfig& alarmConfig, const std::string& currIsoTime, const std::string& eventName);
-	Poco::JSON::Object getAlarmResources(const External::Groupalarm2::AlarmConfig& alarmConfig);
-	std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const std::string& organizationParam);
-	std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint);
-	std::vector<unsigned int> getIdsForUnits(const std::vector<std::string>& unitNames);
-	std::vector<unsigned int> getIdsForLabels(const std::vector<std::string>& labelNames);
-	std::vector<unsigned int> getIdsForUsers(const std::vector<std::string>& userNames);
-	std::vector<unsigned int> getIdsForScenarios(const std::vector<std::string>& scenarioNames);
-	unsigned int getAlarmTemplateId(const std::string& alarmTemplateName);
-	template <class InputIt> static std::string join(InputIt first, InputIt last, const std::string& delim);
+	void SetProxy(Poco::Net::HTTPSClientSession& session, std::unique_ptr<CGatewayLoginData> loginData);
+	bool HasJsonResponse(const Poco::Net::HTTPResponse& response, const std::string& responseBody);
+	std::vector<unsigned int> ParseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId);
+	void RaiseForStatus(const Poco::Net::HTTPResponse& response);
+	Poco::JSON::Object CreateAlarmJson(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<External::CAlarmMessage> message, unsigned int organizationId, const std::string& apiToken);
+	Poco::JSON::Object GetJsonPayload(std::unique_ptr<External::CAlarmMessage> message, const std::string& currIsoTime, const std::string& eventName, unsigned int organizationId, const std::string& apiToken);
+	Poco::JSON::Object GetAlarmResources(std::unique_ptr<External::CAlarmMessage> message, unsigned int organizationId, const std::string& apiToken);
+	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId, const std::string& apiToken, const std::string& organizationParam);
+	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId, const std::string& apiToken);
+	std::vector<unsigned int> GetIdsForUnits(const std::vector<std::string>& unitNames, unsigned int organizationId, const std::string& apiToken);
+	std::vector<unsigned int> GetIdsForLabels(const std::vector<std::string>& labelNames, unsigned int organizationId, const std::string& apiToken);
+	std::vector<unsigned int> GetIdsForUsers(const std::vector<std::string>& userNames, unsigned int organizationId, const std::string& apiToken);
+	std::vector<unsigned int> GetIdsForScenarios(const std::vector<std::string>& scenarioNames, unsigned int organizationId, const std::string& apiToken);
+	unsigned int GetAlarmTemplateId(const std::string& alarmTemplateName, unsigned int organizationId, const std::string& apiToken);
+	template <class InputIt> static std::string Join(InputIt first, InputIt last, const std::string& delim);
 };
+/*@}*/

@@ -70,7 +70,9 @@ set( SOURCE
 	Groupalarm2Gateway.cpp
 	Groupalarm2GatewayImpl.cpp
 	GroupalarmLoginData.cpp	
+	Groupalarm2LoginData.cpp	
 	GroupalarmMessage.cpp
+	Groupalarm2Message.cpp
 	InfoalarmMessageDecorator.cpp
 	MonthlyValidity.cpp
 	SimpleHTTPClient.cpp
@@ -127,6 +129,7 @@ set( HEADERS
 	GroupalarmLoginData.h	
 	Groupalarm2LoginData.h
 	GroupalarmMessage.h
+	Groupalarm2Message.h
 	InfoalarmMessageDecorator.h
 	MonthlyValidity.h
 	SimpleHTTPClient.h
