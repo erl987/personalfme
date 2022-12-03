@@ -26,6 +26,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "BoostStdTimeConverter.h"
 #include "german_local_date_time.h"
 #include "Groupalarm2Message.h"
+#include "ExternalProgramMessage.h"
 #include "Groupalarm2GatewayImpl.h"
 
 
@@ -166,19 +167,17 @@ unsigned int External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl:
 	return GetEntityIdsFromEndpoint({ alarmTemplateName }, "alarms/templates", organizationId, apiToken, "organization_id")[0];
 }
 
-Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetAlarmResources(std::unique_ptr<External::CAlarmMessage> message, unsigned int organizationId, const std::string& apiToken) {
+Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetAlarmResources(const CGroupalarm2Message& message, unsigned int organizationId, const std::string& apiToken) {
 	using namespace std;
-
-	auto groupalarmMessage = dynamic_cast<const CGroupalarm2Message&>(*message);
 
 	Poco::JSON::Object alarmResources;
 
-	if (groupalarmMessage.ToAllUsers()) {
+	if (message.ToAllUsers()) {
 		alarmResources.set("allUsers", true);
 	}
-	else if (groupalarmMessage.ToLabels()) {
+	else if (message.ToLabels()) {
 		vector<string> labelNames;
-		for (const auto& entry: groupalarmMessage.GetLabels()) {
+		for (const auto& entry: message.GetLabels()) {
 			labelNames.push_back(entry.first);
 		}
 
@@ -186,7 +185,7 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 
 		vector<Poco::JSON::Object> labelsArray;
 		unsigned int index = 0;
-		for (const auto& entry: groupalarmMessage.GetLabels()) {
+		for (const auto& entry: message.GetLabels()) {
 			Poco::JSON::Object labelObject;
 			labelObject.set("amount", entry.second);
 			labelObject.set("labelID", labelIds[index]);
@@ -195,16 +194,16 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 		}
 		alarmResources.set("labels", labelsArray);
 	}
-	else if (groupalarmMessage.ToUnits()) {
-		auto unitIds = GetIdsForUnits(groupalarmMessage.GetUnits(), organizationId, apiToken);
+	else if (message.ToUnits()) {
+		auto unitIds = GetIdsForUnits(message.GetUnits(), organizationId, apiToken);
 		alarmResources.set("units", unitIds);
 	}
-	else if (groupalarmMessage.ToUsers()) {
-		auto userIds = GetIdsForUsers(groupalarmMessage.GetUsers(), organizationId, apiToken);
+	else if (message.ToUsers()) {
+		auto userIds = GetIdsForUsers(message.GetUsers(), organizationId, apiToken);
 		alarmResources.set("users", userIds);
 	}
-	else if (groupalarmMessage.ToScenarios()) {
-		auto scenarioIds = GetIdsForScenarios(groupalarmMessage.GetScenarios(), organizationId, apiToken);
+	else if (message.ToScenarios()) {
+		auto scenarioIds = GetIdsForScenarios(message.GetScenarios(), organizationId, apiToken);
 		alarmResources.set("scenarios", scenarioIds);
 	}
 	else {
@@ -231,27 +230,32 @@ void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::SetProx
 	}
 }
 
-Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetJsonPayload(std::unique_ptr<External::CAlarmMessage> message, const std::string& currIsoTime, const std::string& eventName, unsigned int organizationId, const std::string& apiToken) {
+Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetJsonPayload(const CGroupalarm2Message& message, const std::string& currIsoTime, const std::string& eventName, const std::string& otherMessagesInfo, unsigned int organizationId, const std::string& apiToken) {
 	using namespace boost::posix_time;
 
 	Poco::JSON::Object jsonPayload;
-	auto groupalarmMessage = dynamic_cast<const CGroupalarm2Message&>(*message);
 
-	if (groupalarmMessage.GetEventActivePeriodInHours() > 0)
+	if (message.GetEventActivePeriodInHours() > 0)
 	{
-		jsonPayload.set("scheduledEndTime", to_iso_extended_string(second_clock::universal_time() + hours(groupalarmMessage.GetEventActivePeriodInHours())) + "Z");
+		jsonPayload.set("scheduledEndTime", to_iso_extended_string(second_clock::universal_time() + hours(message.GetEventActivePeriodInHours())) + "Z");
 	}
 
-	if (groupalarmMessage.HasMessageText())
+	if (message.HasMessageText())
 	{
-		jsonPayload.set("message", groupalarmMessage.GetMessageText());
+		std::string messageText = message.GetMessageText();
+		if (!otherMessagesInfo.empty()) {
+			messageText += "\n\n" + otherMessagesInfo;
+		}
+
+		jsonPayload.set("message", messageText);
 	}
 	else
 	{
-		jsonPayload.set("alarmTemplateID", GetAlarmTemplateId(groupalarmMessage.GetMessageTemplate(), organizationId, apiToken));
+		// the additional infoalarm information is ignored if a message template is used
+		jsonPayload.set("alarmTemplateID", GetAlarmTemplateId(message.GetMessageTemplate(), organizationId, apiToken));
 	}
 
-	jsonPayload.set("alarmResources", GetAlarmResources(move(message), organizationId, apiToken));
+	jsonPayload.set("alarmResources", GetAlarmResources(message, organizationId, apiToken));
 	jsonPayload.set("organizationID", organizationId);
 	jsonPayload.set("startTime", currIsoTime);
 	jsonPayload.set("eventName", eventName);
@@ -263,13 +267,34 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 	using namespace std;
 	using namespace boost::posix_time;
 	using namespace Utilities::Time;
+	using namespace External::Infoalarm;
 	
-	string alarmType;
-	if (isRealAlarm) {
-		alarmType = "Einsatzalarmierung";
+	CGroupalarm2Message groupalarmMessage;
+	string otherMessagesInfo = "";
+	bool isInfoAlarm;
+
+	if (typeid(*message) == typeid(CInfoalarmMessageDecorator)) {
+		const auto& infoalarmMessage = dynamic_cast<const CInfoalarmMessageDecorator&>(*message);
+		otherMessagesInfo = CreateOtherMessagesInfo(infoalarmMessage);
+		groupalarmMessage = dynamic_cast<const CGroupalarm2Message&>(*infoalarmMessage.GetContainedMessage());
+		isInfoAlarm = true;
 	}
 	else {
-		alarmType = "Probealarm";
+		groupalarmMessage = dynamic_cast<const CGroupalarm2Message&>(*message);
+		isInfoAlarm = false;
+	}
+
+	string alarmType;
+
+	if (isInfoAlarm) {
+		alarmType = "Infoalarm";
+	} else {
+		if (isRealAlarm) {
+			alarmType = "Einsatzalarmierung";
+		}
+		else {
+			alarmType = "Probealarm";
+		}
 	}
 
 	stringstream ss;
@@ -277,7 +302,7 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 	string eventName = ss.str();
 
 	string currIsoTime = to_iso_extended_string(second_clock::universal_time()) + "Z";
-	return GetJsonPayload(move(message), currIsoTime, eventName, organizationId, apiToken);
+	return GetJsonPayload(groupalarmMessage, currIsoTime, eventName, otherMessagesInfo, organizationId, apiToken);
 }
 
 External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::CGroupalarm2GatewayImpl()
@@ -321,4 +346,88 @@ void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::Send(co
 
 	HasJsonResponse(response, responseBody);
 	RaiseForStatus(response);
+}
+
+/** @brief		Provides a string containing a summary of the alarms corresponding to the infoalarm
+*   @param		infoalarmMessage				Infoalarm message
+*   @return										Summary string containing the alarms corresponding to the infoalarm
+*   @exception									None
+*   @remarks									None
+*/
+std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::CreateOtherMessagesInfo(const External::Infoalarm::CInfoalarmMessageDecorator& infoalarmMessage)
+{
+	using namespace std;
+	using namespace Email;
+	using namespace Groupalarm;
+	using namespace ExternalProgram;
+
+	unsigned int emailCounter = 0;
+	unsigned int typeCounter = 0;
+	set<string> otherMessageTypes;
+	string receiverIDs;
+	vector< shared_ptr<External::CAlarmMessage> > otherMessages;
+	string otherMessagesInfo;
+
+	otherMessages = infoalarmMessage.GetOtherMessages();
+
+	for (const auto& message : otherMessages) {
+		// infoalarms are not included
+		if (typeid(*message) == typeid(CEmailMessage)) {
+			otherMessageTypes.insert("E-Mail");
+			if (emailCounter > 0) {
+				receiverIDs += " / ";
+			}
+			receiverIDs += GetAlarmReceiverID(dynamic_cast<const Email::CEmailMessage&>(*message));
+			emailCounter++;
+		}
+		else if (typeid(*message) == typeid(CGroupalarm2Message)) {
+			otherMessageTypes.insert("Groupalarm");
+		}
+		else if (typeid(*message) == typeid(CExternalProgramMessage)) {
+			otherMessageTypes.insert("Externes Programm");
+		}
+	}
+
+	// add information on the receiver ids (only available for e-mail messages)
+	if (!receiverIDs.empty()) {
+		otherMessagesInfo += "für: " + receiverIDs;
+	}
+
+	// add information on all message types that were used
+	if (!otherMessageTypes.empty()) {
+		if (!receiverIDs.empty()) {
+			otherMessagesInfo += ". ";
+		}
+		otherMessagesInfo += "Ausgelöst: ";
+		for (auto type : otherMessageTypes) {
+			if (typeCounter > 0) {
+				otherMessagesInfo += ", ";
+			}
+			otherMessagesInfo += type;
+			typeCounter++;
+		}
+	}
+
+	return otherMessagesInfo;
+}
+
+
+/**	@brief		Provides a string containing the receiver ID of an alarm e-mail message
+*	@param		message							E-mail alarm message
+*	@return										String containing the receiver ID of the e-mail message
+*	@exception									None
+*	@remarks									None
+*/
+std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetAlarmReceiverID(const External::Email::CEmailMessage& message)
+{
+	using namespace std;
+
+	bool isWithAlarmMessage;
+	string siteID, alarmID, alarmText, alarmReceiverID;
+	vector< pair<string, string> > recipients;
+
+	message.Get(siteID, alarmID, recipients, alarmText, isWithAlarmMessage);
+	alarmReceiverID = siteID + ", " + alarmID;
+
+	return alarmReceiverID;
 }

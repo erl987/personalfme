@@ -19,7 +19,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "Poco/JSON/Parser.h"
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/HTTPSClientSession.h"
+#include "InfoalarmMessageDecorator.h"
+#include "EmailMessage.h"
 #include "Groupalarm2LoginData.h"
+#include "Groupalarm2Message.h"
 #include "Groupalarm2Gateway.h"
 
 
@@ -40,8 +43,8 @@ private:
 	std::vector<unsigned int> ParseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId);
 	void RaiseForStatus(const Poco::Net::HTTPResponse& response);
 	Poco::JSON::Object CreateAlarmJson(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<External::CAlarmMessage> message, unsigned int organizationId, const std::string& apiToken);
-	Poco::JSON::Object GetJsonPayload(std::unique_ptr<External::CAlarmMessage> message, const std::string& currIsoTime, const std::string& eventName, unsigned int organizationId, const std::string& apiToken);
-	Poco::JSON::Object GetAlarmResources(std::unique_ptr<External::CAlarmMessage> message, unsigned int organizationId, const std::string& apiToken);
+	Poco::JSON::Object GetJsonPayload(const CGroupalarm2Message& message, const std::string& currIsoTime, const std::string& eventName, const std::string& otherMessagesInfo, unsigned int organizationId, const std::string& apiToken);
+	Poco::JSON::Object GetAlarmResources(const CGroupalarm2Message& message, unsigned int organizationId, const std::string& apiToken);
 	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId, const std::string& apiToken, const std::string& organizationParam);
 	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId, const std::string& apiToken);
 	std::vector<unsigned int> GetIdsForUnits(const std::vector<std::string>& unitNames, unsigned int organizationId, const std::string& apiToken);
@@ -50,5 +53,7 @@ private:
 	std::vector<unsigned int> GetIdsForScenarios(const std::vector<std::string>& scenarioNames, unsigned int organizationId, const std::string& apiToken);
 	unsigned int GetAlarmTemplateId(const std::string& alarmTemplateName, unsigned int organizationId, const std::string& apiToken);
 	template <class InputIt> static std::string Join(InputIt first, InputIt last, const std::string& delim);
+	std::string CreateOtherMessagesInfo(const External::Infoalarm::CInfoalarmMessageDecorator& infoalarmMessage);
+	std::string GetAlarmReceiverID(const External::Email::CEmailMessage& message);
 };
 /*@}*/
