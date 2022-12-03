@@ -26,11 +26,7 @@ set( SOURCE
 	main.cpp
 )
 
-set( HEADERS
-)
-
-add_executable( Groupalarm ${SOURCE} ${HEADERS} )
-target_include_directories( Groupalarm PUBLIC ${PROJECT_SOURCE_DIR}/groupalarmDemo )
+add_executable( Groupalarm ${SOURCE} )
 
 target_link_libraries( Groupalarm PRIVATE 
 	Networking	

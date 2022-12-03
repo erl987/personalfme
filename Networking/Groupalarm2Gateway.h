@@ -19,7 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <memory>
 #include <vector>
 #include <string>
-#include "boost/date_time/posix_time/posix_time.hpp"
+#include "DateTime.h"
 #include "Groupalarm2LoginData.h"
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -51,7 +51,7 @@ namespace External {
 	public:
 		NETWORKING_API CGroupalarm2Gateway(const unsigned int& organizationId, const std::string& apiToken);
 		NETWORKING_API virtual ~CGroupalarm2Gateway();
-		NETWORKING_API void sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& alarmType, const boost::posix_time::ptime& alarmTimePoint, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest);
+		NETWORKING_API void sendAlarm(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest);
 	private:
 		class CGroupalarm2GatewayImpl;
 		std::unique_ptr<CGroupalarm2GatewayImpl> privImpl;

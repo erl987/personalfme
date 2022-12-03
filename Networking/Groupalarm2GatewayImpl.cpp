@@ -23,6 +23,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/HTTPSessionFactory.h"
 #include "Poco/Net/HTTPSClientSession.h"
+#include "BoostStdTimeConverter.h"
+#include "german_local_date_time.h"
 #include "Groupalarm2GatewayImpl.h"
 
 
@@ -250,32 +252,48 @@ Poco::JSON::Object External::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::getJs
 	return jsonPayload;
 }
 
+Poco::JSON::Object External::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::createAlarmConfig(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, const External::Groupalarm2::AlarmConfig& alarmConfig) {
+	using namespace std;
+	using namespace boost::posix_time;
+	using namespace Utilities::Time;
+
+	string alarmType;
+	if (isRealAlarm) {
+		alarmType = "Einsatzalarmierung";
+	}
+	else {
+		alarmType = "Probealarm";
+	}
+
+	stringstream ss;
+	ss << "[Funkmelderalarm] Schleife " << join(code.cbegin(), code.cend(), "") << " " << german_local_date_time(CBoostStdTimeConverter::ConvertToBoostTime(alarmTime)) << " (" + alarmType << ")";
+	string eventName = ss.str();
+
+	string currIsoTime = to_iso_extended_string(second_clock::universal_time()) + "Z";
+	return getJsonPayload(alarmConfig, currIsoTime, eventName);
+}
+
 External::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::CGroupalarm2GatewayImpl(const unsigned int& organizationId, const std::string& apiToken)
 	: organizationId(organizationId),
 	apiToken(apiToken)
 {
 }
 
-void External::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& alarmType, const boost::posix_time::ptime& alarmTimePoint, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest) {
+void External::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::sendAlarm(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest) {
 	using namespace std;
-	using namespace boost::posix_time;
 	using namespace Poco;
 	using namespace Poco::Net;
+
+	Poco::JSON::Object jsonPayload = createAlarmConfig(code, alarmTime, isRealAlarm, alarmConfig);
 
 	URI uri(GROUPALARM_URI + "/alarm");
 	HTTPSClientSession session(uri.getHost(), uri.getPort());
 	setProxy(session, alarmConfig.proxy);
 
 	string path(uri.getPathAndQuery());
-	if (isTest)
-	{
+	if (isTest) {
 		path += "/preview";
 	}
-
-	string currIsoTime = to_iso_extended_string(second_clock::universal_time()) + "Z";
-	string alarmTimePointStr = to_iso_extended_string(alarmTimePoint);
-	string eventName = "[Funkmelderalarm] Schleife " + join(alarmCode.cbegin(), alarmCode.cend(), "") + " " + alarmTimePointStr + " (" + alarmType + ")";
-	Poco::JSON::Object jsonPayload = getJsonPayload(alarmConfig, currIsoTime, eventName);
 
 	HTTPRequest request(HTTPRequest::HTTP_POST, path, HTTPMessage::HTTP_1_1);
 	request.setContentType("application/json");

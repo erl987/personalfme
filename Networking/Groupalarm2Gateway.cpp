@@ -39,7 +39,7 @@ External::CGroupalarm2Gateway::~CGroupalarm2Gateway()
 };
 
 
-void External::CGroupalarm2Gateway::sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& alarmType, const boost::posix_time::ptime& alarmTimePoint, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest)
+void External::CGroupalarm2Gateway::sendAlarm(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest)
 {
-	privImpl->sendAlarm(alarmCode, alarmType, alarmTimePoint, alarmConfig, isTest);
+	privImpl->sendAlarm(code, alarmTime, isRealAlarm, alarmConfig, isTest);
 }

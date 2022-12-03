@@ -27,7 +27,7 @@ class External::CGroupalarm2Gateway::CGroupalarm2GatewayImpl {
 public:
 	CGroupalarm2GatewayImpl(const unsigned int& organizationId, const std::string& apiToken);
 	virtual ~CGroupalarm2GatewayImpl() {};
-	void sendAlarm(const std::array<unsigned int, 5> alarmCode, const std::string& alarmType, const boost::posix_time::ptime& alarmTimePoint, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest);
+	void sendAlarm(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, const External::Groupalarm2::AlarmConfig& alarmConfig, bool isTest);
 
 private:
 	const std::string GROUPALARM_URI = "https://app.groupalarm.com/api/v1";
@@ -39,6 +39,7 @@ private:
 	bool hasJsonResponse(const Poco::Net::HTTPResponse& response, const std::string& responseBody);
 	std::vector<unsigned int> parseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint);
 	void raiseForStatus(const Poco::Net::HTTPResponse& response);
+	Poco::JSON::Object createAlarmConfig(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, const External::Groupalarm2::AlarmConfig& alarmConfig);
 	Poco::JSON::Object getJsonPayload(const External::Groupalarm2::AlarmConfig& alarmConfig, const std::string& currIsoTime, const std::string& eventName);
 	Poco::JSON::Object getAlarmResources(const External::Groupalarm2::AlarmConfig& alarmConfig);
 	std::vector<unsigned int> getEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const std::string& organizationParam);

@@ -31,19 +31,21 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <iostream>
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include "Poco/JSON/Parser.h"
+#include "DateTime.h"
+#include "Time.h"
 #include "Groupalarm2Gateway.h"
 #include "Groupalarm2LoginData.h"
 
 
-std::map<std::array<unsigned int, 5>, External::Groupalarm2::AlarmConfig> getGroupalarmConfig() {
-	std::map<std::array<unsigned int, 5>, External::Groupalarm2::AlarmConfig> alarmConfigs{};
+std::map<std::vector<int>, External::Groupalarm2::AlarmConfig> getGroupalarmConfig() {
+	std::map<std::vector<int>, External::Groupalarm2::AlarmConfig> alarmConfigs{};
 	alarmConfigs[{1, 2, 3, 4, 5}] = External::Groupalarm2::AlarmConfig{ External::Groupalarm2::Resources{false, {}, {}, {"B"}, {}}, External::Groupalarm2::Message{"Testlarm", ""}, 2, {"", 0, "", ""}};
 
 	return alarmConfigs;
 }
 
-std::array<unsigned int, 5> alarmCode{ 1, 2, 3, 4, 5 };
-std::string alarmType = "Einsatzalarmierung";
+std::vector<int> alarmCode{ 1, 2, 3, 4, 5 };
+bool isRealAlarm = true;
 bool isTest = false;
 
 
@@ -93,12 +95,15 @@ void main(int argc, char** argv)
 	auto config = readConfigFile(argv[1]);
 	unsigned int organizationId = config.first;
 	string apiToken = config.second;
-	auto alarmTimePoint = boost::posix_time::second_clock::local_time();
+
+	auto currTimePoint = boost::posix_time::second_clock::local_time();
+	Utilities::CTime currTimeOfDay(currTimePoint.time_of_day().hours(), currTimePoint.time_of_day().minutes(), currTimePoint.time_of_day().seconds());
+	Utilities::CDateTime alarmTime(currTimePoint.date().day(), currTimePoint.date().month(), currTimePoint.date().year(), currTimeOfDay);
 
 	External::CGroupalarm2Gateway groupalarm(organizationId, apiToken);
 
 	try {
-		groupalarm.sendAlarm(alarmCode, alarmType, alarmTimePoint, getGroupalarmConfig()[alarmCode], isTest);
+		groupalarm.sendAlarm(alarmCode, alarmTime, isRealAlarm, getGroupalarmConfig()[alarmCode], isTest);
 	}
 	catch (const Poco::Exception& e) {
 		cout << "Error: " << e.displayText() << endl;
