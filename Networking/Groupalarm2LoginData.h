@@ -58,17 +58,17 @@ namespace External {
 			NETWORKING_API virtual ~CGroupalarm2LoginData(void);
 			NETWORKING_API virtual std::unique_ptr<CGatewayLoginData> Clone(void) const override;
 			NETWORKING_API virtual void Set(const unsigned int& organizationId, const std::string& apiToken, const std::string& proxyAddress, const unsigned short& proxyPort, const std::string& proxyUserName, const std::string& proxyPassword);
-			NETWORKING_API virtual void Get(unsigned int& organizationId, std::string& apiToken, std::string& proxyAddress, unsigned short& proxyPort, std::string& proxyUserName, std::string& proxyPassword) const;
-			NETWORKING_API virtual std::string GetProxyAddress() const;
-			NETWORKING_API virtual unsigned short GetProxyPort() const;
-			NETWORKING_API virtual std::string GetProxyUserName() const;
-			NETWORKING_API virtual std::string GetProxyPassword() const;
-			NETWORKING_API virtual std::string GetApiToken() const;
-			NETWORKING_API virtual unsigned int GetOrganizationId() const;
-			NETWORKING_API virtual bool IsWithProxy() const;
-			NETWORKING_API virtual bool IsWithProxyWithUserNameAndPassword() const;
-			NETWORKING_API virtual bool IsWithProxyWithUserNameOnly() const;
-			NETWORKING_API virtual bool IsValid() const;
+			void Get(unsigned int& organizationId, std::string& apiToken, std::string& proxyAddress, unsigned short& proxyPort, std::string& proxyUserName, std::string& proxyPassword) const;
+			std::string GetProxyAddress() const;
+			unsigned short GetProxyPort() const;
+			std::string GetProxyUserName() const;
+			std::string GetProxyPassword() const;
+			std::string GetApiToken() const;
+			unsigned int GetOrganizationId() const;
+			bool IsWithProxy() const;
+			bool IsWithProxyWithUserNameAndPassword() const;
+			bool IsWithProxyWithUserNameOnly() const;
+			bool IsValid() const;
 		protected:
 			NETWORKING_API virtual bool IsEqual(const CGatewayLoginData& rhs) const override;
 		private:
