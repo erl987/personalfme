@@ -113,8 +113,8 @@ void main(int argc, char** argv)
 	try {
 		gateway->Send(alarmCode, alarmTime, isRealAlarm, move(loginData), move(message));
 	}
-	catch (const Poco::Exception& e) {
-		cout << "Error: " << e.displayText() << endl;
+	catch (const std::exception& e) {
+		cout << "Error: " << e.what() << endl;
 		exit(-3);
 	}
 }

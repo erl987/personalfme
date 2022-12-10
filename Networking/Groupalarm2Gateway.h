@@ -69,6 +69,24 @@ namespace External {
 			class CGroupalarm2GatewayImpl;
 			std::unique_ptr<CGroupalarm2GatewayImpl> privImpl;
 		};
+
+		namespace Exception {
+			class GroupalarmServerError : public virtual std::runtime_error
+			{
+			public:
+				GroupalarmServerError(const std::string& errorMessage)
+					: runtime_error(errorMessage)
+				{}
+			};
+
+			class GroupalarmClientError : public virtual std::logic_error
+			{
+			public:
+				GroupalarmClientError(const std::string& errorMessage)
+					: logic_error(errorMessage)
+				{}
+			};
+		}
 	}
 }
 /*@}*/

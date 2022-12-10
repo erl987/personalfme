@@ -39,9 +39,9 @@ private:
 	const std::string GROUPALARM_URI = "https://app.groupalarm.com/api/v1";
 
 	void SetProxy(Poco::Net::HTTPSClientSession& session, std::unique_ptr<CGatewayLoginData> loginData);
-	bool HasJsonResponse(const Poco::Net::HTTPResponse& response, const std::string& responseBody);
+	std::string ExtractErrorInfo(const Poco::Net::HTTPResponse& response, const std::string& responseBody);
 	std::vector<unsigned int> ParseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId);
-	void RaiseForStatus(const Poco::Net::HTTPResponse& response);
+	void RaiseForStatus(const Poco::Net::HTTPResponse& response, const std::string& responseBody);
 	Poco::JSON::Object CreateAlarmJson(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<External::CAlarmMessage> message, unsigned int organizationId, const std::string& apiToken);
 	Poco::JSON::Object GetJsonPayload(const CGroupalarm2Message& message, const std::string& currIsoTime, const std::string& eventName, const std::string& otherMessagesInfo, unsigned int organizationId, const std::string& apiToken);
 	Poco::JSON::Object GetAlarmResources(const CGroupalarm2Message& message, unsigned int organizationId, const std::string& apiToken);
@@ -55,5 +55,6 @@ private:
 	template <class InputIt> static std::string Join(InputIt first, InputIt last, const std::string& delim);
 	std::string CreateOtherMessagesInfo(const External::Infoalarm::CInfoalarmMessageDecorator& infoalarmMessage);
 	std::string GetAlarmReceiverID(const External::Email::CEmailMessage& message);
+	void PerformSend(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<CGatewayLoginData> loginData, std::unique_ptr<CAlarmMessage> message, const Utilities::CMediaFile& audioFile);
 };
 /*@}*/

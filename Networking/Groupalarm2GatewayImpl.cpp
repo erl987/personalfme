@@ -23,6 +23,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/HTTPSessionFactory.h"
 #include "Poco/Net/HTTPSClientSession.h"
+#include "Poco/Net/NetException.h"
 #include "BoostStdTimeConverter.h"
 #include "german_local_date_time.h"
 #include "Groupalarm2Message.h"
@@ -47,15 +48,13 @@ static std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 	return ss.str();
 }
 
-bool External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::HasJsonResponse(const Poco::Net::HTTPResponse& response, const std::string& responseBody) {
+std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::ExtractErrorInfo(const Poco::Net::HTTPResponse& response, const std::string& responseBody) {
 	using namespace std;
 	using namespace Poco::JSON;
 
-	bool hasJsonResponse;
+	string errorInfo = "";
 
-	if (response.has("Content-Type") && response.get("Content-Type").find("application/json") != string::npos) {
-		hasJsonResponse = true;
-
+	if (response.getContentType() != "text/html") {
 		Parser parser;
 		auto jsonVar = parser.parse(responseBody);
 		if (!jsonVar.isArray()) {
@@ -64,15 +63,12 @@ bool External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::HasJson
 			if (jsonObj->has("success") && jsonObj->has("error") && !jsonObj->getValue<bool>("success")) {
 				string message = jsonObj->getValue<string>("message");
 				string details = jsonObj->getValue<string>("error");
-				throw Poco::Exception("Information vom Server Groupalarm.com: " + message + ", Details : " + details);
+				errorInfo = "Fehler von Groupalarm.com: " + message + ", Details: " + details;
 			}
 		}
 	}
-	else {
-		hasJsonResponse = false;
-	}
-
-	return hasJsonResponse;
+	
+	return errorInfo;
 }
 
 std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::ParseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId) {
@@ -103,18 +99,25 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 		vector<string> missingEntities;
 		set_difference(entityNames.begin(), entityNames.end(), foundEntityNames.begin(), foundEntityNames.end(), inserter(missingEntities, missingEntities.begin()));
 
-		throw Poco::Exception("Did not find the following *" + subEndpoint + "* in the Groupalarm organization " + to_string(organizationId) + ": " + Join(missingEntities.cbegin(), missingEntities.cend(), ", "));
+		string errorMessage = "Did not find the following *" + subEndpoint + "* in the Groupalarm organization " + to_string(organizationId) + ": " + Join(missingEntities.cbegin(), missingEntities.cend(), ", ");
+		throw Exception::GroupalarmClientError(errorMessage);
 	}
 
 	return entityIds;
 }
 
-void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::RaiseForStatus(const Poco::Net::HTTPResponse& response) {
-	if (response.getStatus() >= 400 && response.getStatus() < 500) {
-		throw Poco::Exception("Client error, status code " + response.getStatus(), ": " + response.getReason());
+void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::RaiseForStatus(const Poco::Net::HTTPResponse& response, const std::string& responseBody) {
+	std::string errorInfo = ExtractErrorInfo(response, responseBody);
+	std::string errorMessage = "status code " + std::to_string(response.getStatus()) + ": " + response.getReason();
+	if (!errorInfo.empty()) {
+		errorMessage += ", " + errorInfo;
+	}
+
+	if (response.getStatus() >= 300 && response.getStatus() < 500) {
+		throw Exception::GroupalarmClientError("Client error, " + errorMessage);
 	}
 	else if (response.getStatus() >= 500 && response.getStatus() < 600) {
-		throw Poco::Exception("Server error, status code " + response.getStatus(), ": " + response.getReason());
+		throw Exception::GroupalarmServerError("Server error, " + errorMessage);
 	}
 }
 
@@ -137,8 +140,7 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 	istream& responseStream = session.receiveResponse(response);
 	string responseBody(istreambuf_iterator<char>(responseStream), {});
 
-	HasJsonResponse(response, responseBody);
-	RaiseForStatus(response);
+	RaiseForStatus(response, responseBody);
 
 	return ParseResponseJson(responseBody, entityNames, subEndpoint, organizationId);
 }
@@ -207,7 +209,7 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 		alarmResources.set("scenarios", scenarioIds);
 	}
 	else {
-		throw Poco::Exception("Incorrect alarm configuration: no alarm resources");
+		throw Exception::GroupalarmClientError("Incorrect alarm configuration: no alarm resources");
 	}
 
 	return alarmResources;
@@ -309,7 +311,7 @@ External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::CGroupalarm2
 {
 }
 
-void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::Send(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<CGatewayLoginData> loginData, std::unique_ptr<CAlarmMessage> message, const Utilities::CMediaFile& audioFile) {
+void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::PerformSend(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<CGatewayLoginData> loginData, std::unique_ptr<CAlarmMessage> message, const Utilities::CMediaFile& audioFile) {
 	using namespace std;
 	using namespace Poco;
 	using namespace Poco::Net;
@@ -344,8 +346,25 @@ void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::Send(co
 	istream& responseStream = session.receiveResponse(response);
 	string responseBody(istreambuf_iterator<char>(responseStream), {});
 
-	HasJsonResponse(response, responseBody);
-	RaiseForStatus(response);
+	RaiseForStatus(response, responseBody);
+}
+
+void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::Send(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<CGatewayLoginData> loginData, std::unique_ptr<CAlarmMessage> message, const Utilities::CMediaFile& audioFile) {
+	using namespace std;
+	using namespace Poco;
+	using namespace Poco::Net;
+
+	try {
+		PerformSend(code, alarmTime, isRealAlarm, move(loginData), move(message), audioFile);
+	}
+	catch (const Poco::Net::HostNotFoundException& e) {
+		// retry makes sense
+		throw std::runtime_error(e.displayText());
+	}
+	catch (const Poco::Exception& e) {
+		// retry does not make sense
+		throw std::logic_error(e.displayText());
+	}
 }
 
 /** @brief		Provides a string containing a summary of the alarms corresponding to the infoalarm
