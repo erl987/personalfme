@@ -58,7 +58,7 @@ namespace External {
 		class CGroupalarm2Message : public CAlarmMessage
 		{
 		public:
-			NETWORKING_API CGroupalarm2Message();
+			CGroupalarm2Message();
 			NETWORKING_API CGroupalarm2Message(const bool& allUsers, const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const unsigned int& closeEventInHours);
 			~CGroupalarm2Message() {};
 			NETWORKING_API std::unique_ptr< External::CAlarmMessage > Clone() const override;

@@ -55,7 +55,7 @@ namespace External {
 		{
 		public:
 			NETWORKING_API CGroupalarm2LoginData(void);
-			NETWORKING_API virtual ~CGroupalarm2LoginData(void);
+			virtual ~CGroupalarm2LoginData(void);
 			NETWORKING_API virtual std::unique_ptr<CGatewayLoginData> Clone(void) const override;
 			NETWORKING_API virtual void Set(const unsigned int& organizationId, const std::string& apiToken, const std::string& proxyAddress, const unsigned short& proxyPort, const std::string& proxyUserName, const std::string& proxyPassword);
 			void Get(unsigned int& organizationId, std::string& apiToken, std::string& proxyAddress, unsigned short& proxyPort, std::string& proxyUserName, std::string& proxyPassword) const;
