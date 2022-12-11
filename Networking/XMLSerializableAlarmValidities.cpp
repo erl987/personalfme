@@ -32,7 +32,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "XMLSerializableMonthlyValidity.h"
 #include "XMLSerializableSingleTimeValidity.h"
 #include "XMLSerializableEmailMessage.h"
-#include "XMLSerializableGroupalarmMessage.h"
+#include "XMLSerializableGroupalarm2Message.h"
 #include "XMLSerializableExternalProgramMessage.h"
 #include "XMLException.h"
 #include "XMLSerializableAlarmValidities.h"
@@ -44,7 +44,7 @@ const std::string MONTHLY_VALIDITY_KEY = "monthlyException";
 const std::string SINGLE_VALIDITY_KEY = "singleTimeException";
 const std::string ALARMS_KEY = "alarms";
 const std::string EMAIL_KEY = "email";
-const std::string GROUPALARM_KEY = "groupalarm";
+const std::string GROUPALARM_KEY = "groupalarm2";
 const std::string EXTERNAL_PROGRAM_KEY = "external";
 const std::string INFOALARM_KEY = "infoalarm";
 
@@ -68,7 +68,7 @@ std::unique_ptr<External::CAlarmMessage> External::CXMLSerializableAlarmValiditi
 
 	vector<string> availableInfoMessage;
 	CXMLSerializableEmailMessage emailMessage;
-	CXMLSerializableGroupalarmMessage groupalarmMessage;
+	CXMLSerializableGroupalarm2Message groupalarmMessage;
 	CXMLSerializableExternalProgramMessage externalProgramMessage;
 	unique_ptr<External::CAlarmMessage> alarmMessage, infoalarmMessage;
 	
@@ -80,7 +80,7 @@ std::unique_ptr<External::CAlarmMessage> External::CXMLSerializableAlarmValiditi
 	} else if ( messageKey.find( GROUPALARM_KEY ) == 0 ) {
 		Poco::AutoPtr<AbstractConfiguration> groupalarmView( configurationView );
 		groupalarmMessage.SetFromXML( groupalarmView );
-		alarmMessage = make_unique<CGroupalarmMessage>( groupalarmMessage );
+		alarmMessage = make_unique<CGroupalarm2Message>( groupalarmMessage );
 
 	} else if ( messageKey.find( EXTERNAL_PROGRAM_KEY ) == 0 ) {
 		Poco::AutoPtr<AbstractConfiguration> externalProgramView( configurationView );
@@ -213,7 +213,7 @@ void External::CXMLSerializableAlarmValidities::SetAlarmMessage( const std::stri
 
 		} else if ( message.GetGatewayType() == typeid( CGroupalarmGateway ) ) {
 			Poco::AutoPtr<AbstractConfiguration> gatewayView( configurationView->createView( key + GROUPALARM_KEY + "[" + to_string( messageCounters[GROUPALARM_KEY] ) + "]" ) );
-			auto groupalarmMessage = CXMLSerializableGroupalarmMessage( dynamic_cast<const CGroupalarmMessage&>( message ) );
+			auto groupalarmMessage = CXMLSerializableGroupalarm2Message( dynamic_cast<const CGroupalarm2Message&>( message ) );
 			groupalarmMessage.GenerateXML( gatewayView );
 			messageCounters[GROUPALARM_KEY]++;
 

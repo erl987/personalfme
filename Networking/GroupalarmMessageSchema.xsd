@@ -31,11 +31,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			
 <xs:complexType name="groupalarmMessageType">
 	<xs:all>
-        <xs:element name="alarm">
+        <xs:element name="resources">
 			<xs:complexType>
 				<xs:choice>
-					<xs:element name="phoneNumber" type="xs:string"/>
-					<xs:element name="code" type="groupalarmCodeType"/>
+					<xs:element name="unit" type="xs:string"/>
 				</xs:choice>
 			</xs:complexType>
 		</xs:element>
@@ -47,7 +46,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 							<xs:simpleType>
 								<xs:restriction base="xs:string">
 									<xs:enumeration value="freeText"/>
-									<xs:enumeration value="code"/>
+									<xs:enumeration value="template"/>
 								</xs:restriction>
 							</xs:simpleType>
 						</xs:attribute>
@@ -55,9 +54,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				</xs:simpleContent>
 			</xs:complexType>
 		</xs:element>
-		<xs:element name="feedbackReset" type="xs:boolean"/>
-		<xs:element name="normalSMS" type="xs:boolean"/>
-		<xs:element name="suppressFax" type="xs:boolean"/>
+		<xs:element name="eventOpenPeriodInHours" type="xs:unsignedInt"/>
 	</xs:all>
 </xs:complexType>
 

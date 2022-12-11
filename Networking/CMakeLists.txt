@@ -87,7 +87,9 @@ set( SOURCE
 	XMLSerializableExternalProgramMessage.cpp
 	XMLSerializableGatewayLoginDatabase.cpp
 	XMLSerializableGroupalarmLoginData.cpp
+	XMLSerializableGroupalarm2LoginData.cpp
 	XMLSerializableGroupalarmMessage.cpp
+	XMLSerializableGroupalarm2Message.cpp
 	XMLSerializableMonthlyValidity.cpp
 	XMLSerializableSingleTimeValidity.cpp
 	XMLSerializableWeeklyValidity.cpp
@@ -144,7 +146,9 @@ set( HEADERS
 	XMLSerializableExternalProgramMessage.h
 	XMLSerializableGatewayLoginDatabase.h
 	XMLSerializableGroupalarmLoginData.h
+	XMLSerializableGroupalarm2LoginData.h
 	XMLSerializableGroupalarmMessage.h
+	XMLSerializableGroupalarm2Message.h
 	XMLSerializableMonthlyValidity.h
 	XMLSerializableSingleTimeValidity.h
 	XMLSerializableWeeklyValidity.h

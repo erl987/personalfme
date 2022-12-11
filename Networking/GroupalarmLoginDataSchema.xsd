@@ -22,23 +22,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 
 <xs:complexType name="groupalarmLoginDataType">
 	<xs:all>
-		<xs:element name="user" type="xs:string"/>
-		<xs:element name="password">
-			<xs:complexType>
-				<xs:simpleContent>
-					<xs:extension base="xs:string">
-						<xs:attribute name="type" use="required"> 
-							<xs:simpleType>
-								<xs:restriction base="xs:string">
-									<xs:enumeration value="plain"/>
-									<xs:enumeration value="hashed"/>
-								</xs:restriction>
-							</xs:simpleType>
-						</xs:attribute>
-					</xs:extension>
-				</xs:simpleContent>
-			</xs:complexType>
-		</xs:element>
+		<xs:element name="organizationid" type="xs:unsignedInt"/>
+		<xs:element name="apitoken" />
 		<xs:element name="proxy" minOccurs="0">
 			<xs:complexType>
 				<xs:all>
