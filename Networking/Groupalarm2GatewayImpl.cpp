@@ -32,7 +32,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 
 template <class InputIt>
-static std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::Join(InputIt first, InputIt last, const std::string& delim) {
+std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::Join(InputIt first, InputIt last, const std::string& delim) {
 	std::stringstream ss;
 	size_t length = std::distance(first, last);
 
