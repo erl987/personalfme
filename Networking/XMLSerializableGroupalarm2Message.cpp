@@ -28,6 +28,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 const std::string TYPE_ATTRIB_KEY = "[@type]";
 const std::string RESOURCES_KEY = "resources";
+const std::string UNITS_KEY = "units";
 const std::string UNIT_KEY = "unit";
 const std::string MESSAGE_TYPE = "message";
 const std::string EVENT_OPEN_PERIOD_KEY = "eventOpenPeriodInHours";
@@ -44,18 +45,25 @@ const std::string MESSAGE_FREE_TEXT_ATTRIB_KEY = "freeText";
 void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco::AutoPtr<Poco::Util::AbstractConfiguration> xmlFile )
 {
 	using namespace std;
+	using namespace Poco::Util;
 
 	bool allUsers = false;
 	map<string, unsigned int> labels;
 	vector<string> scenarios;
 	vector<string> units;
+	vector<string> unitKeys;
 	vector<string> users;
 	string messageText;
 	string messageTemplate;
 	unsigned int eventOpenPeriodInHours;
 
 	// read the data from the XML-file (it is assumed that the XML-file is well-formed and valid)
-	units = { boost::algorithm::trim_copy(xmlFile->getString(RESOURCES_KEY + "." + UNIT_KEY)) };
+	Poco::AutoPtr<AbstractConfiguration> unitsView( xmlFile->createView(RESOURCES_KEY + "." + UNITS_KEY) );
+	xmlFile->keys(RESOURCES_KEY + "." + UNITS_KEY, unitKeys);
+
+	for (const auto& unitKey : unitKeys) {
+		units.push_back(boost::algorithm::trim_copy(unitsView->getString(unitKey)));
+	}
 
 	if ( xmlFile->getString( MESSAGE_TYPE + TYPE_ATTRIB_KEY ) == MESSAGE_TEMPLATE_ATTRIB_KEY ) {
 		messageTemplate = boost::algorithm::trim_copy(xmlFile->getString(MESSAGE_TYPE));
@@ -77,9 +85,18 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 */
 void External::Groupalarm::CXMLSerializableGroupalarm2Message::GenerateXML( Poco::AutoPtr<Poco::Util::AbstractConfiguration> xmlFile ) const
 {
+	using namespace std;
+	using namespace Poco::Util;
+
+	int unitCounter = 0;
+
 	if ( !IsEmpty() ) {
 		// write the data to the XML-file
-		xmlFile->setString(RESOURCES_KEY + "." + UNIT_KEY, GetUnits()[0]);
+		Poco::AutoPtr<AbstractConfiguration> unitsView(xmlFile->createView(RESOURCES_KEY + "." + UNITS_KEY));
+		for (const auto& unit : GetUnits()) {
+			unitsView->setString(UNIT_KEY + "[" + to_string(unitCounter) + "]", unit);
+			unitCounter++;
+		}
 
 		if (HasMessageText()) {
 			xmlFile->setString(MESSAGE_TYPE, GetMessageText());

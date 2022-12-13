@@ -33,11 +33,20 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 	<xs:all>
         <xs:element name="resources">
 			<xs:complexType>
-				<xs:choice>
-					<xs:element name="unit" type="xs:string"/>
-				</xs:choice>
-			</xs:complexType>
+				<xs:sequence>
+					<xs:element name="units">
+						<xs:complexType>
+							<xs:sequence minOccurs="0" maxOccurs="unbounded">
+								<xs:choice>
+									<xs:element name="unit" type="xs:string"/>
+								</xs:choice>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+		</xs:complexType>
 		</xs:element>
+		
 		<xs:element name="message">
 			<xs:complexType>
 				<xs:simpleContent>
