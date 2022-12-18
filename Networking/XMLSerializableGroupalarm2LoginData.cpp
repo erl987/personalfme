@@ -30,8 +30,10 @@ const std::string ORGANIZATION_ID_KEY = "organizationid";
 const std::string API_TOKEN_KEY = "apitoken";
 
 const std::string PROXY_KEY = "proxy";
-	const std::string PROXY_SERVER_KEY = "server";
-	const std::string PROXY_SERVER_PORT = "port";
+	const std::string PROXY_ADDRESS_KEY = "address";
+	const std::string PROXY_PORT = "port";
+	const std::string PROXY_USER_NAME = "username";
+	const std::string PROXY_PASSWORD = "password";
 
 const std::string TRIALS_KEY = "trials";
 const std::string WAIT_TIME_KEY = "waitTime";
@@ -48,10 +50,9 @@ void External::Groupalarm::CXMLSerializableGroupalarm2LoginData::SetFromXML( Poc
 {
 	using namespace std;
 
-	bool isProxy;
 	unsigned short proxyPort;
 	unsigned int numTrials, maxNumConnections, organizationId;
-	string proxyAddress, apiToken;
+	string proxyAddress, apiToken, proxyUserName, proxyPassword;
 	float timeDistTrial;
 
 	// read the data from the XML-file (it is assumed that the XML-file is well-formed and valid)
@@ -59,20 +60,23 @@ void External::Groupalarm::CXMLSerializableGroupalarm2LoginData::SetFromXML( Poc
 	apiToken = boost::algorithm::trim_copy( xmlFile->getString( API_TOKEN_KEY ) );
 
 	if ( xmlFile->hasProperty( PROXY_KEY ) ) {
-		isProxy = true;
-		proxyAddress = boost::algorithm::trim_copy( xmlFile->getString( PROXY_KEY + "." + PROXY_SERVER_KEY ) );
-		proxyPort = static_cast<unsigned short>( xmlFile->getInt( PROXY_KEY + "." + PROXY_SERVER_PORT, 8080 ) ); // default port is possible
+		proxyAddress = boost::algorithm::trim_copy( xmlFile->getString( PROXY_KEY + "." + PROXY_ADDRESS_KEY) );
+		proxyPort = static_cast<unsigned short>( xmlFile->getInt( PROXY_KEY + "." + PROXY_PORT, 8080 ) ); // default port is possible
+		proxyUserName = boost::algorithm::trim_copy(xmlFile->getString(PROXY_KEY + "." + PROXY_USER_NAME, "")); // empty user name is possible
+		proxyPassword = boost::algorithm::trim_copy(xmlFile->getString(PROXY_KEY + "." + PROXY_PASSWORD, "")); // empty password is possible
 	} else {
-		isProxy = false;
 		proxyAddress = "";
 		proxyPort = 0;
+		proxyUserName = "";
+		proxyPassword = "";
+
 	}
 
 	numTrials = xmlFile->getUInt( TRIALS_KEY, 10 ); // default value: 10 trials
 	timeDistTrial = static_cast<float>( xmlFile->getDouble( WAIT_TIME_KEY, 30.0 ) ); // default value: 30.0 s
 	maxNumConnections = xmlFile->getUInt( CONNECTIONS_KEY, 1 ); // default value: 1 parallel connection
 
-	Set(organizationId, apiToken, proxyAddress, proxyPort, "", "");
+	Set(organizationId, apiToken, proxyAddress, proxyPort, proxyUserName, proxyPassword);
 	SetConnectionTrialInfos( numTrials, timeDistTrial, maxNumConnections );
 }
 
@@ -101,8 +105,14 @@ void External::Groupalarm::CXMLSerializableGroupalarm2LoginData::GenerateXML( Po
 		xmlFile->setString( API_TOKEN_KEY, apiToken );
 
 		if ( !proxyAddress.empty() ) {
-			xmlFile->setString( PROXY_KEY + "." + PROXY_SERVER_KEY, proxyAddress );
-			xmlFile->setInt( PROXY_KEY + "." + PROXY_SERVER_PORT, proxyPort );
+			xmlFile->setString( PROXY_KEY + "." + PROXY_ADDRESS_KEY, proxyAddress );
+			xmlFile->setInt( PROXY_KEY + "." + PROXY_PORT, proxyPort );
+			if (!proxyUserName.empty()) {
+				xmlFile->setString(PROXY_KEY + "." + PROXY_USER_NAME, proxyUserName );
+			}
+			if (!proxyPassword.empty()) {
+				xmlFile->setString(PROXY_KEY + "." + PROXY_PASSWORD, proxyPassword);
+			}
 		}
 
 		xmlFile->setUInt( TRIALS_KEY, numTrials );

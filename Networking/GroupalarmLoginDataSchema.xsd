@@ -27,8 +27,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 		<xs:element name="proxy" minOccurs="0">
 			<xs:complexType>
 				<xs:all>
-					<xs:element name="server" type="xs:anyURI"/>
+					<xs:element name="address" type="xs:anyURI"/>
 					<xs:element name="port" type="xs:unsignedShort" minOccurs="0"/>
+					<xs:element name="username" type="xs:string" minOccurs="0"/>
+					<xs:element name="password" type="xs:string" minOccurs="0"/>
 				</xs:all>
 			</xs:complexType>
 		</xs:element>
