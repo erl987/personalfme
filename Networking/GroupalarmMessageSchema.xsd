@@ -78,13 +78,20 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 	<xs:all>
         <xs:element name="resources">
 			<xs:complexType>
-				<xs:choice minOccurs="0" maxOccurs="unbounded">
-					<xs:element name="units" type="unitsType"/>
-					<xs:element name="scenarios" type="scenariosType"/>
-					<xs:element name="persons" type="personsType"/>
-					<xs:element name="labels" type="labelsType"/>
+				<xs:choice>
+						<xs:element name="all">
+							<xs:complexType/>
+						</xs:element>
+						<xs:sequence>
+							<xs:choice minOccurs="0" maxOccurs="unbounded">
+								<xs:element name="units" type="unitsType"/>
+								<xs:element name="scenarios" type="scenariosType"/>
+								<xs:element name="persons" type="personsType"/>
+								<xs:element name="labels" type="labelsType"/>
+							</xs:choice>
+						</xs:sequence>
 				</xs:choice>
-		</xs:complexType>
+			</xs:complexType>
 		</xs:element>
 		<xs:element name="message" type="messageType"/>
 		<xs:element name="eventOpenPeriodInHours" type="xs:unsignedInt"/>

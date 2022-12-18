@@ -28,6 +28,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 const std::string TYPE_ATTRIB_KEY = "[@type]";
 const std::string RESOURCES_KEY = "resources";
+const std::string ALL_KEY = "all";
 const std::string UNITS_KEY = "units";
 const std::string UNIT_KEY = "unit";
 const std::string SCENARIOS_KEY = "scenarios";
@@ -54,7 +55,7 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 	using namespace std;
 	using namespace Poco::Util;
 
-	bool allUsers = false;
+	bool allUsers;
 	map<string, unsigned int> labels;
 	vector<string> scenarios, units, persons;
 	vector<string> unitKeys, labelKeys, scenarioKeys, personsKeys;
@@ -63,31 +64,37 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 	unsigned int eventOpenPeriodInHours;
 
 	// read the data from the XML-file (it is assumed that the XML-file is well-formed and valid)
-	Poco::AutoPtr<AbstractConfiguration> unitsView( xmlFile->createView(RESOURCES_KEY + "." + UNITS_KEY) );
-	xmlFile->keys(RESOURCES_KEY + "." + UNITS_KEY, unitKeys);
-	for (const auto& unitKey : unitKeys) {
-		units.push_back(boost::algorithm::trim_copy(unitsView->getString(unitKey)));
-	}
+	if (xmlFile->has(RESOURCES_KEY + "." + ALL_KEY)) {
+		allUsers = true;
+	} else {
+		allUsers = false;
 
-	Poco::AutoPtr<AbstractConfiguration> scenariosView(xmlFile->createView(RESOURCES_KEY + "." + SCENARIOS_KEY));
-	xmlFile->keys(RESOURCES_KEY + "." + SCENARIOS_KEY, scenarioKeys);
-	for (const auto& scenarioKey : scenarioKeys) {
-		scenarios.push_back(boost::algorithm::trim_copy(scenariosView->getString(scenarioKey)));
-	}
+		Poco::AutoPtr<AbstractConfiguration> unitsView(xmlFile->createView(RESOURCES_KEY + "." + UNITS_KEY));
+		xmlFile->keys(RESOURCES_KEY + "." + UNITS_KEY, unitKeys);
+		for (const auto& unitKey : unitKeys) {
+			units.push_back(boost::algorithm::trim_copy(unitsView->getString(unitKey)));
+		}
 
-	Poco::AutoPtr<AbstractConfiguration> personsView(xmlFile->createView(RESOURCES_KEY + "." + PERSONS_KEY));
-	xmlFile->keys(RESOURCES_KEY + "." + PERSONS_KEY, personsKeys);
-	for (const auto& personKey : personsKeys) {
-		persons.push_back(boost::algorithm::trim_copy(personsView->getString(personKey)));
-	}
+		Poco::AutoPtr<AbstractConfiguration> scenariosView(xmlFile->createView(RESOURCES_KEY + "." + SCENARIOS_KEY));
+		xmlFile->keys(RESOURCES_KEY + "." + SCENARIOS_KEY, scenarioKeys);
+		for (const auto& scenarioKey : scenarioKeys) {
+			scenarios.push_back(boost::algorithm::trim_copy(scenariosView->getString(scenarioKey)));
+		}
 
-	Poco::AutoPtr<AbstractConfiguration> labelsView(xmlFile->createView(RESOURCES_KEY + "." + LABELS_KEY));
-	xmlFile->keys(RESOURCES_KEY + "." + LABELS_KEY, labelKeys);
-	for (const auto& labelKey : labelKeys) {
-		Poco::AutoPtr<AbstractConfiguration> thisLabelView(labelsView->createView(labelKey));
-		string name = boost::algorithm::trim_copy(thisLabelView->getString(LABEL_KEY));
-		unsigned int amount = thisLabelView->getUInt(AMOUNT_KEY);
-		labels[name] = amount;
+		Poco::AutoPtr<AbstractConfiguration> personsView(xmlFile->createView(RESOURCES_KEY + "." + PERSONS_KEY));
+		xmlFile->keys(RESOURCES_KEY + "." + PERSONS_KEY, personsKeys);
+		for (const auto& personKey : personsKeys) {
+			persons.push_back(boost::algorithm::trim_copy(personsView->getString(personKey)));
+		}
+
+		Poco::AutoPtr<AbstractConfiguration> labelsView(xmlFile->createView(RESOURCES_KEY + "." + LABELS_KEY));
+		xmlFile->keys(RESOURCES_KEY + "." + LABELS_KEY, labelKeys);
+		for (const auto& labelKey : labelKeys) {
+			Poco::AutoPtr<AbstractConfiguration> thisLabelView(labelsView->createView(labelKey));
+			string name = boost::algorithm::trim_copy(thisLabelView->getString(LABEL_KEY));
+			unsigned int amount = thisLabelView->getUInt(AMOUNT_KEY);
+			labels[name] = amount;
+		}
 	}
 
 	if ( xmlFile->getString( MESSAGE_TYPE + TYPE_ATTRIB_KEY ) == MESSAGE_TEMPLATE_ATTRIB_KEY ) {
@@ -120,30 +127,34 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::GenerateXML( Poco
 
 	if ( !IsEmpty() ) {
 		// write the data to the XML-file
-		Poco::AutoPtr<AbstractConfiguration> unitsView(xmlFile->createView(RESOURCES_KEY + "." + UNITS_KEY));
-		for (const auto& unit : GetUnits()) {
-			unitsView->setString(UNIT_KEY + "[" + to_string(unitCounter) + "]", unit);
-			unitCounter++;
-		}
+		if (ToAllUsers()) {
+			xmlFile->setString(RESOURCES_KEY + "." + ALL_KEY, "");
+		} else {
+			Poco::AutoPtr<AbstractConfiguration> unitsView(xmlFile->createView(RESOURCES_KEY + "." + UNITS_KEY));
+			for (const auto& unit : GetUnits()) {
+				unitsView->setString(UNIT_KEY + "[" + to_string(unitCounter) + "]", unit);
+				unitCounter++;
+			}
 
-		Poco::AutoPtr<AbstractConfiguration> scenariosView(xmlFile->createView(RESOURCES_KEY + "." + SCENARIOS_KEY));
-		for (const auto& scenario : GetScenarios()) {
-			scenariosView->setString(SCENARIO_KEY + "[" + to_string(scenarioCounter) + "]", scenario);
-			scenarioCounter++;
-		}
+			Poco::AutoPtr<AbstractConfiguration> scenariosView(xmlFile->createView(RESOURCES_KEY + "." + SCENARIOS_KEY));
+			for (const auto& scenario : GetScenarios()) {
+				scenariosView->setString(SCENARIO_KEY + "[" + to_string(scenarioCounter) + "]", scenario);
+				scenarioCounter++;
+			}
 
-		Poco::AutoPtr<AbstractConfiguration> personsView(xmlFile->createView(RESOURCES_KEY + "." + PERSONS_KEY));
-		for (const auto& person : GetUsers()) {
-			personsView->setString(PERSON_KEY + "[" + to_string(personCounter) + "]", person);
-			personCounter++;
-		}
+			Poco::AutoPtr<AbstractConfiguration> personsView(xmlFile->createView(RESOURCES_KEY + "." + PERSONS_KEY));
+			for (const auto& person : GetUsers()) {
+				personsView->setString(PERSON_KEY + "[" + to_string(personCounter) + "]", person);
+				personCounter++;
+			}
 
-		Poco::AutoPtr<AbstractConfiguration> labelsView(xmlFile->createView(RESOURCES_KEY + "." + LABELS_KEY));
-		for (const auto& label : GetLabels()) {
-			Poco::AutoPtr<AbstractConfiguration> thisLabelView(labelsView->createView(LABEL_KEY + "[" + to_string(unitCounter) + "]"));
-			thisLabelView->setString(LABEL_KEY, label.first);
-			thisLabelView->setUInt(AMOUNT_KEY, label.second);
-			labelCounter++;
+			Poco::AutoPtr<AbstractConfiguration> labelsView(xmlFile->createView(RESOURCES_KEY + "." + LABELS_KEY));
+			for (const auto& label : GetLabels()) {
+				Poco::AutoPtr<AbstractConfiguration> thisLabelView(labelsView->createView(LABEL_KEY + "[" + to_string(unitCounter) + "]"));
+				thisLabelView->setString(LABEL_KEY, label.first);
+				thisLabelView->setUInt(AMOUNT_KEY, label.second);
+				labelCounter++;
+			}
 		}
 
 		if (HasMessageText()) {
