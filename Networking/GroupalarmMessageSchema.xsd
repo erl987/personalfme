@@ -20,49 +20,55 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			xmlns="http://www.personalfme.de/v1"
 			elementFormDefault="qualified">
 
-
-<xs:complexType name="groupalarmCodeType" >
-	<xs:choice minOccurs="1" maxOccurs="unbounded">
-		<xs:element name="list" type="xs:nonNegativeInteger"/>
-		<xs:element name="group" type="xs:nonNegativeInteger"/>
-	</xs:choice>
+<xs:complexType name="unitsType">
+	<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		<xs:choice>
+			<xs:element name="unit" type="xs:string"/>
+		</xs:choice>
+	</xs:sequence>
 </xs:complexType>
-			
+
+<xs:complexType name="labelsType">
+	<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		<xs:choice>
+			<xs:element name="label">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="label" type="xs:string"/>
+						<xs:element name="amount" type="xs:unsignedInt"/>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:sequence>
+</xs:complexType>	
+
+<xs:complexType name="messageType">
+	<xs:simpleContent>
+		<xs:extension base="xs:string">
+			<xs:attribute name="type" use="required"> 
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="freeText"/>
+						<xs:enumeration value="template"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:extension>
+	</xs:simpleContent>
+</xs:complexType>		
 			
 <xs:complexType name="groupalarmMessageType">
 	<xs:all>
         <xs:element name="resources">
 			<xs:complexType>
-				<xs:sequence>
-					<xs:element name="units">
-						<xs:complexType>
-							<xs:sequence minOccurs="0" maxOccurs="unbounded">
-								<xs:choice>
-									<xs:element name="unit" type="xs:string"/>
-								</xs:choice>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="units" type="unitsType"/>
+					<xs:element name="labels" type="labelsType"/>
+				</xs:choice>
 		</xs:complexType>
 		</xs:element>
-		
-		<xs:element name="message">
-			<xs:complexType>
-				<xs:simpleContent>
-					<xs:extension base="xs:string">
-						<xs:attribute name="type" use="required"> 
-							<xs:simpleType>
-								<xs:restriction base="xs:string">
-									<xs:enumeration value="freeText"/>
-									<xs:enumeration value="template"/>
-								</xs:restriction>
-							</xs:simpleType>
-						</xs:attribute>
-					</xs:extension>
-				</xs:simpleContent>
-			</xs:complexType>
-		</xs:element>
+		<xs:element name="message" type="messageType"/>
 		<xs:element name="eventOpenPeriodInHours" type="xs:unsignedInt"/>
 	</xs:all>
 </xs:complexType>

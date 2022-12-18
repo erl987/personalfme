@@ -30,6 +30,9 @@ const std::string TYPE_ATTRIB_KEY = "[@type]";
 const std::string RESOURCES_KEY = "resources";
 const std::string UNITS_KEY = "units";
 const std::string UNIT_KEY = "unit";
+const std::string LABELS_KEY = "labels";
+const std::string LABEL_KEY = "label";
+const std::string AMOUNT_KEY = "amount";
 const std::string MESSAGE_TYPE = "message";
 const std::string EVENT_OPEN_PERIOD_KEY = "eventOpenPeriodInHours";
 const std::string MESSAGE_TEMPLATE_ATTRIB_KEY = "template";
@@ -49,10 +52,8 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 
 	bool allUsers = false;
 	map<string, unsigned int> labels;
-	vector<string> scenarios;
-	vector<string> units;
-	vector<string> unitKeys;
-	vector<string> users;
+	vector<string> scenarios, units, users;
+	vector<string> unitKeys, labelKeys;
 	string messageText;
 	string messageTemplate;
 	unsigned int eventOpenPeriodInHours;
@@ -60,9 +61,17 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 	// read the data from the XML-file (it is assumed that the XML-file is well-formed and valid)
 	Poco::AutoPtr<AbstractConfiguration> unitsView( xmlFile->createView(RESOURCES_KEY + "." + UNITS_KEY) );
 	xmlFile->keys(RESOURCES_KEY + "." + UNITS_KEY, unitKeys);
-
 	for (const auto& unitKey : unitKeys) {
 		units.push_back(boost::algorithm::trim_copy(unitsView->getString(unitKey)));
+	}
+
+	Poco::AutoPtr<AbstractConfiguration> labelsView(xmlFile->createView(RESOURCES_KEY + "." + LABELS_KEY));
+	xmlFile->keys(RESOURCES_KEY + "." + LABELS_KEY, labelKeys);
+	for (const auto& labelKey : labelKeys) {
+		Poco::AutoPtr<AbstractConfiguration> thisLabelView(labelsView->createView(labelKey));
+		string name = boost::algorithm::trim_copy(thisLabelView->getString(LABEL_KEY));
+		unsigned int amount = thisLabelView->getUInt(AMOUNT_KEY);
+		labels[name] = amount;
 	}
 
 	if ( xmlFile->getString( MESSAGE_TYPE + TYPE_ATTRIB_KEY ) == MESSAGE_TEMPLATE_ATTRIB_KEY ) {
@@ -89,6 +98,7 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::GenerateXML( Poco
 	using namespace Poco::Util;
 
 	int unitCounter = 0;
+	int labelCounter = 0;
 
 	if ( !IsEmpty() ) {
 		// write the data to the XML-file
@@ -96,6 +106,14 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::GenerateXML( Poco
 		for (const auto& unit : GetUnits()) {
 			unitsView->setString(UNIT_KEY + "[" + to_string(unitCounter) + "]", unit);
 			unitCounter++;
+		}
+
+		Poco::AutoPtr<AbstractConfiguration> labelsView(xmlFile->createView(RESOURCES_KEY + "." + LABELS_KEY));
+		for (const auto& label : GetLabels()) {
+			Poco::AutoPtr<AbstractConfiguration> thisLabelView(labelsView->createView(LABEL_KEY + "[" + to_string(unitCounter) + "]"));
+			thisLabelView->setString(LABEL_KEY, label.first);
+			thisLabelView->setUInt(AMOUNT_KEY, label.second);
+			labelCounter++;
 		}
 
 		if (HasMessageText()) {
