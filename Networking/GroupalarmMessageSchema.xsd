@@ -36,6 +36,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 	</xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="personsType">
+	<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		<xs:choice>
+			<xs:element name="name" type="xs:string"/>
+		</xs:choice>
+	</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="labelsType">
 	<xs:sequence minOccurs="0" maxOccurs="unbounded">
 		<xs:choice>
@@ -73,6 +81,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				<xs:choice minOccurs="0" maxOccurs="unbounded">
 					<xs:element name="units" type="unitsType"/>
 					<xs:element name="scenarios" type="scenariosType"/>
+					<xs:element name="persons" type="personsType"/>
 					<xs:element name="labels" type="labelsType"/>
 				</xs:choice>
 		</xs:complexType>

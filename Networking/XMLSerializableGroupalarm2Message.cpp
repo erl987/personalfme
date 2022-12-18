@@ -32,6 +32,8 @@ const std::string UNITS_KEY = "units";
 const std::string UNIT_KEY = "unit";
 const std::string SCENARIOS_KEY = "scenarios";
 const std::string SCENARIO_KEY = "scenario";
+const std::string PERSONS_KEY = "persons";
+const std::string PERSON_KEY = "person";
 const std::string LABELS_KEY = "labels";
 const std::string LABEL_KEY = "label";
 const std::string AMOUNT_KEY = "amount";
@@ -54,8 +56,8 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 
 	bool allUsers = false;
 	map<string, unsigned int> labels;
-	vector<string> scenarios, units, users;
-	vector<string> unitKeys, labelKeys, scenarioKeys;
+	vector<string> scenarios, units, persons;
+	vector<string> unitKeys, labelKeys, scenarioKeys, personsKeys;
 	string messageText;
 	string messageTemplate;
 	unsigned int eventOpenPeriodInHours;
@@ -71,6 +73,12 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 	xmlFile->keys(RESOURCES_KEY + "." + SCENARIOS_KEY, scenarioKeys);
 	for (const auto& scenarioKey : scenarioKeys) {
 		scenarios.push_back(boost::algorithm::trim_copy(scenariosView->getString(scenarioKey)));
+	}
+
+	Poco::AutoPtr<AbstractConfiguration> personsView(xmlFile->createView(RESOURCES_KEY + "." + PERSONS_KEY));
+	xmlFile->keys(RESOURCES_KEY + "." + PERSONS_KEY, personsKeys);
+	for (const auto& personKey : personsKeys) {
+		persons.push_back(boost::algorithm::trim_copy(personsView->getString(personKey)));
 	}
 
 	Poco::AutoPtr<AbstractConfiguration> labelsView(xmlFile->createView(RESOURCES_KEY + "." + LABELS_KEY));
@@ -90,7 +98,7 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 
 	eventOpenPeriodInHours = xmlFile->getUInt(EVENT_OPEN_PERIOD_KEY);
 
-	Set(allUsers, labels, scenarios, units, users, messageText, messageTemplate, eventOpenPeriodInHours);
+	Set(allUsers, labels, scenarios, units, persons, messageText, messageTemplate, eventOpenPeriodInHours);
 }
 
 
@@ -107,6 +115,7 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::GenerateXML( Poco
 
 	int unitCounter = 0;
 	int scenarioCounter = 0;
+	int personCounter = 0;
 	int labelCounter = 0;
 
 	if ( !IsEmpty() ) {
@@ -121,6 +130,12 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::GenerateXML( Poco
 		for (const auto& scenario : GetScenarios()) {
 			scenariosView->setString(SCENARIO_KEY + "[" + to_string(scenarioCounter) + "]", scenario);
 			scenarioCounter++;
+		}
+
+		Poco::AutoPtr<AbstractConfiguration> personsView(xmlFile->createView(RESOURCES_KEY + "." + PERSONS_KEY));
+		for (const auto& person : GetUsers()) {
+			personsView->setString(PERSON_KEY + "[" + to_string(personCounter) + "]", person);
+			personCounter++;
 		}
 
 		Poco::AutoPtr<AbstractConfiguration> labelsView(xmlFile->createView(RESOURCES_KEY + "." + LABELS_KEY));
