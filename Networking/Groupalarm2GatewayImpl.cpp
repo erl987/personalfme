@@ -237,9 +237,9 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 
 	Poco::JSON::Object jsonPayload;
 
-	if (message.GetEventActivePeriodInHours() > 0)
+	if (message.GetEventOpenPeriodInHours() > 0)
 	{
-		jsonPayload.set("scheduledEndTime", to_iso_extended_string(second_clock::universal_time() + hours(message.GetEventActivePeriodInHours())) + "Z");
+		jsonPayload.set("scheduledEndTime", to_iso_extended_string(second_clock::universal_time() + hours(message.GetEventOpenPeriodHour()) + minutes(message.GetEventOpenPeriodMinute()) + seconds(message.GetEventOpenPeriodSecond()) ) + "Z");
 	}
 
 	if (message.HasMessageText())

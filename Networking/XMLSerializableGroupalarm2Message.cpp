@@ -61,7 +61,7 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 	vector<string> unitKeys, labelKeys, scenarioKeys, personsKeys;
 	string messageText;
 	string messageTemplate;
-	unsigned int eventOpenPeriodInHours;
+	double eventOpenPeriodInHours;
 
 	// read the data from the XML-file (it is assumed that the XML-file is well-formed and valid)
 	if (xmlFile->has(RESOURCES_KEY + "." + ALL_KEY)) {
@@ -103,7 +103,7 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 		messageText = boost::algorithm::trim_copy(xmlFile->getString(MESSAGE_TYPE));
 	}
 
-	eventOpenPeriodInHours = xmlFile->getUInt(EVENT_OPEN_PERIOD_KEY);
+	eventOpenPeriodInHours = xmlFile->getDouble(EVENT_OPEN_PERIOD_KEY);
 
 	Set(allUsers, labels, scenarios, units, persons, messageText, messageTemplate, eventOpenPeriodInHours);
 }
@@ -165,6 +165,6 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::GenerateXML( Poco
 			xmlFile->setString(MESSAGE_TYPE + TYPE_ATTRIB_KEY, MESSAGE_TEMPLATE_ATTRIB_KEY);
 		}
 
-		xmlFile->setUInt(EVENT_OPEN_PERIOD_KEY, GetEventActivePeriodInHours());
+		xmlFile->setDouble(EVENT_OPEN_PERIOD_KEY, GetEventOpenPeriodInHours());
 	}
 }

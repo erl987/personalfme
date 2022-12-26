@@ -52,7 +52,7 @@ namespace External {
 	{
 	public:
 		NETWORKING_API CGatewayLoginData(void);
-		virtual ~CGatewayLoginData(void);
+		NETWORKING_API virtual ~CGatewayLoginData(void);
 		NETWORKING_API virtual void SetConnectionTrialInfos(const unsigned int& numTrials, const float& timeDistTrial, const unsigned int& maxNumConnections);
 		NETWORKING_API virtual void GetConnectionTrialInfos(unsigned int& numTrials, float& timeDistTrial, unsigned int& maxNumConnections ) const;
 		NETWORKING_API friend bool operator==( const CGatewayLoginData& lhs, const CGatewayLoginData& rhs );

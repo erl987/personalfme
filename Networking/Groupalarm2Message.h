@@ -58,26 +58,29 @@ namespace External {
 		class CGroupalarm2Message : public CAlarmMessage
 		{
 		public:
-			CGroupalarm2Message();
-			NETWORKING_API CGroupalarm2Message(const bool& allUsers, const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const unsigned int& closeEventInHours);
-			~CGroupalarm2Message() {};
+			NETWORKING_API CGroupalarm2Message();
+			NETWORKING_API CGroupalarm2Message(const bool& allUsers, const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours);
+			NETWORKING_API ~CGroupalarm2Message() {};
 			NETWORKING_API std::unique_ptr< External::CAlarmMessage > Clone() const override;
 			NETWORKING_API virtual void SetEmpty() override;
 			NETWORKING_API virtual bool IsEmpty() const override;
-			NETWORKING_API virtual void Set(const bool& allUsers, const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const unsigned int& closeEventInHours);
-			bool ToAllUsers() const;
-			bool ToLabels() const;
-			bool ToUnits() const;
-			bool ToUsers() const;
-			bool ToScenarios() const;
-			std::map<std::string, unsigned int> GetLabels() const;
-			std::vector<std::string> GetUnits() const;
-			std::vector<std::string> GetUsers() const;
-			std::vector<std::string> GetScenarios() const;
-			unsigned int GetEventActivePeriodInHours() const;
-			bool HasMessageText() const;
-			std::string GetMessageText() const;
-			std::string GetMessageTemplate() const;
+			NETWORKING_API virtual void Set(const bool& allUsers, const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours);
+			NETWORKING_API bool ToAllUsers() const;
+			NETWORKING_API bool ToLabels() const;
+			NETWORKING_API bool ToUnits() const;
+			NETWORKING_API bool ToUsers() const;
+			NETWORKING_API bool ToScenarios() const;
+			NETWORKING_API std::map<std::string, unsigned int> GetLabels() const;
+			NETWORKING_API std::vector<std::string> GetUnits() const;
+			NETWORKING_API std::vector<std::string> GetUsers() const;
+			NETWORKING_API std::vector<std::string> GetScenarios() const;
+			NETWORKING_API double GetEventOpenPeriodInHours() const;
+			NETWORKING_API unsigned int GetEventOpenPeriodHour() const;
+			NETWORKING_API unsigned int GetEventOpenPeriodMinute() const;
+			NETWORKING_API unsigned int GetEventOpenPeriodSecond() const;
+			NETWORKING_API bool HasMessageText() const;
+			NETWORKING_API std::string GetMessageText() const;
+			NETWORKING_API std::string GetMessageTemplate() const;
 			NETWORKING_API virtual std::type_index GetGatewayType() const override;
 		protected:
 			NETWORKING_API virtual bool IsEqual(const CAlarmMessage& rhs) const override;
@@ -90,9 +93,42 @@ namespace External {
 			std::vector<std::string> users;
 			std::string messageText;
 			std::string messageTemplate;
-			unsigned int closeEventInHours;
+			double eventOpenPeriodInHours;
 			bool isEmpty;
 		};
+
+		namespace Exception {
+			/**	This class provides an exception for Groupalarm.de if full alarm is used together with specific alarm settings
+			*/
+			class Groupalarm2FullAlarmInconsistent : public virtual std::logic_error
+			{
+			public:
+				Groupalarm2FullAlarmInconsistent(const char* errorMessage)
+					: logic_error(errorMessage)
+				{}
+			};
+
+
+			/**	This class provides an exception for Groupalarm.de if a message text and message template are used at the same time
+			*/
+			class Groupalarm2MessageContentInconsistent : public virtual std::logic_error
+			{
+			public:
+				Groupalarm2MessageContentInconsistent(const char* errorMessage)
+					: logic_error(errorMessage)
+				{}
+			};
+
+			/**	This class provides an exception for Groupalarm.de if the event open period is invalid
+*/
+			class Groupalarm2EventOpenPeriodOutOfRange : public virtual std::logic_error
+			{
+			public:
+				Groupalarm2EventOpenPeriodOutOfRange(const char* errorMessage)
+					: logic_error(errorMessage)
+				{}
+			};
+		}
 	}
 }
 /*@}*/

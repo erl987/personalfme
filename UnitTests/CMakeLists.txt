@@ -73,9 +73,9 @@ set( HEADERS
 	SendStatusMessageTest.h
 	germanLocalDateTimeTest.h
 	GatewayLoginDatabaseTest.h
-	GroupalarmGatewayTest.h		
-	GroupalarmLoginDataTest.h	
-	GroupalarmMessageTest.h
+	Groupalarm2GatewayTest.h		
+	Groupalarm2LoginDataTest.h	
+	Groupalarm2MessageTest.h
 	InfoalarmMessageDecoratorTest.h
 	MonthlyValidityTest.h
 	OGGHandlerTest.h
