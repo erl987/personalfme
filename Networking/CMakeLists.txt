@@ -179,6 +179,11 @@ endif()
 
 target_link_libraries( Networking PUBLIC Utilities )
 
+if ( WIN32 )
+	set_target_properties( Networking PROPERTIES LINK_FLAGS "/ignore:4217")
+endif()
+
+
 # installer settings
 install( TARGETS Networking
 	RUNTIME DESTINATION bin
