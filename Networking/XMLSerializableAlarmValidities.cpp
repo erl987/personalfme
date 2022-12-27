@@ -25,7 +25,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include "DefaultValidity.h"
 #include "EmailGateway.h"
-#include "GroupalarmGateway.h"
+#include "Groupalarm2Gateway.h"
 #include "ExternalProgramGateway.h"
 #include "InfoalarmMessageDecorator.h"
 #include "XMLSerializableWeeklyValidity.h"
@@ -211,7 +211,7 @@ void External::CXMLSerializableAlarmValidities::SetAlarmMessage( const std::stri
 			emailMessage.GenerateXML( gatewayView );
 			messageCounters[EMAIL_KEY]++;
 
-		} else if ( message.GetGatewayType() == typeid( CGroupalarmGateway ) ) {
+		} else if ( message.GetGatewayType() == typeid( CGroupalarm2Gateway ) ) {
 			Poco::AutoPtr<AbstractConfiguration> gatewayView( configurationView->createView( key + GROUPALARM_KEY + "[" + to_string( messageCounters[GROUPALARM_KEY] ) + "]" ) );
 			auto groupalarmMessage = CXMLSerializableGroupalarm2Message( dynamic_cast<const CGroupalarm2Message&>( message ) );
 			groupalarmMessage.GenerateXML( gatewayView );

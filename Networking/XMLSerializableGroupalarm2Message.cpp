@@ -34,7 +34,7 @@ const std::string UNIT_KEY = "unit";
 const std::string SCENARIOS_KEY = "scenarios";
 const std::string SCENARIO_KEY = "scenario";
 const std::string PERSONS_KEY = "persons";
-const std::string PERSON_KEY = "person";
+const std::string PERSON_NAME_KEY = "name";
 const std::string LABELS_KEY = "labels";
 const std::string LABEL_KEY = "label";
 const std::string AMOUNT_KEY = "amount";
@@ -143,14 +143,14 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::GenerateXML( Poco
 			}
 
 			Poco::AutoPtr<AbstractConfiguration> personsView(xmlFile->createView(RESOURCES_KEY + "." + PERSONS_KEY));
-			for (const auto& person : GetUsers()) {
-				personsView->setString(PERSON_KEY + "[" + to_string(personCounter) + "]", person);
+			for (const auto& personName : GetUsers()) {
+				personsView->setString(PERSON_NAME_KEY + "[" + to_string(personCounter) + "]", personName);
 				personCounter++;
 			}
 
 			Poco::AutoPtr<AbstractConfiguration> labelsView(xmlFile->createView(RESOURCES_KEY + "." + LABELS_KEY));
 			for (const auto& label : GetLabels()) {
-				Poco::AutoPtr<AbstractConfiguration> thisLabelView(labelsView->createView(LABEL_KEY + "[" + to_string(unitCounter) + "]"));
+				Poco::AutoPtr<AbstractConfiguration> thisLabelView(labelsView->createView(LABEL_KEY + "[" + to_string(labelCounter) + "]"));
 				thisLabelView->setString(LABEL_KEY, label.first);
 				thisLabelView->setUInt(AMOUNT_KEY, label.second);
 				labelCounter++;

@@ -33,8 +33,8 @@ set( SOURCE
 	XMLExternalProgramLoginDataTest.cpp
 	XMLExternalProgramMessageTest.cpp
 	XMLGatewayLoginDatabaseTest.cpp	
-	XMLGroupalarmLoginDataTest.cpp
-	XMLGroupalarmMessageTest.cpp
+	XMLGroupalarm2LoginDataTest.cpp
+	XMLGroupalarm2MessageTest.cpp
 	XMLSettingsParamTest.cpp
 	XMLMonthlyValidityTest.cpp	
 	XMLSingleTimeValidityTest.cpp
@@ -102,8 +102,8 @@ set( HEADERS
 	XMLExternalProgramLoginDataTest.h
 	XMLExternalProgramMessageTest.h
 	XMLGatewayLoginDatabaseTest.h
-	XMLGroupalarmLoginDataTest.h
-	XMLGroupalarmMessageTest.h
+	XMLGroupalarm2LoginDataTest.h
+	XMLGroupalarm2MessageTest.h
 	XMLSettingsParamTest.h
 	XMLTests.h
 	XMLMonthlyValidityTest.h

@@ -18,15 +18,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 	#include "stdafx.h"
 #endif
 #include "XMLUtilities.h"
-#include "XMLSerializableGroupalarmLoginData.h"
-#include "XMLGroupalarmLoginDataTest.h"
+#include "XMLSerializableGroupalarm2Message.h"
+#include "XMLGroupalarm2MessageTest.h"
 
-const boost::filesystem::path xmlFileName = "./groupalarmLoginData.xml";
+const boost::filesystem::path xmlFileName = "./groupalarmMessage.xml";
 #if defined( _WIN32 )
-	const boost::filesystem::path schemaDefinitionFilePath = "../../UnitTests/TestGroupalarmLoginDataSchema.xsd";
+	const boost::filesystem::path schemaDefinitionFilePath = "../../UnitTests/TestGroupalarmMessageSchema.xsd";
 #elif defined( __linux )
-	// Linux
-	const boost::filesystem::path schemaDefinitionFilePath = "../UnitTests/TestGroupalarmLoginDataSchema.xsd";
+	const boost::filesystem::path schemaDefinitionFilePath = "../UnitTests/TestGroupalarmMessageSchema.xsd";
 #endif
 const std::string namespaceName = "http://www.personalfme.de/v1";
 const std::string rootTag = "config";
@@ -37,18 +36,17 @@ const std::string rootTag = "config";
 *	@exception									None
 *	@remarks									The XML headers require wrapping into a cpp-file because the Poco AbstractConfiguration.hpp seems to expose windows.h which causes problems
 */
-bool Utilitites::XMLTest::XMLGroupalarmLoginDataTest::Test()
+bool Utilitites::XMLTest::XMLGroupalarmMessageTest::Test()
 {
-	External::Groupalarm::CXMLSerializableGroupalarmLoginData setLoginData, getLoginData;
+	External::Groupalarm::CXMLSerializableGroupalarm2Message setMessage, getMessage;
 
-	setLoginData.SetConnectionTrialInfos( 7, 19.3f, 5 );
-	setLoginData.SetServerInformation( "user3", false, "password4", "proxy.wan.de", 8080 );
+	setMessage.Set(false, { {"label1", 2}, {"label", 1} }, { "scenario1", "scenario2" }, { "unit1", "unit2" }, { "user1", "user2" }, "", "template1", 2.53);
 
 	// write the XML-file
-	Utilities::XML::WriteXML( xmlFileName, setLoginData, rootTag, make_pair( namespaceName, schemaDefinitionFilePath ) );
+	Utilities::XML::WriteXML( xmlFileName, setMessage, rootTag, make_pair( namespaceName, schemaDefinitionFilePath ) );
 
 	// read the XML-file (with a validating parser)
-	Utilities::XML::ReadXML( xmlFileName, getLoginData );
+	Utilities::XML::ReadXML( xmlFileName, getMessage );
 
-	return( getLoginData == setLoginData );
+	return( getMessage == setMessage );
 }
