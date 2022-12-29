@@ -19,7 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <boost/test/unit_test.hpp>
 #include "ExternalProgramMessage.h"
 #include "ExternalProgramGateway.h"
-#include "GroupalarmMessage.h"
+#include "Groupalarm2Message.h"
 
 using boost::unit_test::label;
 
@@ -132,7 +132,7 @@ namespace Networking {
 				using namespace External::Groupalarm;
 				using namespace External::ExternalProgram;
 				CExternalProgramMessage message1, message2;
-				CGroupalarmMessage message3;
+				CGroupalarm2Message message3;
 
 				message1 = CExternalProgramMessage( commandSet, programArgumentsSet );
 				message2 = CExternalProgramMessage( "program.exe", programArgumentsSet );

@@ -17,7 +17,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #if defined _WIN32
 	#include "stdafx.h"
 #endif
-#include "GroupalarmMessage.h"
 #include "EmailMessage.h"
 #include "DefaultValidity.h"
 #include "WeeklyValidity.h"

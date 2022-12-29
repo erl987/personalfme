@@ -31,12 +31,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "EmailMessage.h"
 #include "EmailLoginData.h"
 #include "EmailGateway.h"
-#include "GroupalarmMessage.h"
-#include "GroupalarmLoginData.h"
-#include "GroupalarmGateway.h"
+#include "Groupalarm2Message.h"
+#include "Groupalarm2LoginData.h"
+#include "Groupalarm2Gateway.h"
 #include "GatewayLoginDatabase.h"
 #include "AlarmMessagesDatabase.h"
 #include "SendStatusMessage.h"
+#include "InfoalarmMessageDecorator.h"
 #include "AlarmGatewaysManager.h"
 
 using boost::unit_test::label;
@@ -130,19 +131,19 @@ namespace Networking {
 			using namespace External;
 
 			unique_ptr< CGatewayLoginData > emailLoginData( new Email::CEmailLoginData );
-			unique_ptr< CGatewayLoginData > groupalarmLoginData( new Groupalarm::CGroupalarmLoginData );
+			unique_ptr< CGatewayLoginData > groupalarmLoginData( new Groupalarm::CGroupalarm2LoginData );
 
 			CGatewayLoginDatabase loginDatabase;
 
 			dynamic_cast< Email::CEmailLoginData* >( emailLoginData.get() )->SetServerInformation( Email::TLS_SSL_CONN, "mail.gmx.net" );
-			dynamic_cast< Email::CEmailLoginData* >( emailLoginData.get() )->SetLoginInformation( "ralf.rettig@gmx.de", Email::UNENCRYPTED_AUTH, "ralf.rettig@gmx.de", "" );
+			dynamic_cast< Email::CEmailLoginData* >( emailLoginData.get() )->SetLoginInformation( "bob.foo@provider.org", Email::UNENCRYPTED_AUTH, "bob.foo@provider.org", "" );
 			dynamic_cast< Email::CEmailLoginData* >( emailLoginData.get() )->SetConnectionTrialInfos( 10, 30.0, 1 );
 
-			dynamic_cast< Groupalarm::CGroupalarmLoginData* >( groupalarmLoginData.get() )->SetServerInformation( "user", false, "pass" );
-			dynamic_cast< Groupalarm::CGroupalarmLoginData* >( groupalarmLoginData.get() )->SetConnectionTrialInfos( 10, 30.0, 1 );
+			dynamic_cast<Groupalarm::CGroupalarm2LoginData*>(groupalarmLoginData.get())->Set(12345, "aToken", "proxy.provider.org", 8080, "aUser", "aPasswd");
+			dynamic_cast< Groupalarm::CGroupalarm2LoginData* >( groupalarmLoginData.get() )->SetConnectionTrialInfos( 10, 30.0, 1 );
 
 			loginDatabase.Add( make_unique<Email::CEmailGateway>(), move( emailLoginData ) );
-			loginDatabase.Add( make_unique<Groupalarm::CGroupalarmGateway>(), move( groupalarmLoginData ) );
+			loginDatabase.Add( make_unique<Groupalarm::CGroupalarm2Gateway>(), move( groupalarmLoginData ) );
 
 			return loginDatabase;
 		}
@@ -156,15 +157,16 @@ namespace Networking {
 
 			CAlarmMessageDatabase messageDatabase;
 
-			vector< pair<string, string> > tempRecipients = { { "Ralf Rettig", "ralf.rettig@gmx.de" } };
-			shared_ptr< CAlarmMessage > alarmMessage( new Email::CEmailMessage( "THW Schwabach", "Fachberater", tempRecipients, u8"Fachberatereinsatz für das THW Schwabach! Kontakt mit der Leitstelle aufnehmen.", true ) );
+			vector< pair<string, string> > tempRecipients = { { "Bob Foo", "bob.foo@provider.org" } };
+			shared_ptr< CAlarmMessage > alarmMessage( new Email::CEmailMessage( "Organisation", "Role", tempRecipients, u8"Einsatz! Kontakt mit der Leitstelle aufnehmen.", true ) );
 			messageDatabase.Add( code, Validities::DEFAULT_VALIDITY, alarmMessage );
-			shared_ptr< CAlarmMessage > alarmMessage2( new Groupalarm::CGroupalarmMessage( { 734234, 28343 }, { 2345234 }, false, "234523", false, false, true ) );
+			shared_ptr< CAlarmMessage > alarmMessage2(new Groupalarm::CGroupalarm2Message(false, { {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, {"Bob Foo", "Alice Bar"}, "A message!", "", 2.53));
 			messageDatabase.Add( code, Validities::DEFAULT_VALIDITY, alarmMessage2 );
 			shared_ptr< Validities::CSingleTimeValidity > singleTimeException = make_shared<Validities::CSingleTimeValidity>( CDateTime( 1, 1, 2015, CTime( 2, 0, 0 ) ), CDateTime( 1, 1, 2015, CTime( 3, 0, 0 ) ) ); // local time
-			messageDatabase.Add( code, singleTimeException, make_shared< Groupalarm::CGroupalarmMessage >() );
+			messageDatabase.Add( code, singleTimeException, make_shared< Groupalarm::CGroupalarm2Message >() );
 
-			unique_ptr<CAlarmMessage> infoGroupalarmMessage = make_unique<Groupalarm::CGroupalarmMessage>( vector<int>( { 734234, 28343 } ), vector<int>( { 2345234 } ), false, "234523", false, false, true );
+			Groupalarm::CGroupalarm2Message infoMessage(false, { {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "An infoalarm message!", "", 2.53);
+			unique_ptr<CAlarmMessage> infoGroupalarmMessage = make_unique<Groupalarm::CGroupalarm2Message>(infoMessage);
 			unique_ptr<CAlarmMessage> infoalarmMessage = make_unique<Infoalarm::CInfoalarmMessageDecorator>( move( infoGroupalarmMessage ) );
 			
 			messageDatabase.Add( code, Validities::DEFAULT_VALIDITY, move( infoalarmMessage ) );
@@ -246,7 +248,7 @@ namespace Networking {
 			gateways.ResetAlarmMessagesDatabase( alarmDatabase );
 			BOOST_CHECK_NO_THROW( gateways.Send( code, eventTime, Utilities::CMediaFile(), true ) );
 
-			// asynchronous sending - wait for finishing for max. 1 second
+			// asynchronous sending
 			unique_lock<mutex> lock( receivedAlarmMessageMutex );
 			receivedAlarmMessageCondition.wait_for( lock, 5s, []() { return isReceivedAlarmMessageReady; } );
 			BOOST_REQUIRE( isReceivedAlarmMessageReady );

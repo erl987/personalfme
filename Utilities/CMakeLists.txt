@@ -44,7 +44,6 @@ set( SOURCE
 	MediaFile.cpp
 	ParserErrorHandler.cpp
 	StatusMessage.cpp
-	StringUtils.cpp
 	VersionInfo.cpp
 	XercesString.cpp
 	XMLUtilities.cpp	
@@ -74,7 +73,6 @@ set( HEADERS
 	ParserErrorHandler.h
 	PluginLoader.h
 	SendStatusMessage.h
-	StringUtils.h
 	VersionInfo.h
 	XercesString.h
 	XMLException.h

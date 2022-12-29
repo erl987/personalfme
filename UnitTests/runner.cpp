@@ -67,6 +67,5 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "SerializableSeqDataTest.h"
 #include "SerializableSeqDataCompleteTest.h"
 #include "dataProcessingTest.h"
-#include "SimpleHTTPClientTest.h"
 #include "portaudioTest.h"
 #include "OGGHandlerTest.h"

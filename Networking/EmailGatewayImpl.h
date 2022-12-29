@@ -28,7 +28,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 	#include <openssl/conf.h>
 #endif
 #include "EmailMessage.h"
-#include "GroupalarmMessage.h"
+#include "Groupalarm2Message.h"
 #include "ExternalProgramMessage.h"
 #include "GatewayLoginData.h"
 #include "InfoalarmMessageDecorator.h"
@@ -99,8 +99,9 @@ protected:
 	bool IsTemporarySMTPServerError( const Poco::Net::SMTPException& e );
 	static std::string CreateOtherMessagesInfo( const Infoalarm::CInfoalarmMessageDecorator& infoalarmMessage );
 	static std::string CreateEmailMessageInfo( const External::Email::CEmailMessage& message );
-	static std::string CreateGroupalarmMessageInfo( const External::Groupalarm::CGroupalarmMessage& message );
+	static std::string CreateGroupalarmMessageInfo( const External::Groupalarm::CGroupalarm2Message& message );
 	static std::string CreateExternalProgramMessageInfo( const External::ExternalProgram::CExternalProgramMessage& message );
+	template <class T> static std::string Join(const std::vector<T>& elements, const std::string& delim);
 private:
 	static std::unique_ptr<SSLInitializer> sslInitializer;
 	static std::once_flag rootCertificatesLoadOnceFlag;

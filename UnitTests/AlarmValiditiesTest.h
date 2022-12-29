@@ -19,7 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <memory>
 #include <boost/test/unit_test.hpp>
 #include "AlarmValidities.h"
-#include "GroupalarmMessage.h"
+#include "Groupalarm2Message.h"
 #include "SingleTimeValidity.h"
 #include "WeeklyValidity.h"
 #include "MonthlyValidity.h"
@@ -38,20 +38,6 @@ namespace Networking {
 	/** \ingroup GatewayTests
 	*/
 	namespace AlarmValiditiesTest {
-		const std::string alarmPhoneNum1 = "091316120400";
-		const bool isFreeTextFlagSet1 = true;
-		const std::string messageTextSet1 = "test";
-		const bool isFeedbackFlagSet1 = true;
-		const bool isFlashSMSflagSet1 = false;
-		const bool isNoFaxFlagSet1 = true;
-
-		const std::vector<int> alarmLists2 = { 3 };
-		const std::vector<int> alarmGroups2 = { 7, 9 };
-		const bool isFreeTextFlagSet2 = false;
-		const std::string messageTextSet2 = "5";
-		const bool isFeedbackFlagSet2 = true;
-		const bool isFlashSMSflagSet2 = false;
-		const bool isNoFaxFlagSet2 = true;
 
 		/**	@brief		Generate test data
 		*/
@@ -67,11 +53,11 @@ namespace Networking {
 			vector< shared_ptr< CAlarmMessage > > groupalarm1, groupalarm2;
 
 			validitySet = make_shared< Validities::CSingleTimeValidity >( Validities::CSingleTimeValidity( CDateTime( 25, 3, 2013, CTime( 15, 21, 30, 0 ) ), CDateTime( 25, 3, 2013, CTime( 18, 29, 45, 0 ) ) ) );
-			groupalarm1.push_back( make_shared< CGroupalarmMessage >( CGroupalarmMessage( alarmPhoneNum1, isFreeTextFlagSet1, messageTextSet1, isFeedbackFlagSet1, isFlashSMSflagSet1, isNoFaxFlagSet1 ) ) );
-			groupalarm1.push_back( make_shared< CGroupalarmMessage >( CGroupalarmMessage( alarmLists2, alarmGroups2, isFreeTextFlagSet2, messageTextSet2, isFeedbackFlagSet2, isFlashSMSflagSet2, isNoFaxFlagSet2 ) ) );
+			groupalarm1.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message(false, { {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "A message!", "", 2.53) ) );
+			groupalarm1.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message(true, {}, {}, {}, {}, "", "full_alarm", 5.2) ) );
 			dataset.AddEntry( validitySet, groupalarm1.begin(), groupalarm1.end() );
 				
-			groupalarm2.push_back( make_shared< CGroupalarmMessage >( CGroupalarmMessage() ) );
+			groupalarm2.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message() ) );
 			dataset.AddEntry( Validities::DEFAULT_VALIDITY, groupalarm2.begin(), groupalarm2.end() );
 
 			return dataset;
@@ -91,9 +77,9 @@ namespace Networking {
 			shared_ptr< Validities::CValidity > validitySet;
 			vector< shared_ptr< CAlarmMessage > > groupalarm1, groupalarm2;
 
-			vector< shared_ptr< CAlarmMessage > > groupalarmDefault( 1, make_shared< CGroupalarmMessage >( CGroupalarmMessage( { 1, 4 }, { 5, 7 }, true, "default", true, false, true ) ) );
-			vector< shared_ptr< CAlarmMessage > > groupalarmException( 1, make_shared< CGroupalarmMessage >( CGroupalarmMessage( { 1, 4 }, { 5, 7 }, true, "exception", true, false, true ) ) );
-			vector< shared_ptr< CAlarmMessage > > groupalarmEmpty( 1, make_shared< CGroupalarmMessage >( CGroupalarmMessage() ) );
+			vector< shared_ptr< CAlarmMessage > > groupalarmDefault( 1, make_shared< CGroupalarm2Message >( CGroupalarm2Message(false, { {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "A message!", "", 2.53) ) );
+			vector< shared_ptr< CAlarmMessage > > groupalarmException( 1, make_shared< CGroupalarm2Message >( CGroupalarm2Message(true, {}, {}, {}, {}, "", "full_alarm", 5.2) ) );
+			vector< shared_ptr< CAlarmMessage > > groupalarmEmpty( 1, make_shared< CGroupalarm2Message >( CGroupalarm2Message() ) );
 			CWeeklyValidity weeklyException( Utilities::Time::THURSDAY, Utilities::CTime( 21, 30, 00 ), Utilities::CTime( 23, 30, 00 ) );
 			CMonthlyValidity monthlyException( 5, Utilities::CTime( 19, 12, 30 ), Utilities::CTime( 20, 12, 30 ) );
 
@@ -129,8 +115,8 @@ namespace Networking {
 
 			// test normal construction
 			validitySet = make_shared< Validities::CSingleTimeValidity >( CDateTime( 25, 3, 2013, CTime( 15, 21, 30, 0 ) ), CDateTime( 25, 3, 2013, CTime( 18, 29, 45, 0 ) ) );
-			groupalarmSet.push_back( make_shared< CGroupalarmMessage >( CGroupalarmMessage( alarmPhoneNum1, isFreeTextFlagSet1, messageTextSet1, isFeedbackFlagSet1, isFlashSMSflagSet1, isNoFaxFlagSet1 ) ) );
-			groupalarmSet.push_back( make_shared< CGroupalarmMessage >( CGroupalarmMessage( alarmLists2, alarmGroups2, isFreeTextFlagSet2, messageTextSet2, isFeedbackFlagSet2, isFlashSMSflagSet2, isNoFaxFlagSet2 ) ) );
+			groupalarmSet.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message(false, { {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "A message!", "", 2.53) ) );
+			groupalarmSet.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message(true, {}, {}, {}, {}, "", "full_alarm", 5.2) ) );
 			dataset2 = CAlarmValidities( validitySet, groupalarmSet.begin(), groupalarmSet.end() );
 			BOOST_REQUIRE( dataset2.GetAllEntries().size() == 1 );
 			BOOST_REQUIRE( *( dataset2.GetAllEntries().front().first ) == *validitySet );
@@ -164,10 +150,10 @@ namespace Networking {
 
 			// test adding entries
 			validitySet = make_shared< CSingleTimeValidity >( CSingleTimeValidity( CDateTime( 25, 3, 2013, CTime( 15, 21, 30, 0 ) ), CDateTime( 25, 3, 2013, CTime( 18, 29, 45, 0 ) ) ) );
-			groupalarmSet.push_back( make_shared< CGroupalarmMessage >( CGroupalarmMessage( alarmPhoneNum1, isFreeTextFlagSet1, messageTextSet1, isFeedbackFlagSet1, isFlashSMSflagSet1, isNoFaxFlagSet1 ) ) );
+			groupalarmSet.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message(false, { {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "A message!", "", 2.53) ) );
 			dataset.AddEntry( validitySet, groupalarmSet.begin(), groupalarmSet.end() );
 			validitySet2 = make_shared< CWeeklyValidity >( CWeeklyValidity( Utilities::Time::MONDAY, Utilities::CTime( 5, 20, 41 ), Utilities::CTime( 5, 32, 58 ) ) );
-			groupalarmSet2.push_back( make_shared< CGroupalarmMessage >( CGroupalarmMessage( alarmLists2, alarmGroups2, isFreeTextFlagSet2, messageTextSet2, isFeedbackFlagSet2, isFlashSMSflagSet2, isNoFaxFlagSet2 ) ) );
+			groupalarmSet2.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message(true, {}, {}, {}, {}, "", "full_alarm", 5.2) ) );
 			dataset.AddEntry( validitySet2, groupalarmSet2.begin(), groupalarmSet2.end() );
 				
 			// test getting entries
@@ -221,7 +207,7 @@ namespace Networking {
 			using namespace External;
 			using namespace External::Groupalarm;
 			CAlarmValidities dataset;
-			vector< CGroupalarmMessage > groupalarm;
+			vector< CGroupalarm2Message > groupalarm;
 
 			dataset = GenerateTestset();
 			BOOST_REQUIRE( dataset.Size() == 2 );
@@ -243,7 +229,7 @@ namespace Networking {
 			vector< shared_ptr< CAlarmMessage > > groupalarm;
 
 			dataset1 = GenerateTestset();
-			groupalarm.push_back( make_shared< CGroupalarmMessage >( CGroupalarmMessage() ) );
+			groupalarm.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message() ) );
 			dataset2.AddEntry( Validities::DEFAULT_VALIDITY, groupalarm.begin(), groupalarm.end() );
 
 			// test valid comparisons

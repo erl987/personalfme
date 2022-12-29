@@ -23,11 +23,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "AudioDevice.h"
 #include "GatewayLoginDatabase.h"
 #include "EmailGateway.h"
-#include "GroupalarmGateway.h"
+#include "Groupalarm2Gateway.h"
 #include "EmailLoginData.h"
-#include "GroupalarmLoginData.h"
+#include "Groupalarm2LoginData.h"
 #include "EmailMessage.h"
-#include "GroupalarmMessage.h"
+#include "Groupalarm2Message.h"
 #include "AlarmMessagesDatabase.h"
 #include "WeeklyValidity.h"
 #include "DefaultValidity.h"
@@ -53,7 +53,7 @@ namespace Middleware {
 
 			External::CGatewayLoginDatabase gatewayDatabase;
 			External::Email::CEmailLoginData emailLoginData;
-			External::Groupalarm::CGroupalarmLoginData groupalarmLoginData;
+			External::Groupalarm::CGroupalarm2LoginData groupalarmLoginData;
 			Middleware::CSettingsParam settings;
 			External::CAlarmMessageDatabase alarmDatabase;
 			External::CAlarmValidities validity1, validity2;
@@ -72,8 +72,8 @@ namespace Middleware {
 			gatewayDatabase.Add( make_unique<External::Email::CEmailGateway>(), make_unique<External::Email::CEmailLoginData>( emailLoginData ) );
 
 			groupalarmLoginData.SetConnectionTrialInfos( 7, 19.3f, 5 );
-			groupalarmLoginData.SetServerInformation( "user3", false, "password4", "proxy.wan.de", 8080 );
-			gatewayDatabase.Add( make_unique<External::Groupalarm::CGroupalarmGateway>(), make_unique<External::Groupalarm::CGroupalarmLoginData>( groupalarmLoginData ) );
+			groupalarmLoginData.Set(12345, "aToken", "proxy.provider.org", 8080, "aUser", "aPasswd");
+			gatewayDatabase.Add( make_unique<External::Groupalarm::CGroupalarm2Gateway>(), make_unique<External::Groupalarm::CGroupalarm2LoginData>( groupalarmLoginData ) );
 
 			// prepare the alarm messages database
 			vector<int> code1 = { 2, 5, 6, 3, 4 };

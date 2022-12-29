@@ -66,16 +66,12 @@ set( SOURCE
 	FMEServerDebug.cpp
 	GatewayLoginData.cpp
 	GatewayLoginDatabase.cpp
-	GroupalarmGateway.cpp
 	Groupalarm2Gateway.cpp
 	Groupalarm2GatewayImpl.cpp
-	GroupalarmLoginData.cpp	
 	Groupalarm2LoginData.cpp	
-	GroupalarmMessage.cpp
 	Groupalarm2Message.cpp
 	InfoalarmMessageDecorator.cpp
 	MonthlyValidity.cpp
-	SimpleHTTPClient.cpp
 	SingleTimeValidity.cpp
 	Validity.cpp
 	WeeklyValidity.cpp
@@ -86,9 +82,7 @@ set( SOURCE
 	XMLSerializableExternalProgramLoginData.cpp
 	XMLSerializableExternalProgramMessage.cpp
 	XMLSerializableGatewayLoginDatabase.cpp
-	XMLSerializableGroupalarmLoginData.cpp
 	XMLSerializableGroupalarm2LoginData.cpp
-	XMLSerializableGroupalarmMessage.cpp
 	XMLSerializableGroupalarm2Message.cpp
 	XMLSerializableMonthlyValidity.cpp
 	XMLSerializableSingleTimeValidity.cpp
@@ -125,16 +119,12 @@ set( HEADERS
 	FMESessionManagerDebug.h
 	GatewayLoginData.h
 	GatewayLoginDatabase.h
-	GroupalarmGateway.h
 	Groupalarm2Gateway.h
-	Groupalarm2GatewayImpl.h
-	GroupalarmLoginData.h	
+	Groupalarm2GatewayImpl.h	
 	Groupalarm2LoginData.h
-	GroupalarmMessage.h
 	Groupalarm2Message.h
 	InfoalarmMessageDecorator.h
 	MonthlyValidity.h
-	SimpleHTTPClient.h
 	SingleTimeValidity.h
 	Validity.h
 	WeeklyValidity.h
@@ -145,9 +135,7 @@ set( HEADERS
     XMLSerializableExternalProgramLoginData.h
 	XMLSerializableExternalProgramMessage.h
 	XMLSerializableGatewayLoginDatabase.h
-	XMLSerializableGroupalarmLoginData.h
 	XMLSerializableGroupalarm2LoginData.h
-	XMLSerializableGroupalarmMessage.h
 	XMLSerializableGroupalarm2Message.h
 	XMLSerializableMonthlyValidity.h
 	XMLSerializableSingleTimeValidity.h

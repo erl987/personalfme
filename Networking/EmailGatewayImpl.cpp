@@ -323,8 +323,8 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateOtherMessag
 		// infoalarms are not included
 		if ( typeid( CEmailMessage ) == typeid( *message ) ) {
 			newMessageInfo = CreateEmailMessageInfo( dynamic_cast<const CEmailMessage&>( *message ) );
-		} else if ( typeid( CGroupalarmMessage ) == typeid( *message ) ) {
-			newMessageInfo = CreateGroupalarmMessageInfo( dynamic_cast<const CGroupalarmMessage&>( *message ) );
+		} else if ( typeid( CGroupalarm2Message ) == typeid( *message ) ) {
+			newMessageInfo = CreateGroupalarmMessageInfo( dynamic_cast<const CGroupalarm2Message&>( *message ) );
 		} else if ( typeid( CExternalProgramMessage ) == typeid( *message ) ) {
 			newMessageInfo = CreateExternalProgramMessageInfo( dynamic_cast<const CExternalProgramMessage&>( *message ) );
 		}
@@ -375,67 +375,41 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateEmailMessag
 *	@exception									None
 *	@remarks									None
 */
-std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmMessageInfo( const External::Groupalarm::CGroupalarmMessage& message )
+std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmMessageInfo( const External::Groupalarm::CGroupalarm2Message& message )
 {
-	using namespace std;
+	std::stringstream infoStream;
 
-	unsigned int listCounter = 0;
-	unsigned int groupCounter = 0;
-	bool isUsingListOrGroups, isFreeText;
-	string infoMessage, messageText, alarmPhoneNum;
-	vector<int> alarmLists, alarmGroups;
+	infoStream << u8"Groupalarm-Nachricht: ";
 
-	isUsingListOrGroups = message.GetAlarmData( alarmPhoneNum, alarmLists, alarmGroups );
-	isFreeText = message.GetAlarmMessage( messageText );
-
-	infoMessage = u8"Groupalarm-Nachricht an ";
-	if ( isUsingListOrGroups ) {
-		if ( !alarmLists.empty() ) {
-			if ( alarmLists.size() == 1 ) {
-				infoMessage += "Liste: ";
-			} else {
-				infoMessage += "Listen: ";
-			}
-			for ( auto permanentListID : alarmLists ) {
-				if ( listCounter > 0 ) {
-					infoMessage += ", ";
-				}
-				infoMessage += to_string( permanentListID );
-				listCounter++;
-			}
-			infoMessage += ", ";
-
+	if (message.ToAllUsers()) {
+		infoStream << u8"Vollalarm" << ", ";
+	}
+	else {
+		if (message.ToScenarios()) {
+			infoStream << u8"Szenarien: " << Join(message.GetScenarios(), ",") << ", ";
 		}
-		if ( !alarmGroups.empty() ) {
-			if ( alarmGroups.size() == 1 ) {
-				infoMessage += "Gruppe: ";
-			} else {
-				infoMessage += "Gruppen: ";
+		if (message.ToLabels()) {
+			infoStream << u8"Label: ";
+			for (const auto& labelInfo : message.GetLabels()) {
+				infoStream << labelInfo.first << ": " << labelInfo.second << ", ";
 			}
-			for ( auto permanentGroupID : alarmGroups ) {
-				if ( groupCounter > 0 ) {
-					infoMessage += ", ";
-				}
-				infoMessage += to_string( permanentGroupID );
-				groupCounter++;
-			}
-			infoMessage += ", ";
 		}
-	} else {
-		infoMessage += "Telefonnummer: " + alarmPhoneNum + ", ";
+		if (message.ToUsers()) {
+			infoStream << u8"Personen: " << Join(message.GetUsers(), ",") << ", ";
+		}
+		if (message.ToUnits()) {
+			infoStream << u8"Einheiten: " << Join(message.GetUnits(), ",") << ", ";
+		}
 	}
 
-	if ( isFreeText ) {
-		infoMessage += "Alarmtext: ";
-	} else {
-		infoMessage += "Alarmtext (Groupalarm-Code): \"";
+	if (message.HasMessageText()) {
+		infoStream << u8"Alarmtext: " << message.GetMessageText() << ", ";
 	}
-	infoMessage += messageText;
-	if ( !isFreeText ) {
-		infoMessage += "\"";
+	else {
+		infoStream << u8"Alarmtemplate: " << message.GetMessageTemplate() << ", ";
 	}
 
-	return infoMessage;
+	return infoStream.str();
 }
 
 
@@ -460,6 +434,19 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateExternalPro
 	}
 
 	return infoMessage;
+}
+
+template <class T>
+std::string External::Email::CEmailGateway::CEmailGatewayImpl::Join(const std::vector<T>& elements, const std::string& delim) {
+	std::stringstream ss;
+	for (size_t i = 0; i < elements.size(); i++) {
+		ss << elements[i];
+		if (i < elements.size() - 1) {
+			ss << delim;
+		}
+	}
+
+	return ss.str();
 }
 
 
