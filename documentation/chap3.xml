@@ -424,7 +424,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 <![CDATA[
 <groupalarm2>
 	<organizationid>12345</organizationid>
-	<apitoken>U&s4j4&tw!rw5*w6NPWB9^sL3M6Gx$z4ynrJiZtakPFoe^MRSFWo$3WiepQ&e*r</apitoken>
+	<apitoken>U&s4j4&tw!rw5*w6NPWB9^sL3M6Gx</apitoken>
 	<proxy>
 		<address>proxy.orga.de</address>
 		<port>8080</port>
@@ -437,14 +437,15 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			</para>
 			<itemizedlist>
 				<listitem>
-					<code language="xml"><![CDATA[<organizationid>]]></code>: ID Ihrer Organisation bei Groupalarm ("Organisation" -> ... -> "Einstellungen")
+					<code language="xml"><![CDATA[<organizationid>]]></code>: ID Ihrer Organisation bei Groupalarm ("Organisation" -> ... -> "Einstellungen" auf <ulink url="https://app.groupalarm.com"></ulink>)
 				</listitem>
 				<listitem>
 					<code language="xml"><![CDATA[<apitoken>]]></code>: Der Schlüssel zum Auslösen eines Alarms (Sie können Ihren API-Schlüssel unter "Admin" -> "Berechtigungen" -> "API-Schlüssel" erzeugen).
+					Geben Sie dem API-Schlüssel einen sinnvollen Namen wie z.B. PersonalFME.
 					
 					<warning>
-					Dieser funktioniert wie ein Passwort und sollte entsprechend behandelt werden. Jeder kann mit diesem Schlüssel Alarmierungen auslösen. Geben Sie dem API-Schlüssel einen sinnvollen Namen wie z.B. PersonalFME.
-					Der API-Schlüssel wird unverschlüsselt in der XML-Konfigurationsdatei gespeichert. Sorgen Sie durch Festlegung der Benutzerrechte und Begrenzung des Zugangs zum Rechner dafür, dass der Schlüssel nicht in falsche
+					Der API-Schlüssel funktioniert wie ein Passwort und sollte entsprechend behandelt werden. Jeder kann mit diesem Schlüssel Alarmierungen auslösen.
+					Er wird unverschlüsselt in der XML-Konfigurationsdatei gespeichert. Sorgen Sie durch Festlegung der Benutzerrechte und Begrenzung des Zugangs zum Rechner dafür, dass der Schlüssel nicht in falsche
 					Hände gerät. Geben Sie die XML-Konfigurationsdatei nicht mit Ihrem Passwort weiter.
 					</warning>
 				</listitem>
@@ -878,7 +879,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				<emphasis>Einstellungsmöglichkeiten</emphasis>
 				<itemizedlist>
 					<listitem>
-						<code language="xml"><![CDATA[<resources>]]></code>: Definition der Alarmempfänger. Es bestehen folgende Wahlmöglichkeiten:
+						<code language="xml"><![CDATA[<resources>]]></code>: Definition der Alarmempfänger. Es können entweder beliebige Kombinationen von Einheiten, Personen, usw. <emphasis>oder</emphasis>
+						Vollalarm ausgelöst werden:
+						
 						<itemizedlist>
 							<listitem>
 									<code language="xml"><![CDATA[<all>]]></code>: <emphasis>Vollalarm für alle Mitglieder der Organisation</emphasis>. Keine anderen
@@ -898,7 +901,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 							
 							<listitem>
 								<code language="xml"><![CDATA[<scenarios>]]></code>: Alarmierung von definierten Szenarien von Groupalarm. Dies sind Kombinationen von z.B. verschiedenen Einheiten.
-								Angegeben werden jeweils der Name des Szenarios (<code language="xml"><![CDATA[<scenario>]]></code>), definiert unter "Konfiguration" -> "Szenarien").
+								Angegeben werden jeweils der Name des Szenarios (<code language="xml"><![CDATA[<scenario>]]></code>, definiert unter "Konfiguration" -> "Szenarien").
 							</listitem>
 							
 							<listitem>
@@ -911,7 +914,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 						<code language="xml"><![CDATA[<message>]]></code>: Definition der Alarmnachricht. Es bestehen folgende Wahlmöglichkeiten:
 						<itemizedlist>
 							<listitem>
-								<code language="xml"><![CDATA[<message type="template">]]></code>: Vordefinierte Groupalarm-Nachricht ("Konfiguration" -> "Textvorlagen").
+								<code language="xml"><![CDATA[<message type="template">]]></code>: Vordefinierte Groupalarm-Nachricht, angegeben wird der Name der Textvorlage ("Konfiguration" -> "Textvorlagen").
 							</listitem>
 							<listitem>
 								<code language="xml"><![CDATA[<message type="freeText">]]></code>: Frei definierte Nachricht:
@@ -1159,7 +1162,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 					Version 0.2.1: neue vereinfachte Syntax für Groupalarm-Auslösungen (Auszeichner: <code language="XML"><![CDATA[<groupalarm>]]></code>)
 				</listitem>
 				<listitem>
-					Version 1.1.0: neue Syntax für den neuen Dienst für Groupalarm.de  (Auszeichner: <code language="XML"><![CDATA[<groupalarm2>]]></code>).
+					Version 1.1.0: neue Syntax für den neuen Dienst von Groupalarm.de  (Auszeichner: <code language="XML"><![CDATA[<groupalarm2>]]></code>),
 					<code language="XML"><![CDATA[<groupalarm>]]></code> wurde entfernt.
 				</listitem>
 			</itemizedlist>
