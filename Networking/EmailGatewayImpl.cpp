@@ -41,6 +41,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #endif
 #include "VersionInfo.h"
 #include "BoostStdTimeConverter.h"
+#include "StringUtilities.h"
 #include "german_local_date_time.h"
 #include "EmailLoginData.h"
 #include "EmailGatewayImpl.h"
@@ -377,6 +378,8 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateEmailMessag
 */
 std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmMessageInfo( const External::Groupalarm::CGroupalarm2Message& message )
 {
+	using namespace Utilities;
+
 	std::stringstream infoStream;
 
 	infoStream << u8"Groupalarm-Nachricht: ";
@@ -391,7 +394,7 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmM
 			} else {
 				infoStream << u8"Szenarien: ";
 			}
-			infoStream << Join(message.GetScenarios(), ",") << ", ";
+			infoStream << CStringUtilities().Join(message.GetScenarios(), ",") << ", ";
 		}
 		if (message.ToLabels()) {
 			if (message.GetLabels().size() == 1) {
@@ -404,7 +407,7 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmM
 			}
 		}
 		if (message.ToUsers()) {
-			infoStream << u8"Teilnehmer: " << Join(message.GetUsers(), ",") << ", ";
+			infoStream << u8"Teilnehmer: " << CStringUtilities().Join(message.GetUsers(), ",") << ", ";
 		}
 		if (message.ToUnits()) {
 			if (message.GetUnits().size() == 1) {
@@ -413,7 +416,7 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmM
 			else {
 				infoStream << u8"Einheiten: ";
 			}
-			infoStream << Join(message.GetUnits(), ",") << ", ";
+			infoStream << CStringUtilities().Join(message.GetUnits(), ",") << ", ";
 		}
 	}
 
@@ -449,19 +452,6 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateExternalPro
 	}
 
 	return infoMessage;
-}
-
-template <class T>
-std::string External::Email::CEmailGateway::CEmailGatewayImpl::Join(const std::vector<T>& elements, const std::string& delim) {
-	std::stringstream ss;
-	for (size_t i = 0; i < elements.size(); i++) {
-		ss << elements[i];
-		if (i < elements.size() - 1) {
-			ss << delim;
-		}
-	}
-
-	return ss.str();
 }
 
 

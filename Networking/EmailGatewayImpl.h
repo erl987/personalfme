@@ -101,7 +101,6 @@ protected:
 	static std::string CreateEmailMessageInfo( const External::Email::CEmailMessage& message );
 	static std::string CreateGroupalarmMessageInfo( const External::Groupalarm::CGroupalarm2Message& message );
 	static std::string CreateExternalProgramMessageInfo( const External::ExternalProgram::CExternalProgramMessage& message );
-	template <class T> static std::string Join(const std::vector<T>& elements, const std::string& delim);
 private:
 	static std::unique_ptr<SSLInitializer> sslInitializer;
 	static std::once_flag rootCertificatesLoadOnceFlag;

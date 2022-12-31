@@ -52,7 +52,6 @@ private:
 	std::vector<unsigned int> GetIdsForUsers(const std::vector<std::string>& userNames, unsigned int organizationId, const std::string& apiToken);
 	std::vector<unsigned int> GetIdsForScenarios(const std::vector<std::string>& scenarioNames, unsigned int organizationId, const std::string& apiToken);
 	unsigned int GetAlarmTemplateId(const std::string& alarmTemplateName, unsigned int organizationId, const std::string& apiToken);
-	template <class InputIt> static std::string Join(InputIt first, InputIt last, const std::string& delim);
 	std::string CreateOtherMessagesInfo(const External::Infoalarm::CInfoalarmMessageDecorator& infoalarmMessage);
 	std::string GetAlarmReceiverID(const External::Email::CEmailMessage& message);
 	void PerformSend(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<CGatewayLoginData> loginData, std::unique_ptr<CAlarmMessage> message, const Utilities::CMediaFile& audioFile);

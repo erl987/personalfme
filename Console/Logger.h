@@ -50,7 +50,6 @@ namespace Logger {
 		std::string GenerateGeneralStatusMessage( const Utilities::Message::CGeneralStatusMessage& message ) const;
 		void GetGroupalarmInfo( const External::Groupalarm::CGroupalarm2Message& alarmMessage, std::string& messageInfoString, std::string& messageTypeString ) const;
 		void GetEmailInfo( const External::Email::CEmailMessage& alarmMessage, std::string& messageInfoString, std::string& messageTypeString ) const;
-		template<class T> static std::string Join(const std::vector<T>& elements, const std::string& delim);
 
 		static std::unique_ptr<CLogger> instancePtr;
 		static std::once_flag onceFlag;

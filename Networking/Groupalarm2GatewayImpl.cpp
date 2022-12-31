@@ -26,27 +26,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "Poco/Net/NetException.h"
 #include "BoostStdTimeConverter.h"
 #include "german_local_date_time.h"
+#include "StringUtilities.h"
 #include "Groupalarm2Message.h"
 #include "ExternalProgramMessage.h"
 #include "Groupalarm2GatewayImpl.h"
 
-
-template <class InputIt>
-std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::Join(InputIt first, InputIt last, const std::string& delim) {
-	std::stringstream ss;
-	size_t length = std::distance(first, last);
-
-	int i = 0;
-	for (auto it = first; it != last; ++it) {
-		ss << *it;
-		if (i < length - 1) {
-			ss << delim;
-		}
-		i++;
-	}
-
-	return ss.str();
-}
 
 std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::ExtractErrorInfo(const Poco::Net::HTTPResponse& response, const std::string& responseBody) {
 	using namespace std;
@@ -73,6 +57,7 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 
 std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::ParseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId) {
 	using namespace std;
+	using namespace Utilities;
 	using namespace Poco::JSON;
 
 	Parser parser;
@@ -99,7 +84,7 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 		vector<string> missingEntities;
 		set_difference(entityNames.begin(), entityNames.end(), foundEntityNames.begin(), foundEntityNames.end(), inserter(missingEntities, missingEntities.begin()));
 
-		string errorMessage = "Did not find the following *" + subEndpoint + "* in the Groupalarm organization " + to_string(organizationId) + ": " + Join(missingEntities.cbegin(), missingEntities.cend(), ", ");
+		string errorMessage = "Did not find the following *" + subEndpoint + "* in the Groupalarm organization " + to_string(organizationId) + ": " + CStringUtilities().Join(missingEntities.cbegin(), missingEntities.cend(), ", ");
 		throw Exception::GroupalarmClientError(errorMessage);
 	}
 
@@ -269,6 +254,7 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 
 Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::CreateAlarmJson(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<External::CAlarmMessage> message, unsigned int organizationId, const std::string& apiToken) {
 	using namespace std;
+	using namespace Utilities;
 	using namespace boost::posix_time;
 	using namespace Utilities::Time;
 	using namespace External::Infoalarm;
@@ -302,7 +288,7 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 	}
 
 	stringstream ss;
-	ss << "[Funkmelderalarm] Schleife " << Join(code.cbegin(), code.cend(), "") << " " << german_local_date_time(CBoostStdTimeConverter::ConvertToBoostTime(alarmTime)) << " (" + alarmType << ")";
+	ss << "[Funkmelderalarm] Schleife " << CStringUtilities().Join(code.cbegin(), code.cend(), "") << " " << german_local_date_time(CBoostStdTimeConverter::ConvertToBoostTime(alarmTime)) << " (" + alarmType << ")";
 	string eventName = ss.str();
 
 	string currIsoTime = to_iso_extended_string(second_clock::universal_time()) + "Z";

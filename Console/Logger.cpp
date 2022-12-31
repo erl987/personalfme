@@ -21,6 +21,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "DateTime.h"
 #include "german_local_date_time.h"
 #include "BoostStdTimeConverter.h"
+#include "StringUtilities.h"
 #include "InfoalarmMessageDecorator.h"
 #include "Logger.h"
 
@@ -291,6 +292,8 @@ std::string Logger::CLogger::GenerateGeneralStatusMessage( const Utilities::Mess
 */
 void Logger::CLogger::GetGroupalarmInfo( const External::Groupalarm::CGroupalarm2Message& alarmMessage, std::string& messageInfoString, std::string& messageTypeString ) const
 {
+	using namespace Utilities;
+
 	std::stringstream infoStream;
 
 	if ( alarmMessage.IsEmpty() ) {
@@ -305,7 +308,7 @@ void Logger::CLogger::GetGroupalarmInfo( const External::Groupalarm::CGroupalarm
 				} else {
 					infoStream << u8"Szenarien: ";
 				}
-				infoStream << Join(alarmMessage.GetScenarios(), ",") << ", ";
+				infoStream << CStringUtilities().Join(alarmMessage.GetScenarios(), ",") << ", ";
 			}
 			if (alarmMessage.ToLabels()) {
 				if (alarmMessage.GetLabels().size() == 1) {
@@ -318,7 +321,7 @@ void Logger::CLogger::GetGroupalarmInfo( const External::Groupalarm::CGroupalarm
 				}
 			}
 			if (alarmMessage.ToUsers()) {
-				infoStream << u8"Teilnehmer: " << Join(alarmMessage.GetUsers(), ",") << ", ";
+				infoStream << u8"Teilnehmer: " << CStringUtilities().Join(alarmMessage.GetUsers(), ",") << ", ";
 			}
 			if (alarmMessage.ToUnits()) {
 				if (alarmMessage.GetUnits().size() == 1) {
@@ -327,7 +330,7 @@ void Logger::CLogger::GetGroupalarmInfo( const External::Groupalarm::CGroupalarm
 				else {
 					infoStream << u8"Einheiten: ";
 				}
-				infoStream << Join(alarmMessage.GetUnits(), ",") << ", ";
+				infoStream << CStringUtilities().Join(alarmMessage.GetUnits(), ",") << ", ";
 			}
 		}
 
@@ -380,20 +383,6 @@ void Logger::CLogger::GetEmailInfo( const External::Email::CEmailMessage& alarmM
 
 	messageInfoString = infoStream.str();
 	messageTypeString = u8"Email-";
-}
-
-
-template <class T>
-std::string Logger::CLogger::Join(const std::vector<T>& elements, const std::string& delim) {
-	std::stringstream ss;
-	for (size_t i = 0; i < elements.size(); i++) {
-		ss << elements[i];
-		if (i < elements.size() - 1) {
-			ss << delim;
-		}
-	}
-
-	return ss.str();
 }
 
 

@@ -64,6 +64,7 @@ set( HEADERS
 	SerializableSeqDataComplete.h
 	SerializableDateTime.h
 	SerializableTime.h
+	StringUtilities.h
 	DateTime.h
 	CTime.h
 	TimeDatatypes.h
