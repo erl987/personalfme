@@ -386,19 +386,34 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmM
 	}
 	else {
 		if (message.ToScenarios()) {
-			infoStream << u8"Szenarien: " << Join(message.GetScenarios(), ",") << ", ";
+			if (message.GetScenarios().size() == 1) {
+				infoStream << u8"Szenario: ";
+			} else {
+				infoStream << u8"Szenarien: ";
+			}
+			infoStream << Join(message.GetScenarios(), ",") << ", ";
 		}
 		if (message.ToLabels()) {
-			infoStream << u8"Label: ";
+			if (message.GetLabels().size() == 1) {
+				infoStream << u8"Label: ";
+			} else {
+				infoStream << u8"Labels: ";
+			}
 			for (const auto& labelInfo : message.GetLabels()) {
 				infoStream << labelInfo.first << ": " << labelInfo.second << ", ";
 			}
 		}
 		if (message.ToUsers()) {
-			infoStream << u8"Personen: " << Join(message.GetUsers(), ",") << ", ";
+			infoStream << u8"Teilnehmer: " << Join(message.GetUsers(), ",") << ", ";
 		}
 		if (message.ToUnits()) {
-			infoStream << u8"Einheiten: " << Join(message.GetUnits(), ",") << ", ";
+			if (message.GetUnits().size() == 1) {
+				infoStream << u8"Einheit: ";
+			}
+			else {
+				infoStream << u8"Einheiten: ";
+			}
+			infoStream << Join(message.GetUnits(), ",") << ", ";
 		}
 	}
 
@@ -406,7 +421,7 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmM
 		infoStream << u8"Alarmtext: " << message.GetMessageText() << ", ";
 	}
 	else {
-		infoStream << u8"Alarmtemplate: " << message.GetMessageTemplate() << ", ";
+		infoStream << u8"Alarmvorlage: " << message.GetMessageTemplate() << ", ";
 	}
 
 	return infoStream.str();

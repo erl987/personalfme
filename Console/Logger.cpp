@@ -300,26 +300,41 @@ void Logger::CLogger::GetGroupalarmInfo( const External::Groupalarm::CGroupalarm
 			infoStream << u8"Vollalarm" << ", ";
 		} else {
 			if (alarmMessage.ToScenarios()) {
-				infoStream << u8"Szenarien: " << Join(alarmMessage.GetScenarios(), ",") << ", ";
+				if (alarmMessage.GetScenarios().size() == 1) {
+					infoStream << u8"Szenario: ";
+				} else {
+					infoStream << u8"Szenarien: ";
+				}
+				infoStream << Join(alarmMessage.GetScenarios(), ",") << ", ";
 			}
 			if (alarmMessage.ToLabels()) {
-				infoStream << u8"Label: ";
+				if (alarmMessage.GetLabels().size() == 1) {
+					infoStream << u8"Label: ";
+				} else {
+					infoStream << u8"Labels: ";
+				}
 				for (const auto& labelInfo : alarmMessage.GetLabels()) {
 					infoStream << labelInfo.first << ": " << labelInfo.second << ", ";
 				}
 			}
 			if (alarmMessage.ToUsers()) {
-				infoStream << u8"Personen: " << Join(alarmMessage.GetUsers(), ",") << ", ";
+				infoStream << u8"Teilnehmer: " << Join(alarmMessage.GetUsers(), ",") << ", ";
 			}
 			if (alarmMessage.ToUnits()) {
-				infoStream << u8"Einheiten: " << Join(alarmMessage.GetUnits(), ",") << ", ";
+				if (alarmMessage.GetUnits().size() == 1) {
+					infoStream << u8"Einheit: ";
+				}
+				else {
+					infoStream << u8"Einheiten: ";
+				}
+				infoStream << Join(alarmMessage.GetUnits(), ",") << ", ";
 			}
 		}
 
 		if (alarmMessage.HasMessageText()) {
 			infoStream << u8"Alarmtext: " << alarmMessage.GetMessageText() << ", ";
 		} else {
-			infoStream << u8"Alarmtemplate: " << alarmMessage.GetMessageTemplate() << ", ";
+			infoStream << u8"Alarmvorlage: " << alarmMessage.GetMessageTemplate() << ", ";
 		}
 
 		infoStream << u8"Ereignis aktiv für " << alarmMessage.GetEventOpenPeriodInHours() << " Stunden";
