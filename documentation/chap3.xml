@@ -431,6 +431,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 		<username>user</username>
 		<password>passwd</password>
 	</proxy>
+	<trials>10</trials>
+	<waitTime>60</waitTime>
+	<connections>1</connections>
 </groupalarm2>
 ]]>
 				</programlisting>
