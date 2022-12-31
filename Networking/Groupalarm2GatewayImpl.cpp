@@ -177,39 +177,41 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 	if (message.ToAllUsers()) {
 		alarmResources.set("allUsers", true);
 	}
-	else if (message.ToLabels()) {
-		vector<string> labelNames;
-		for (const auto& entry: message.GetLabels()) {
-			labelNames.push_back(entry.first);
-		}
-
-		auto labelIds = GetIdsForLabels(labelNames, organizationId, apiToken);
-
-		vector<Poco::JSON::Object> labelsArray;
-		unsigned int index = 0;
-		for (const auto& entry: message.GetLabels()) {
-			Poco::JSON::Object labelObject;
-			labelObject.set("amount", entry.second);
-			labelObject.set("labelID", labelIds[index]);
-			labelsArray.push_back(labelObject);
-			index++;
-		}
-		alarmResources.set("labels", labelsArray);
-	}
-	else if (message.ToUnits()) {
-		auto unitIds = GetIdsForUnits(message.GetUnits(), organizationId, apiToken);
-		alarmResources.set("units", unitIds);
-	}
-	else if (message.ToUsers()) {
-		auto userIds = GetIdsForUsers(message.GetUsers(), organizationId, apiToken);
-		alarmResources.set("users", userIds);
-	}
-	else if (message.ToScenarios()) {
-		auto scenarioIds = GetIdsForScenarios(message.GetScenarios(), organizationId, apiToken);
-		alarmResources.set("scenarios", scenarioIds);
-	}
 	else {
-		throw Exception::GroupalarmClientError("Incorrect alarm configuration: no alarm resources");
+		if (message.ToLabels()) {
+			vector<string> labelNames;
+			for (const auto& entry : message.GetLabels()) {
+				labelNames.push_back(entry.first);
+			}
+
+			auto labelIds = GetIdsForLabels(labelNames, organizationId, apiToken);
+
+			vector<Poco::JSON::Object> labelsArray;
+			unsigned int index = 0;
+			for (const auto& entry : message.GetLabels()) {
+				Poco::JSON::Object labelObject;
+				labelObject.set("amount", entry.second);
+				labelObject.set("labelID", labelIds[index]);
+				labelsArray.push_back(labelObject);
+				index++;
+			}
+			alarmResources.set("labels", labelsArray);
+		}
+
+		if (message.ToUnits()) {
+			auto unitIds = GetIdsForUnits(message.GetUnits(), organizationId, apiToken);
+			alarmResources.set("units", unitIds);
+		}
+
+		if (message.ToUsers()) {
+			auto userIds = GetIdsForUsers(message.GetUsers(), organizationId, apiToken);
+			alarmResources.set("users", userIds);
+		}
+
+		if (message.ToScenarios()) {
+			auto scenarioIds = GetIdsForScenarios(message.GetScenarios(), organizationId, apiToken);
+			alarmResources.set("scenarios", scenarioIds);
+		}
 	}
 
 	return alarmResources;
