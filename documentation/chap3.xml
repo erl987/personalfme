@@ -882,8 +882,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				<emphasis>Einstellungsmöglichkeiten</emphasis>
 				<itemizedlist>
 					<listitem>
-						<code language="xml"><![CDATA[<resources>]]></code>: Definition der Alarmempfänger. Es können entweder beliebige Kombinationen von Einheiten, Personen, usw. <emphasis>oder</emphasis>
-						Vollalarm ausgelöst werden:
+						<code language="xml"><![CDATA[<resources>]]></code>: Definition der Alarmempfänger (Best-Effort Alarmierung). Es können entweder beliebige Kombinationen von Einheiten, Personen, usw. <emphasis>oder</emphasis>
+						Vollalarm ausgelöst werden.
 						
 						<itemizedlist>
 							<listitem>

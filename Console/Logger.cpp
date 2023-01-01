@@ -337,7 +337,7 @@ void Logger::CLogger::GetGroupalarmInfo( const External::Groupalarm::CGroupalarm
 		if (alarmMessage.HasMessageText()) {
 			infoStream << u8"Alarmtext: " << alarmMessage.GetMessageText() << ", ";
 		} else {
-			infoStream << u8"Alarmvorlage: " << alarmMessage.GetMessageTemplate() << ", ";
+			infoStream << u8"Textvorlage: " << alarmMessage.GetMessageTemplate() << ", ";
 		}
 
 		infoStream << u8"Ereignis aktiv für " << alarmMessage.GetEventOpenPeriodInHours() << " Stunden";

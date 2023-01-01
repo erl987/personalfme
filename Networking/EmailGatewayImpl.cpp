@@ -424,7 +424,7 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmM
 		infoStream << u8"Alarmtext: " << message.GetMessageText() << ", ";
 	}
 	else {
-		infoStream << u8"Alarmvorlage: " << message.GetMessageTemplate() << ", ";
+		infoStream << u8"Textvorlage: " << message.GetMessageTemplate() << ", ";
 	}
 
 	return infoStream.str();
