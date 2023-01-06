@@ -52,10 +52,10 @@ namespace Networking {
 		const std::vector<int> code3 = { 2, 3, 4, 5, 6 };
 		const std::vector<int> code4 = { 9, 8, 7, 6, 5 };
 		const std::vector<int> notExistingCode = { 3, 2, 1, 5, 6 };
-		const External::Groupalarm::CGroupalarm2Message groupalarmDefault(false, { {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "default", "", 2.53);
-		const External::Groupalarm::CGroupalarm2Message groupalarmException(true, {}, {}, {}, {}, "exception", "", 5.2);
+		const External::Groupalarm::CGroupalarm2Message groupalarmDefault({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "default", "", 2.53);
+		const External::Groupalarm::CGroupalarm2Message groupalarmException("exception", "", 5.2);
 		const External::Groupalarm::CGroupalarm2Message groupalarmEmpty;
-		const External::Groupalarm::CGroupalarm2Message groupalarmInfo(false, {}, {}, {}, { "Bob Foo"}, "", "infoalarm_template", 2.53);
+		const External::Groupalarm::CGroupalarm2Message groupalarmInfo({}, {}, {}, { "Bob Foo"}, "", "infoalarm_template", 2.53);
 		const External::Email::CEmailMessage email( "test", "test", { {"test1", "test1" }, { "test2", "test2" } }, "test", true );
 		const External::Email::CEmailMessage emailFallback( "fallback", "fallback", { { "test3", "test3" },{ "test4", "test4" } }, "fallback", true );
 		const External::Validities::CWeeklyValidity weeklyException( Utilities::Time::THURSDAY, Utilities::CTime( 21, 30, 00 ), Utilities::CTime( 23, 30, 00 ) );

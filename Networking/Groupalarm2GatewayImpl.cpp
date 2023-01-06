@@ -55,14 +55,21 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 	return errorInfo;
 }
 
-std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::ParseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId) {
+std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::ParseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId, const std::string& entry) {
 	using namespace std;
 	using namespace Utilities;
 	using namespace Poco::JSON;
 
+	Array::Ptr jsonObj;
+
 	Parser parser;
 	auto result = parser.parse(json);
-	Array::Ptr jsonObj = result.extract<Array::Ptr>();
+	
+	if (entry.empty()) {
+		jsonObj = result.extract<Array::Ptr>();
+	} else {
+		jsonObj = result.extract<Object::Ptr>()->getArray(entry);
+	}
 
 	map<string, unsigned int> entityIdMap;
 	for (int i = 0; i < jsonObj->size(); i++) {
@@ -106,7 +113,7 @@ void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::RaiseFo
 	}
 }
 
-std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam) {
+std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam, const std::string& entry) {
 	using namespace std;
 	using namespace Poco;
 	using namespace Poco::Net;
@@ -128,11 +135,11 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 
 	RaiseForStatus(response, responseBody);
 
-	return ParseResponseJson(responseBody, entityNames, subEndpoint, loginData.GetOrganizationId());
+	return ParseResponseJson(responseBody, entityNames, subEndpoint, loginData.GetOrganizationId(), entry);
 }
 
 std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData) {
-	return GetEntityIdsFromEndpoint(entityNames, subEndpoint, loginData, "organization");
+	return GetEntityIdsFromEndpoint(entityNames, subEndpoint, loginData, "organization", "");
 }
 
 std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdsForUnits(const std::vector<std::string>& unitNames, const CGroupalarm2LoginData& loginData) {
@@ -151,8 +158,12 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 	return GetEntityIdsFromEndpoint(scenarioNames, "scenarios", loginData);
 }
 
-unsigned int External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetAlarmTemplateId(const std::string& alarmTemplateName, const CGroupalarm2LoginData& loginData) {
-	return GetEntityIdsFromEndpoint({ alarmTemplateName }, "alarms/templates", loginData, "organization_id")[0];
+unsigned int External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdForMessageTemplate(const std::string& messageTemplateName, const CGroupalarm2LoginData& loginData) {
+	return GetEntityIdsFromEndpoint({ messageTemplateName }, "alarms/templates", loginData, "organization_id", "")[0];
+}
+
+unsigned int External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdForAlarmTemplate(const std::string& alarmTemplateName, const CGroupalarm2LoginData& loginData) {
+	return GetEntityIdsFromEndpoint({ alarmTemplateName }, "alarms/resource-templates", loginData, "organization_id", "templates")[0];
 }
 
 Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetAlarmResources(const CGroupalarm2Message& message, const CGroupalarm2LoginData& loginData) {
@@ -223,27 +234,29 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 
 	Poco::JSON::Object jsonPayload;
 
-	if (message.GetEventOpenPeriodInHours() > 0)
-	{
+	if (message.GetEventOpenPeriodInHours() > 0) {
 		jsonPayload.set("scheduledEndTime", to_iso_extended_string(second_clock::universal_time() + hours(message.GetEventOpenPeriodHour()) + minutes(message.GetEventOpenPeriodMinute()) + seconds(message.GetEventOpenPeriodSecond()) ) + "Z");
 	}
 
-	if (message.HasMessageText())
-	{
-		std::string messageText = message.GetMessageText();
-		if (!otherMessagesInfo.empty()) {
-			messageText += "\n\n" + otherMessagesInfo;
+	if (message.ToAlarmTemplate()) {
+		jsonPayload.set("alarmResourceTemplateID", GetIdForAlarmTemplate(message.GetAlarmTemplate(), loginData));
+	} else {
+		jsonPayload.set("alarmResources", GetAlarmResources(message, loginData));
+
+		if (message.HasMessageText()) {
+			std::string messageText = message.GetMessageText();
+			if (!otherMessagesInfo.empty()) {
+				messageText += "\n\n" + otherMessagesInfo;
+			}
+
+			jsonPayload.set("message", messageText);
+		}
+		else {
+			// the additional infoalarm information is ignored if a message template is used
+			jsonPayload.set("alarmTemplateID", GetIdForMessageTemplate(message.GetMessageTemplate(), loginData));
 		}
 
-		jsonPayload.set("message", messageText);
 	}
-	else
-	{
-		// the additional infoalarm information is ignored if a message template is used
-		jsonPayload.set("alarmTemplateID", GetAlarmTemplateId(message.GetMessageTemplate(), loginData));
-	}
-
-	jsonPayload.set("alarmResources", GetAlarmResources(message, loginData));
 	jsonPayload.set("organizationID", loginData.GetOrganizationId());
 	jsonPayload.set("startTime", currIsoTime);
 	jsonPayload.set("eventName", eventName);

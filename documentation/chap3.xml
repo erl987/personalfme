@@ -852,29 +852,34 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				<programlisting language="xml">
 <![CDATA[
 <groupalarm2>
-	<resources>
-		<!--<all/>-->
-		<units>
-			<unit>B</unit>
-		</units>
-		<labels>
-			<label>
-				<label>Kraftfahrer</label>
-				<amount>1</amount>
-			</label>
-			<label>
-				<label>CBRN</label>
-				<amount>2</amount>
-			</label>
-		</labels>
-		<scenarios>
-			<scenario>SEG-Alarm</scenario>
-		</scenarios>
-		<persons>
-			<name>Max Mustermann</name>
-		</persons>
-	</resources>
-	<message type="template">SEG-Alarm</message>
+	<alarm>
+		<!--<template>SEG-Alarm</template>-->
+		<definition>
+			<resources>
+				<!--<all/>-->
+				<units>
+					<unit>B</unit>
+				</units>
+				<labels>
+					<label>
+						<label>Kraftfahrer</label>
+						<amount>1</amount>
+					</label>
+					<label>
+						<label>CBRN</label>
+						<amount>2</amount>
+					</label>
+				</labels>
+				<scenarios>
+					<scenario>SEG-Alarm</scenario>
+				</scenarios>
+				<persons>
+					<name>Max Mustermann</name>
+				</persons>
+			</resources>
+			<message type="template">SEG-Alarm</message>
+		</definition>
+	</alarm>
 	<eventOpenPeriodInHours>2.5</eventOpenPeriodInHours>
 </groupalarm2>
 ]]>
@@ -882,49 +887,60 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				<emphasis>Einstellungsmöglichkeiten</emphasis>
 				<itemizedlist>
 					<listitem>
-						<code language="xml"><![CDATA[<resources>]]></code>: Definition der Alarmempfänger (Best-Effort Alarmierung). Es können entweder beliebige Kombinationen von Einheiten, Personen, usw. <emphasis>oder</emphasis>
-						Vollalarm ausgelöst werden.
-						
-						<itemizedlist>
-							<listitem>
-									<code language="xml"><![CDATA[<all>]]></code>: <emphasis>Vollalarm für alle Mitglieder der Organisation</emphasis>. Keine anderen
-									Resourcen können ausgewählt werden.
-							</listitem>
-						
-							<listitem>
-								<code language="xml"><![CDATA[<units>]]></code>: Alarm an die definierten Einheiten bei Groupalarm (<code language="xml"><![CDATA[<unit>]]></code>).
-								Hier wird der <emphasis>Name</emphasis> der Einheit angegeben (wie z.B. "B" oder "FGr_N", die Einstellung erfolgt unter "Konfiguration" -> "Einheiten").
-							</listitem>
-							
-							<listitem>
-								<code language="xml"><![CDATA[<labels>]]></code>: Alarm an die definierten Labels von Groupalarm. Dies sind definierte Funktionen über Einheiten hinweg, z.B. für
-								Kraftfahrer (<code language="xml"><![CDATA[<label>]]></code>). Angegeben werden jeweils der Name des Labels (definiert unter "Konfiguration" -> "Labels") sowie
-								die benötigte Anzahl.
-							</listitem>
-							
-							<listitem>
-								<code language="xml"><![CDATA[<scenarios>]]></code>: Alarmierung von definierten Szenarien von Groupalarm. Dies sind Kombinationen von z.B. verschiedenen Einheiten.
-								Angegeben werden jeweils der Name des Szenarios (<code language="xml"><![CDATA[<scenario>]]></code>, definiert unter "Konfiguration" -> "Szenarien").
-							</listitem>
-							
-							<listitem>
-								<code language="xml"><![CDATA[<persons>]]></code>: Alarm an die definierten Teilnehmer von Groupalarm (<code language="xml"><![CDATA[<name>]]></code>),
-								definiert unter "Konfiguration" -> "Teilnehmer").
-							</listitem>
-						</itemizedlist>
+						<code language="xml"><![CDATA[<template>]]></code>: Benutzung einer Alarmvorlage von Groupalarm (Best-Effort Alarmierung). Die Auswahl aller alarmierten Resourcen sowie der Alarmachricht erfolgt unter 
+						"Konfiguration" -> "Alarmvorlagen". <emphasis>In diesem Fall wird der Eventname immer durch die Alarmvorlage bestimmt.</emphasis>
 					</listitem>
+					
 					<listitem>
-						<code language="xml"><![CDATA[<message>]]></code>: Definition der Alarmnachricht. Es bestehen folgende Wahlmöglichkeiten:
+						<code language="xml"><![CDATA[<definition>]]></code>: Detaillierte Definition der alarmierten Resourcen:
 						<itemizedlist>
 							<listitem>
-								<code language="xml"><![CDATA[<message type="template">]]></code>: Vordefinierte Groupalarm-Nachricht, angegeben wird der Name der Textvorlage ("Konfiguration" -> "Textvorlagen").
+								<code language="xml"><![CDATA[<resources>]]></code>: Definition der Alarmempfänger (Best-Effort Alarmierung). Es können entweder beliebige Kombinationen von Einheiten, Personen, usw. <emphasis>oder</emphasis>
+								Vollalarm ausgelöst werden.
+								
+								<itemizedlist>
+									<listitem>
+											<code language="xml"><![CDATA[<all>]]></code>: <emphasis>Vollalarm für alle Mitglieder der Organisation</emphasis>. Keine anderen
+											Resourcen können ausgewählt werden.
+									</listitem>
+								
+									<listitem>
+										<code language="xml"><![CDATA[<units>]]></code>: Alarm an die definierten Einheiten bei Groupalarm (<code language="xml"><![CDATA[<unit>]]></code>).
+										Hier wird der <emphasis>Name</emphasis> der Einheit angegeben (wie z.B. "B" oder "FGr_N", die Einstellung erfolgt unter "Konfiguration" -> "Einheiten").
+									</listitem>
+									
+									<listitem>
+										<code language="xml"><![CDATA[<labels>]]></code>: Alarm an die definierten Labels von Groupalarm. Dies sind definierte Funktionen über Einheiten hinweg, z.B. für
+										Kraftfahrer (<code language="xml"><![CDATA[<label>]]></code>). Angegeben werden jeweils der Name des Labels (definiert unter "Konfiguration" -> "Labels") sowie
+										die benötigte Anzahl.
+									</listitem>
+									
+									<listitem>
+										<code language="xml"><![CDATA[<scenarios>]]></code>: Alarmierung von definierten Szenarien von Groupalarm. Dies sind Kombinationen von z.B. verschiedenen Einheiten.
+										Angegeben werden jeweils der Name des Szenarios (<code language="xml"><![CDATA[<scenario>]]></code>, definiert unter "Konfiguration" -> "Szenarien").
+									</listitem>
+									
+									<listitem>
+										<code language="xml"><![CDATA[<persons>]]></code>: Alarm an die definierten Teilnehmer von Groupalarm (<code language="xml"><![CDATA[<name>]]></code>),
+										definiert unter "Konfiguration" -> "Teilnehmer").
+									</listitem>
+								</itemizedlist>
 							</listitem>
 							<listitem>
-								<code language="xml"><![CDATA[<message type="freeText">]]></code>: Frei definierte Nachricht:
-								<para>Beispiel: <code language="xml"><![CDATA[<message type="freeText">Probealarm für die SEG.</message>]]></code></para>
+								<code language="xml"><![CDATA[<message>]]></code>: Definition der Alarmnachricht. Es bestehen folgende Wahlmöglichkeiten:
+								<itemizedlist>
+									<listitem>
+										<code language="xml"><![CDATA[<message type="template">]]></code>: Vordefinierte Groupalarm-Nachricht, angegeben wird der Name der Textvorlage ("Konfiguration" -> "Textvorlagen").
+									</listitem>
+									<listitem>
+										<code language="xml"><![CDATA[<message type="freeText">]]></code>: Frei definierte Nachricht:
+										<para>Beispiel: <code language="xml"><![CDATA[<message type="freeText">Probealarm für die SEG.</message>]]></code></para>
+									</listitem>
+								</itemizedlist>
 							</listitem>
 						</itemizedlist>
 					</listitem>
+					
 					<listitem>
 						<code language="xml"><![CDATA[<eventOpenPeriodInHours>]]></code>: Die Alarmierung wird nach dem angegeben Zeitraum geschlossen. Zum Beispiel stehen
 						nach diesem Zeitraum die alarmierten und zugesagten Kräfte wieder für neue Alarmierungen zur Verfügung. Für Details wird auf die Dokumentation von

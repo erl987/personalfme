@@ -87,7 +87,9 @@ namespace Utilitites {
 		*/
 		BOOST_AUTO_TEST_CASE( XML_GroupalarmMessageTest_test_case )
 		{
-			BOOST_REQUIRE( XMLGroupalarmMessageTest::Test() );
+			BOOST_REQUIRE( XMLGroupalarmMessageTest::TestDefinedUsers() );
+			BOOST_REQUIRE(XMLGroupalarmMessageTest::TestAllUsers());
+			BOOST_REQUIRE(XMLGroupalarmMessageTest::TestAlarmTemplate());
 		}
 
 		/**	@brief		Testing XML serialization and deserialization of the CEmailMessage class

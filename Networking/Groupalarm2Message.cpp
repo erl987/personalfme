@@ -34,11 +34,25 @@ External::Groupalarm::CGroupalarm2Message::CGroupalarm2Message()
 {
 }
 
-External::Groupalarm::CGroupalarm2Message::CGroupalarm2Message(const bool& allUsers, const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours)
+External::Groupalarm::CGroupalarm2Message::CGroupalarm2Message(const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours)
 	: CAlarmMessage(true), // Groupalarm.de alarms are only allowed directly after detecting an alarm
 	isEmpty(true)
 {
-	Set(allUsers, labels, scenarios, units, users, messageText, messageTemplate, eventOpenPeriodInHours);
+	SetAlarmToDefinedUsers(labels, scenarios, units, users, messageText, messageTemplate, eventOpenPeriodInHours);
+}
+
+External::Groupalarm::CGroupalarm2Message::CGroupalarm2Message(const std::string& alarmTemplate, const double& eventOpenPeriodInHours)
+	: CAlarmMessage(true), // Groupalarm.de alarms are only allowed directly after detecting an alarm
+	isEmpty(true)
+{
+	SetAlarmTemplate(alarmTemplate, eventOpenPeriodInHours);
+}
+
+External::Groupalarm::CGroupalarm2Message::CGroupalarm2Message(const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours)
+	: CAlarmMessage(true), // Groupalarm.de alarms are only allowed directly after detecting an alarm
+	isEmpty(true)
+{
+	SetAlarmToAllUsers(messageText, messageTemplate, eventOpenPeriodInHours);
 }
 
 /**	@brief		Cloning method duplicating the object
@@ -51,23 +65,8 @@ std::unique_ptr< External::CAlarmMessage > External::Groupalarm::CGroupalarm2Mes
 	return std::make_unique<CGroupalarm2Message>(*this);
 }
 
-void External::Groupalarm::CGroupalarm2Message::Set(const bool& allUsers, const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours)
+void External::Groupalarm::CGroupalarm2Message::SetAlarmToDefinedUsers(const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours)
 {
-	if (allUsers) {
-		if (!labels.empty()) {
-			throw Exception::Groupalarm2FullAlarmInconsistent("Full alarm but also labels are defined");
-		}
-		if (!scenarios.empty()) {
-			throw Exception::Groupalarm2FullAlarmInconsistent("Full alarm but also scenarios are defined");
-		}
-		if (!units.empty()) {
-			throw Exception::Groupalarm2FullAlarmInconsistent("Full alarm but also units are defined");
-		}
-		if (!users.empty()) {
-			throw Exception::Groupalarm2FullAlarmInconsistent("Full alarm but also users are defined");
-		}
-	}
-
 	if (!messageText.empty() && !messageTemplate.empty()) {
 		throw Exception::Groupalarm2MessageContentInconsistent("Both message text and template are defined");
 	}
@@ -80,13 +79,58 @@ void External::Groupalarm::CGroupalarm2Message::Set(const bool& allUsers, const 
 		throw Exception::Groupalarm2EventOpenPeriodOutOfRange("The event open period must not be negative");
 	}
 
-	CGroupalarm2Message::allUsers = allUsers;
+	CGroupalarm2Message::allUsers = false;
+	CGroupalarm2Message::alarmTemplate = "";
 	CGroupalarm2Message::labels = labels;
 	CGroupalarm2Message::scenarios = scenarios;
 	CGroupalarm2Message::units = units;
 	CGroupalarm2Message::users = users;
 	CGroupalarm2Message::messageText = messageText;
 	CGroupalarm2Message::messageTemplate = messageTemplate;
+	CGroupalarm2Message::eventOpenPeriodInHours = eventOpenPeriodInHours;
+	CGroupalarm2Message::isEmpty = false;
+}
+
+void External::Groupalarm::CGroupalarm2Message::SetAlarmToAllUsers(const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours)
+{
+	if (!messageText.empty() && !messageTemplate.empty()) {
+		throw Exception::Groupalarm2MessageContentInconsistent("Both message text and template are defined");
+	}
+
+	if (messageText.empty() && messageTemplate.empty()) {
+		throw Exception::Groupalarm2MessageContentInconsistent("Neither message text nor template are defined");
+	}
+
+	if (eventOpenPeriodInHours < 0) {
+		throw Exception::Groupalarm2EventOpenPeriodOutOfRange("The event open period must not be negative");
+	}
+
+	CGroupalarm2Message::allUsers = true;
+	CGroupalarm2Message::alarmTemplate = "";
+	CGroupalarm2Message::labels = {};
+	CGroupalarm2Message::scenarios = {};
+	CGroupalarm2Message::units = {};
+	CGroupalarm2Message::users = {};
+	CGroupalarm2Message::messageText = messageText;
+	CGroupalarm2Message::messageTemplate = messageTemplate;
+	CGroupalarm2Message::eventOpenPeriodInHours = eventOpenPeriodInHours;
+	CGroupalarm2Message::isEmpty = false;
+}
+
+void External::Groupalarm::CGroupalarm2Message::SetAlarmTemplate(const std::string& alarmTemplate, const double& eventOpenPeriodInHours)
+{
+	if (eventOpenPeriodInHours < 0) {
+		throw Exception::Groupalarm2EventOpenPeriodOutOfRange("The event open period must not be negative");
+	}
+
+	CGroupalarm2Message::allUsers = false;
+	CGroupalarm2Message::alarmTemplate = alarmTemplate;
+	CGroupalarm2Message::labels = {};
+	CGroupalarm2Message::scenarios = {};
+	CGroupalarm2Message::units = {};
+	CGroupalarm2Message::users = {};
+	CGroupalarm2Message::messageText = "";
+	CGroupalarm2Message::messageTemplate = "";
 	CGroupalarm2Message::eventOpenPeriodInHours = eventOpenPeriodInHours;
 	CGroupalarm2Message::isEmpty = false;
 }
@@ -109,6 +153,9 @@ bool External::Groupalarm::CGroupalarm2Message::IsEqual(const CAlarmMessage& rhs
 		// checks for equality of all components
 		if (!IsEmpty() && !derivRhs.IsEmpty()) {
 			if (allUsers != derivRhs.allUsers) {
+				return false;
+			}
+			if (alarmTemplate != derivRhs.alarmTemplate) {
 				return false;
 			}
 			if (labels != derivRhs.labels) {
@@ -158,6 +205,9 @@ bool External::Groupalarm::CGroupalarm2Message::IsSmaller(const CAlarmMessage& r
 			if (allUsers >= derivRhs.allUsers) {
 				return false;
 			}
+			if (alarmTemplate >= derivRhs.alarmTemplate) {
+				return false;
+			}
 			if (labels >= derivRhs.labels) {
 				return false;
 			}
@@ -191,7 +241,6 @@ bool External::Groupalarm::CGroupalarm2Message::IsSmaller(const CAlarmMessage& r
 	return true;
 }
 
-
 /**	@brief		Checking if the dataset is empty
 *	@return										True if the dataset is empty, if it contains valid data it is false
 *	@exception									None
@@ -221,6 +270,16 @@ bool External::Groupalarm::CGroupalarm2Message::ToAllUsers() const
 	}
 
 	return allUsers;
+}
+
+
+bool External::Groupalarm::CGroupalarm2Message::ToAlarmTemplate() const
+{
+	if (IsEmpty()) {
+		throw std::domain_error("The groupalarm.de dataset is empty.");
+	}
+
+	return !alarmTemplate.empty();
 }
 
 bool External::Groupalarm::CGroupalarm2Message::ToLabels() const
@@ -257,6 +316,15 @@ bool External::Groupalarm::CGroupalarm2Message::ToScenarios() const
 	}
 
 	return !scenarios.empty();
+}
+
+std::string External::Groupalarm::CGroupalarm2Message::GetAlarmTemplate() const
+{
+	if (IsEmpty()) {
+		throw std::domain_error("The groupalarm.de dataset is empty.");
+	}
+
+	return alarmTemplate;
 }
 
 std::map<std::string, unsigned int> External::Groupalarm::CGroupalarm2Message::GetLabels() const

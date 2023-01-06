@@ -386,8 +386,7 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmM
 
 	if (message.ToAllUsers()) {
 		infoStream << u8"Vollalarm" << ", ";
-	}
-	else {
+	} else {
 		if (message.ToScenarios()) {
 			if (message.GetScenarios().size() == 1) {
 				infoStream << u8"Szenario: ";
@@ -420,11 +419,14 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmM
 		}
 	}
 
-	if (message.HasMessageText()) {
-		infoStream << u8"Alarmtext: " << message.GetMessageText() << ", ";
-	}
-	else {
-		infoStream << u8"Textvorlage: " << message.GetMessageTemplate() << ", ";
+	if (message.ToAlarmTemplate()) {
+		infoStream << u8"Alarmvorlage: " << message.GetAlarmTemplate() << ", ";
+	} else {
+		if (message.HasMessageText()) {
+			infoStream << u8"Alarmtext: " << message.GetMessageText() << ", ";
+		} else {
+			infoStream << u8"Textvorlage: " << message.GetMessageTemplate() << ", ";
+		}
 	}
 
 	return infoStream.str();

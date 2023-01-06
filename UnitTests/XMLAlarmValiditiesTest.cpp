@@ -59,7 +59,7 @@ bool Utilitites::XMLTest::XMLAlarmValiditiesTest::Test()
 	vector<WeekType> exceptionWeeks;
 	CXMLSerializableAlarmValidities setAlarmValidities, getAlarmValidities;
 
-	groupalarmMessage.Set(true, {}, {}, {}, {}, "Alarm for all!", "", 2.5);
+	groupalarmMessage.SetAlarmToAllUsers("Alarm for all!", "", 2.5);
 	alarmMessages.push_back( make_shared<Groupalarm::CGroupalarm2Message>( groupalarmMessage ) );
 
 	vector< pair<string, string> > recipients = { { "", "first.last@test.de" },{ "First2 Last2", "first2.last2@test.de" } };
@@ -68,7 +68,7 @@ bool Utilitites::XMLTest::XMLAlarmValiditiesTest::Test()
 	alarmMessages.push_back( make_shared<Email::CEmailMessage>( emailMessage ) );
 	alarmMessages.push_back( make_shared<Infoalarm::CInfoalarmMessageDecorator>( emailMessage.Clone() ) );
 
-	groupalarmMessage2.Set(false, { {"label1", 2}, {"label2", 1} }, { "scenario1", "scenario2"}, { "unit1", "unit2"}, {"First Person1", "First Person2"}, "A message.", "", 2.3);
+	groupalarmMessage2.SetAlarmToDefinedUsers({ {"label1", 2}, {"label2", 1} }, { "scenario1", "scenario2"}, { "unit1", "unit2"}, {"First Person1", "First Person2"}, "A message.", "", 2.3);
 	alarmMessages.push_back( make_shared<Infoalarm::CInfoalarmMessageDecorator>( groupalarmMessage2.Clone() ) );
 
 	setAlarmValidities.AddEntry( Validities::DEFAULT_VALIDITY, begin( alarmMessages ), end( alarmMessages ) );
@@ -77,7 +77,7 @@ bool Utilitites::XMLTest::XMLAlarmValiditiesTest::Test()
 	alarmMessagesEmpty.clear();
 	setAlarmValidities.AddEntry( make_shared<Validities::CSingleTimeValidity>( singleTimeException ), begin( alarmMessagesEmpty ), end( alarmMessagesEmpty ) );
 
-	groupalarmMessage3.Set(false, {}, {}, {"unit1"}, {}, "", "template1", 2.0);
+	groupalarmMessage3.SetAlarmToDefinedUsers({}, {}, {"unit1"}, {}, "", "template1", 2.0);
 	alarmMessagesException.push_back( make_shared<Groupalarm::CGroupalarm2Message>( groupalarmMessage2 ) );
 	alarmMessagesException.push_back( make_shared<Groupalarm::CGroupalarm2Message>( groupalarmMessage3 ) );
 	exceptionWeeks = { FIRST, THIRD };

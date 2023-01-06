@@ -78,28 +78,41 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
     <xs:restriction base="xs:double">
         <xs:minInclusive value="0"/>
     </xs:restriction>
-</xs:simpleType>	
-			
+</xs:simpleType>
+
+<xs:complexType name="resourcesType">
+	<xs:choice>
+		<xs:element name="all">
+			<xs:complexType/>
+		</xs:element>
+		<xs:sequence>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="units" type="unitsType"/>
+				<xs:element name="scenarios" type="scenariosType"/>
+				<xs:element name="persons" type="personsType"/>
+				<xs:element name="labels" type="labelsType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:choice>
+</xs:complexType>
+
 <xs:complexType name="groupalarmMessageType">
 	<xs:all>
-        <xs:element name="resources">
+		<xs:element name="alarm">
 			<xs:complexType>
 				<xs:choice>
-						<xs:element name="all">
-							<xs:complexType/>
-						</xs:element>
-						<xs:sequence>
-							<xs:choice minOccurs="0" maxOccurs="unbounded">
-								<xs:element name="units" type="unitsType"/>
-								<xs:element name="scenarios" type="scenariosType"/>
-								<xs:element name="persons" type="personsType"/>
-								<xs:element name="labels" type="labelsType"/>
-							</xs:choice>
-						</xs:sequence>
+					<xs:element name="template" type="xs:string"/>
+					<xs:element name="definition">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="resources" type="resourcesType"/>
+								<xs:element name="message" type="messageType"/>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
 				</xs:choice>
 			</xs:complexType>
 		</xs:element>
-		<xs:element name="message" type="messageType"/>
 		<xs:element name="eventOpenPeriodInHours" type="nonNegativeDoubleType"/>
 	</xs:all>
 </xs:complexType>

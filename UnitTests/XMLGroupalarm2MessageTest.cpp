@@ -36,11 +36,11 @@ const std::string rootTag = "config";
 *	@exception									None
 *	@remarks									The XML headers require wrapping into a cpp-file because the Poco AbstractConfiguration.hpp seems to expose windows.h which causes problems
 */
-bool Utilitites::XMLTest::XMLGroupalarmMessageTest::Test()
+bool Utilitites::XMLTest::XMLGroupalarmMessageTest::TestDefinedUsers()
 {
 	External::Groupalarm::CXMLSerializableGroupalarm2Message setMessage, getMessage;
 
-	setMessage.Set(false, { {"label1", 2}, {"label", 1} }, { "scenario1", "scenario2" }, { "unit1", "unit2" }, { "user1", "user2" }, "", "template1", 2.53);
+	setMessage.SetAlarmToDefinedUsers({ {"label1", 2}, {"label", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "user 1", "user 2" }, "", "Message Template 1", 2.53);
 
 	// write the XML-file
 	Utilities::XML::WriteXML( xmlFileName, setMessage, rootTag, make_pair( namespaceName, schemaDefinitionFilePath ) );
@@ -49,4 +49,44 @@ bool Utilitites::XMLTest::XMLGroupalarmMessageTest::Test()
 	Utilities::XML::ReadXML( xmlFileName, getMessage );
 
 	return( getMessage == setMessage );
+}
+
+/**	@brief		Test implementation.
+*	@return										True if the test succeeded, false otherwise
+*	@exception									None
+*	@remarks									The XML headers require wrapping into a cpp-file because the Poco AbstractConfiguration.hpp seems to expose windows.h which causes problems
+*/
+bool Utilitites::XMLTest::XMLGroupalarmMessageTest::TestAllUsers()
+{
+	External::Groupalarm::CXMLSerializableGroupalarm2Message setMessage, getMessage;
+
+	setMessage.SetAlarmToAllUsers("This is an alarm!", "", 2.53);
+
+	// write the XML-file
+	Utilities::XML::WriteXML(xmlFileName, setMessage, rootTag, make_pair(namespaceName, schemaDefinitionFilePath));
+
+	// read the XML-file (with a validating parser)
+	Utilities::XML::ReadXML(xmlFileName, getMessage);
+
+	return(getMessage == setMessage);
+}
+
+/**	@brief		Test implementation.
+*	@return										True if the test succeeded, false otherwise
+*	@exception									None
+*	@remarks									The XML headers require wrapping into a cpp-file because the Poco AbstractConfiguration.hpp seems to expose windows.h which causes problems
+*/
+bool Utilitites::XMLTest::XMLGroupalarmMessageTest::TestAlarmTemplate()
+{
+	External::Groupalarm::CXMLSerializableGroupalarm2Message setMessage, getMessage;
+
+	setMessage.SetAlarmTemplate("Alarm Template 1", 2.53);
+
+	// write the XML-file
+	Utilities::XML::WriteXML(xmlFileName, setMessage, rootTag, make_pair(namespaceName, schemaDefinitionFilePath));
+
+	// read the XML-file (with a validating parser)
+	Utilities::XML::ReadXML(xmlFileName, getMessage);
+
+	return(getMessage == setMessage);
 }

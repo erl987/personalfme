@@ -39,7 +39,7 @@ namespace Networking {
 	*/
 	namespace GroupalarmTest {
 	namespace Groupalarm2MessageTest {
-		const bool allUsersSet = false;
+		const std::string alarmTemplateSet = "Alarm Template 1";
 		const std::map<std::string, unsigned int> labelsSet = { {"label1", 3}, {"label2", 4} };
 		const std::vector<std::string> unitsSet = {"unit1", "unit2"};
 		const std::vector<std::string> usersSet = {"user1", "user2"};
@@ -65,6 +65,7 @@ namespace Networking {
 				BOOST_REQUIRE( groupalarm1.IsEmpty() );
 				BOOST_CHECK_THROW(groupalarm1.GetEventOpenPeriodInHours(), std::domain_error);
 				BOOST_CHECK_THROW(groupalarm1.GetLabels(), std::domain_error);
+				BOOST_CHECK_THROW(groupalarm1.GetAlarmTemplate(), std::domain_error);
 				BOOST_CHECK_THROW(groupalarm1.GetMessageTemplate(), std::domain_error);
 				BOOST_CHECK_THROW(groupalarm1.GetMessageText(), std::domain_error);
 				BOOST_CHECK_THROW(groupalarm1.GetScenarios(), std::domain_error);
@@ -72,13 +73,14 @@ namespace Networking {
 				BOOST_CHECK_THROW(groupalarm1.GetUsers(), std::domain_error);
 				BOOST_CHECK_THROW(groupalarm1.HasMessageText(), std::domain_error);
 				BOOST_CHECK_THROW(groupalarm1.ToAllUsers(), std::domain_error);
+				BOOST_CHECK_THROW(groupalarm1.ToAlarmTemplate(), std::domain_error);
 				BOOST_CHECK_THROW(groupalarm1.ToLabels(), std::domain_error);
 				BOOST_CHECK_THROW(groupalarm1.ToScenarios(), std::domain_error);
 				BOOST_CHECK_THROW(groupalarm1.ToUnits(), std::domain_error);
 				BOOST_CHECK_THROW(groupalarm1.ToUsers(), std::domain_error);
 
 				// test normal construction
-				groupalarm1 = CGroupalarm2Message(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
+				groupalarm1 = CGroupalarm2Message(labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
 				BOOST_REQUIRE( !groupalarm1.IsEmpty() );
 
 				BOOST_REQUIRE(groupalarm1.GetEventOpenPeriodInHours() == eventOpenPeriodInHoursSet);
@@ -88,8 +90,10 @@ namespace Networking {
 				BOOST_REQUIRE(groupalarm1.GetScenarios() == scenariosSet);
 				BOOST_REQUIRE(groupalarm1.GetUnits() == unitsSet);
 				BOOST_REQUIRE(groupalarm1.GetUsers() == usersSet);
+				BOOST_REQUIRE(groupalarm1.GetAlarmTemplate() == "");
 				BOOST_REQUIRE(groupalarm1.HasMessageText() == true);
 				BOOST_REQUIRE(groupalarm1.ToAllUsers() == false);
+				BOOST_REQUIRE(groupalarm1.ToAlarmTemplate() == false);
 				BOOST_REQUIRE(groupalarm1.ToLabels() == true);
 				BOOST_REQUIRE(groupalarm1.ToScenarios() == true);
 				BOOST_REQUIRE(groupalarm1.ToUnits() == true);
@@ -104,21 +108,29 @@ namespace Networking {
 				using namespace std;
 				using namespace External::Groupalarm;
 
-				CGroupalarm2Message groupalarm1, groupalarm2;
+				CGroupalarm2Message groupalarm1, groupalarm2, groupalarm3;
 
 				// standard cases are already covered by the constructor tests
 				// test message templates
 				groupalarm1 = CGroupalarm2Message();
-				groupalarm1.Set(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, "", "templateId", eventOpenPeriodInHoursSet);
+				groupalarm1.SetAlarmToDefinedUsers(labelsSet, scenariosSet, unitsSet, usersSet, "", "templateId", eventOpenPeriodInHoursSet);
 				BOOST_REQUIRE(!groupalarm1.IsEmpty());
 				BOOST_REQUIRE(groupalarm1.HasMessageText() == false);
 				BOOST_REQUIRE(groupalarm1.GetMessageTemplate() == "templateId");
 
 				// test full alarm
 				groupalarm2 = CGroupalarm2Message();
-				groupalarm2.Set(true, {}, {}, {}, {}, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
+				groupalarm2.SetAlarmToAllUsers(messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
 				BOOST_REQUIRE(!groupalarm2.IsEmpty());
 				BOOST_REQUIRE(groupalarm2.ToAllUsers() == true);
+
+				// test template alarm
+				groupalarm3 = CGroupalarm2Message();
+				groupalarm3.SetAlarmTemplate(alarmTemplateSet, eventOpenPeriodInHoursSet);
+				BOOST_REQUIRE(!groupalarm3.IsEmpty());
+				BOOST_REQUIRE(groupalarm3.ToAllUsers() == false);
+				BOOST_REQUIRE(groupalarm3.ToAlarmTemplate() == true);
+				BOOST_REQUIRE(groupalarm3.GetAlarmTemplate() == alarmTemplateSet);
 
 				BOOST_REQUIRE( groupalarm1.GetGatewayType() == typeid( CGroupalarm2Gateway ) );
 			}
@@ -131,16 +143,20 @@ namespace Networking {
 				using namespace std;
 				using namespace External::Groupalarm;
 
-				// check full alarm
-				BOOST_CHECK_NO_THROW(CGroupalarm2Message(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet));
-				BOOST_CHECK_THROW(CGroupalarm2Message(true, labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet), Exception::Groupalarm2FullAlarmInconsistent);
+				BOOST_CHECK_NO_THROW(CGroupalarm2Message(labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet));
+				BOOST_CHECK_NO_THROW(CGroupalarm2Message(messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet));
+				BOOST_CHECK_NO_THROW(CGroupalarm2Message(alarmTemplateSet, eventOpenPeriodInHoursSet));
 
 				// check that either message text or template defined
-				BOOST_CHECK_THROW(CGroupalarm2Message(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, "a text", "aTemplateId", eventOpenPeriodInHoursSet), Exception::Groupalarm2MessageContentInconsistent);
-				BOOST_CHECK_THROW(CGroupalarm2Message(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, "", "", eventOpenPeriodInHoursSet), Exception::Groupalarm2MessageContentInconsistent);
+				BOOST_CHECK_THROW(CGroupalarm2Message(labelsSet, scenariosSet, unitsSet, usersSet, "a text", "aTemplateId", eventOpenPeriodInHoursSet), Exception::Groupalarm2MessageContentInconsistent);
+				BOOST_CHECK_THROW(CGroupalarm2Message(labelsSet, scenariosSet, unitsSet, usersSet, "", "", eventOpenPeriodInHoursSet), Exception::Groupalarm2MessageContentInconsistent);
+				BOOST_CHECK_THROW(CGroupalarm2Message("", "", eventOpenPeriodInHoursSet), Exception::Groupalarm2MessageContentInconsistent);
+				BOOST_CHECK_THROW(CGroupalarm2Message("a text", "aTemplateId", eventOpenPeriodInHoursSet), Exception::Groupalarm2MessageContentInconsistent);
 				
 				// check the validity of the event open period
-				BOOST_CHECK_THROW(CGroupalarm2Message(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, -1.0), Exception::Groupalarm2EventOpenPeriodOutOfRange);
+				BOOST_CHECK_THROW(CGroupalarm2Message(labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, -1.0), Exception::Groupalarm2EventOpenPeriodOutOfRange);
+				BOOST_CHECK_THROW(CGroupalarm2Message(messageTextSet, messageTemplateSet, -1.0), Exception::Groupalarm2EventOpenPeriodOutOfRange);
+				BOOST_CHECK_THROW(CGroupalarm2Message(alarmTemplateSet, -1.0), Exception::Groupalarm2EventOpenPeriodOutOfRange);
 			}
 
 			
@@ -153,7 +169,7 @@ namespace Networking {
 
 				CGroupalarm2Message groupalarm1;
 
-				groupalarm1 = CGroupalarm2Message(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
+				groupalarm1 = CGroupalarm2Message(labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
 				BOOST_REQUIRE(!groupalarm1.IsEmpty());
 
 				// set empty
@@ -162,7 +178,7 @@ namespace Networking {
 				BOOST_CHECK_THROW( groupalarm1.GetLabels(), std::domain_error);
 
 				// reset non-empty
-				groupalarm1.Set(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
+				groupalarm1.SetAlarmToDefinedUsers(labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
 				BOOST_REQUIRE( !groupalarm1.IsEmpty() );
 				BOOST_CHECK_NO_THROW( groupalarm1.GetLabels());
 			}
@@ -175,12 +191,13 @@ namespace Networking {
 				using namespace std;
 				using namespace External::Groupalarm;
 				using namespace External::Email;
-				CGroupalarm2Message groupalarm1, groupalarm2, groupalarm3;
+				CGroupalarm2Message groupalarm1, groupalarm2, groupalarm3, groupalarm4;
 				CEmailMessage email1;
 
-				groupalarm1 = CGroupalarm2Message(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
-				groupalarm2 = CGroupalarm2Message(true, {}, {}, {}, {}, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
-				groupalarm3 = CGroupalarm2Message();
+				groupalarm1 = CGroupalarm2Message(labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
+				groupalarm2 = CGroupalarm2Message(messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
+				groupalarm3 = CGroupalarm2Message(alarmTemplateSet, eventOpenPeriodInHoursSet);
+				groupalarm4 = CGroupalarm2Message();
 
 				vector< pair<string, string> > recipients = { { "test", "test" } };
 				email1 = CEmailMessage( "test", "test", recipients, "test", true );
@@ -189,6 +206,8 @@ namespace Networking {
 				BOOST_REQUIRE( groupalarm1 == groupalarm1 );
 				BOOST_REQUIRE( !( groupalarm1 == groupalarm2 ) );
 				BOOST_REQUIRE( ( groupalarm1 != groupalarm2 ) );
+				BOOST_REQUIRE(!(groupalarm3 == groupalarm4));
+				BOOST_REQUIRE((groupalarm3 != groupalarm4));
 				BOOST_REQUIRE( CGroupalarm2Message() == CGroupalarm2Message() );
 
 				// test invalid comparison with other derived class type
@@ -206,12 +225,12 @@ namespace Networking {
 				using namespace std;
 				using namespace External::Groupalarm;
 
-				CGroupalarm2Message groupalarm1(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
+				CGroupalarm2Message groupalarm1(labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, eventOpenPeriodInHoursSet);
 				BOOST_REQUIRE(groupalarm1.GetEventOpenPeriodHour() == 2);
 				BOOST_REQUIRE(groupalarm1.GetEventOpenPeriodMinute() == 7);
 				BOOST_REQUIRE(groupalarm1.GetEventOpenPeriodSecond() == 47);
 
-				CGroupalarm2Message groupalarm2(allUsersSet, labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, 0);
+				CGroupalarm2Message groupalarm2(labelsSet, scenariosSet, unitsSet, usersSet, messageTextSet, messageTemplateSet, 0);
 				BOOST_REQUIRE(groupalarm2.GetEventOpenPeriodHour() == 0);
 				BOOST_REQUIRE(groupalarm2.GetEventOpenPeriodMinute() == 0);
 				BOOST_REQUIRE(groupalarm2.GetEventOpenPeriodSecond() == 0);
