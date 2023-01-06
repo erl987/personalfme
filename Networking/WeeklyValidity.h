@@ -16,6 +16,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 #pragma once
 #include "TimeDatatypes.h"
+#include <stdexcept>
 #include "Validity.h"
 
 #if defined _WIN32 || defined __CYGWIN__
