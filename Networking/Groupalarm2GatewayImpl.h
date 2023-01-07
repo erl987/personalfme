@@ -50,7 +50,6 @@ private:
 	Poco::JSON::Object GetAlarmResources(const CGroupalarm2Message& message, const CGroupalarm2LoginData& loginData);
 	std::string GetJsonFromEndpoint(const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam);
 	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData);
-	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam);
 	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam, const std::string& entry);
 	std::vector<unsigned int> GetIdsForUnits(const std::vector<std::string>& unitNames, const CGroupalarm2LoginData& loginData);
 	std::vector<unsigned int> GetIdsForLabels(const std::vector<std::string>& labelNames, const CGroupalarm2LoginData& loginData);

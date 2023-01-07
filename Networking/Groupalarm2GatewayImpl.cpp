@@ -177,6 +177,9 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 	HTTPSClientSession session(uri.getHost(), uri.getPort());
 	SetProxy(session, loginData);
 	uri.addQueryParameter(organizationParam, to_string(loginData.GetOrganizationId()));
+	if (subEndpoint != "scenarios") { // note: not supported for scenarios
+		uri.addQueryParameter("all", "true");
+	}
 	string path(uri.getPathAndQuery());
 
 	HTTPRequest request(HTTPRequest::HTTP_GET, path, HTTPMessage::HTTP_1_1);
@@ -195,13 +198,11 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 
 std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData) {
 	std::string json = GetJsonFromEndpoint(subEndpoint, loginData, "organization");
-	auto entityIdMap = ParseResponseJson(json, "");
-	return GetIdsForEntities(entityIdMap, entityNames, subEndpoint, loginData.GetOrganizationId());
-}
-
-std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam) {
-	std::string json = GetJsonFromEndpoint(subEndpoint, loginData, organizationParam);
-	auto entityIdMap = ParseResponseJson(json, "");
+	std::string entry = "";
+	if (subEndpoint != "scenarios") { // note: not supported for scenarios
+		entry = subEndpoint;
+	}
+	auto entityIdMap = ParseResponseJson(json, entry);
 	return GetIdsForEntities(entityIdMap, entityNames, subEndpoint, loginData.GetOrganizationId());
 }
 
@@ -230,7 +231,7 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 }
 
 unsigned int External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdForMessageTemplate(const std::string& messageTemplateName, const CGroupalarm2LoginData& loginData) {
-	return GetEntityIdsFromEndpoint({ messageTemplateName }, "alarms/templates", loginData, "organization_id")[0];
+	return GetEntityIdsFromEndpoint({ messageTemplateName }, "alarms/templates", loginData, "organization_id", "templates")[0];
 }
 
 unsigned int External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdForAlarmTemplate(const std::string& alarmTemplateName, const CGroupalarm2LoginData& loginData) {
