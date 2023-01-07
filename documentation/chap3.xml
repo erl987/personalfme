@@ -848,7 +848,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 		<section xml:id="groupalarm_messages">
 			<title>Groupalarm (<code language="xml"><![CDATA[<groupalarm2>]]></code>)</title>
 			<para>
-				<emphasis role="underline">Syntax:</emphasis>
+				<emphasis role="underline">Syntax (ein Groupalarm-Event pro <code language="xml"><![CDATA[<groupalarm2>]]></code> tag):</emphasis>
 				<programlisting language="xml">
 <![CDATA[
 <groupalarm2>
