@@ -38,9 +38,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 
 <xs:complexType name="personsType">
 	<xs:sequence minOccurs="0" maxOccurs="unbounded">
-		<xs:choice>
-			<xs:element name="name" type="xs:string"/>
-		</xs:choice>
+		<xs:element name="person">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="firstName" type="xs:string"/>
+					<xs:element name="lastName" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>
 	</xs:sequence>
 </xs:complexType>
 

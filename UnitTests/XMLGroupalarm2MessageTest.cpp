@@ -40,7 +40,7 @@ bool Utilitites::XMLTest::XMLGroupalarmMessageTest::TestDefinedUsers()
 {
 	External::Groupalarm::CXMLSerializableGroupalarm2Message setMessage, getMessage;
 
-	setMessage.SetAlarmToDefinedUsers({ {"label1", 2}, {"label", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "user 1", "user 2" }, "", "Message Template 1", 2.53);
+	setMessage.SetAlarmToDefinedUsers({ {"label1", 2}, {"label", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { std::make_pair<>("Bob", "Foo"), std::make_pair<>("Alice", "Bar") }, "", "Message Template 1", 2.53);
 
 	// write the XML-file
 	Utilities::XML::WriteXML( xmlFileName, setMessage, rootTag, make_pair( namespaceName, schemaDefinitionFilePath ) );

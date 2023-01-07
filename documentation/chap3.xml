@@ -874,7 +874,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 					<scenario>SEG-Alarm</scenario>
 				</scenarios>
 				<persons>
-					<name>Max Mustermann</name>
+					<person>
+						<firstName>Max</firstName>
+						<lastName>Mustermann</lastName>
+					</person>
 				</persons>
 			</resources>
 			<message type="template">SEG-Alarm</message>

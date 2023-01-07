@@ -53,7 +53,7 @@ namespace Networking {
 			vector< shared_ptr< CAlarmMessage > > groupalarm1, groupalarm2;
 
 			validitySet = make_shared< Validities::CSingleTimeValidity >( Validities::CSingleTimeValidity( CDateTime( 25, 3, 2013, CTime( 15, 21, 30, 0 ) ), CDateTime( 25, 3, 2013, CTime( 18, 29, 45, 0 ) ) ) );
-			groupalarm1.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "A message!", "", 2.53) ) );
+			groupalarm1.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { make_pair<>("Bob", "Foo"), make_pair<>("Alice", "Bar") }, "A message!", "", 2.53) ) );
 			groupalarm1.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message("", "full_alarm", 5.2) ) );
 			dataset.AddEntry( validitySet, groupalarm1.begin(), groupalarm1.end() );
 				
@@ -77,7 +77,7 @@ namespace Networking {
 			shared_ptr< Validities::CValidity > validitySet;
 			vector< shared_ptr< CAlarmMessage > > groupalarm1, groupalarm2;
 
-			vector< shared_ptr< CAlarmMessage > > groupalarmDefault( 1, make_shared< CGroupalarm2Message >( CGroupalarm2Message({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "A message!", "", 2.53) ) );
+			vector< shared_ptr< CAlarmMessage > > groupalarmDefault( 1, make_shared< CGroupalarm2Message >( CGroupalarm2Message({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { make_pair<>("Bob", "Foo"), make_pair<>("Alice", "Bar") }, "A message!", "", 2.53) ) );
 			vector< shared_ptr< CAlarmMessage > > groupalarmException( 1, make_shared< CGroupalarm2Message >( CGroupalarm2Message("", "full_alarm", 5.2) ) );
 			vector< shared_ptr< CAlarmMessage > > groupalarmEmpty( 1, make_shared< CGroupalarm2Message >( CGroupalarm2Message() ) );
 			CWeeklyValidity weeklyException( Utilities::Time::THURSDAY, Utilities::CTime( 21, 30, 00 ), Utilities::CTime( 23, 30, 00 ) );
@@ -115,7 +115,7 @@ namespace Networking {
 
 			// test normal construction
 			validitySet = make_shared< Validities::CSingleTimeValidity >( CDateTime( 25, 3, 2013, CTime( 15, 21, 30, 0 ) ), CDateTime( 25, 3, 2013, CTime( 18, 29, 45, 0 ) ) );
-			groupalarmSet.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "A message!", "", 2.53) ) );
+			groupalarmSet.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { make_pair<>("Bob", "Foo"), make_pair<>("Alice", "Bar") }, "A message!", "", 2.53) ) );
 			groupalarmSet.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message("", "full_alarm", 5.2) ) );
 			dataset2 = CAlarmValidities( validitySet, groupalarmSet.begin(), groupalarmSet.end() );
 			BOOST_REQUIRE( dataset2.GetAllEntries().size() == 1 );
@@ -150,7 +150,7 @@ namespace Networking {
 
 			// test adding entries
 			validitySet = make_shared< CSingleTimeValidity >( CSingleTimeValidity( CDateTime( 25, 3, 2013, CTime( 15, 21, 30, 0 ) ), CDateTime( 25, 3, 2013, CTime( 18, 29, 45, 0 ) ) ) );
-			groupalarmSet.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "A message!", "", 2.53) ) );
+			groupalarmSet.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { make_pair<>("Bob", "Foo"), make_pair<>("Alice", "Bar") }, "A message!", "", 2.53) ) );
 			dataset.AddEntry( validitySet, groupalarmSet.begin(), groupalarmSet.end() );
 			validitySet2 = make_shared< CWeeklyValidity >( CWeeklyValidity( Utilities::Time::MONDAY, Utilities::CTime( 5, 20, 41 ), Utilities::CTime( 5, 32, 58 ) ) );
 			groupalarmSet2.push_back( make_shared< CGroupalarm2Message >( CGroupalarm2Message("", "full_alarm", 5.2) ) );

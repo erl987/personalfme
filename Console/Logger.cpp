@@ -292,9 +292,10 @@ std::string Logger::CLogger::GenerateGeneralStatusMessage( const Utilities::Mess
 */
 void Logger::CLogger::GetGroupalarmInfo( const External::Groupalarm::CGroupalarm2Message& alarmMessage, std::string& messageInfoString, std::string& messageTypeString ) const
 {
+	using namespace std;
 	using namespace Utilities;
 
-	std::stringstream infoStream;
+	stringstream infoStream;
 
 	if ( alarmMessage.IsEmpty() ) {
 		infoStream << u8"keine Groupalarm-Auslösung";
@@ -321,7 +322,12 @@ void Logger::CLogger::GetGroupalarmInfo( const External::Groupalarm::CGroupalarm
 				}
 			}
 			if (alarmMessage.ToUsers()) {
-				infoStream << u8"Teilnehmer: " << CStringUtilities().Join(alarmMessage.GetUsers(), ",") << ", ";
+				vector<string> userNames;
+				for (const auto& user : alarmMessage.GetUsers()) {
+					userNames.push_back(user.first + " " + user.second);
+				}
+
+				infoStream << u8"Teilnehmer: " << CStringUtilities().Join(userNames, ",") << ", ";
 			}
 			if (alarmMessage.ToUnits()) {
 				if (alarmMessage.GetUnits().size() == 1) {

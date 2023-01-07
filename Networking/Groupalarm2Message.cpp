@@ -34,7 +34,7 @@ External::Groupalarm::CGroupalarm2Message::CGroupalarm2Message()
 {
 }
 
-External::Groupalarm::CGroupalarm2Message::CGroupalarm2Message(const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours)
+External::Groupalarm::CGroupalarm2Message::CGroupalarm2Message(const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::pair<std::string, std::string>>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours)
 	: CAlarmMessage(true), // Groupalarm.de alarms are only allowed directly after detecting an alarm
 	isEmpty(true)
 {
@@ -65,7 +65,7 @@ std::unique_ptr< External::CAlarmMessage > External::Groupalarm::CGroupalarm2Mes
 	return std::make_unique<CGroupalarm2Message>(*this);
 }
 
-void External::Groupalarm::CGroupalarm2Message::SetAlarmToDefinedUsers(const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours)
+void External::Groupalarm::CGroupalarm2Message::SetAlarmToDefinedUsers(const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::pair<std::string, std::string>>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours)
 {
 	if (!messageText.empty() && !messageTemplate.empty()) {
 		throw Exception::Groupalarm2MessageContentInconsistent("Both message text and template are defined");
@@ -345,7 +345,7 @@ std::vector<std::string> External::Groupalarm::CGroupalarm2Message::GetUnits() c
 	return units;
 }
 
-std::vector<std::string> External::Groupalarm::CGroupalarm2Message::GetUsers() const
+std::vector<std::pair<std::string, std::string>> External::Groupalarm::CGroupalarm2Message::GetUsers() const
 {
 	if (IsEmpty()) {
 		throw std::domain_error("The groupalarm.de dataset is empty.");

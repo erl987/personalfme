@@ -37,7 +37,9 @@ const std::string UNIT_KEY = "unit";
 const std::string SCENARIOS_KEY = "scenarios";
 const std::string SCENARIO_KEY = "scenario";
 const std::string PERSONS_KEY = "persons";
-const std::string PERSON_NAME_KEY = "name";
+const std::string PERSON_KEY = "person";
+const std::string PERSON_FIRST_NAME_KEY = "firstName";
+const std::string PERSON_LAST_NAME_KEY = "lastName";
 const std::string LABELS_KEY = "labels";
 const std::string LABEL_KEY = "label";
 const std::string AMOUNT_KEY = "amount";
@@ -60,7 +62,8 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 
 	bool allUsers;
 	map<string, unsigned int> labels;
-	vector<string> scenarios, units, persons;
+	vector<string> scenarios, units;
+	vector<pair<string, string>> persons;
 	vector<string> unitKeys, labelKeys, scenarioKeys, personsKeys;
 	string messageText;
 	string messageTemplate;
@@ -91,7 +94,10 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::SetFromXML( Poco:
 			Poco::AutoPtr<AbstractConfiguration> personsView(definitionView->createView(RESOURCES_KEY + "." + PERSONS_KEY));
 			definitionView->keys(RESOURCES_KEY + "." + PERSONS_KEY, personsKeys);
 			for (const auto& personKey : personsKeys) {
-				persons.push_back(boost::algorithm::trim_copy(personsView->getString(personKey)));
+				Poco::AutoPtr<AbstractConfiguration> personView(personsView->createView(personKey));
+				string firstName = boost::algorithm::trim_copy(personView->getString(PERSON_FIRST_NAME_KEY));
+				string lastName = boost::algorithm::trim_copy(personView->getString(PERSON_LAST_NAME_KEY));
+				persons.push_back(make_pair<>(firstName, lastName));
 			}
 
 			Poco::AutoPtr<AbstractConfiguration> labelsView(definitionView->createView(RESOURCES_KEY + "." + LABELS_KEY));
@@ -166,7 +172,9 @@ void External::Groupalarm::CXMLSerializableGroupalarm2Message::GenerateXML( Poco
 
 				Poco::AutoPtr<AbstractConfiguration> personsView(definitionView->createView(RESOURCES_KEY + "." + PERSONS_KEY));
 				for (const auto& personName : GetUsers()) {
-					personsView->setString(PERSON_NAME_KEY + "[" + to_string(personCounter) + "]", personName);
+					Poco::AutoPtr<AbstractConfiguration> thisPersonView(personsView->createView(PERSON_KEY + "[" + to_string(personCounter) + "]"));
+					thisPersonView->setString(PERSON_FIRST_NAME_KEY, personName.first);
+					thisPersonView->setString(PERSON_LAST_NAME_KEY, personName.second);
 					personCounter++;
 				}
 

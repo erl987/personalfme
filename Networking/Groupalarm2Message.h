@@ -60,7 +60,7 @@ namespace External {
 		public:
 			NETWORKING_API CGroupalarm2Message();
 			NETWORKING_API ~CGroupalarm2Message() {};
-			NETWORKING_API CGroupalarm2Message(const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours);
+			NETWORKING_API CGroupalarm2Message(const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::pair<std::string, std::string>>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours);
 			NETWORKING_API CGroupalarm2Message(const std::string& alarmTemplate, const double& eventOpenPeriodInHours);
 			NETWORKING_API CGroupalarm2Message(const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours);
 			NETWORKING_API std::unique_ptr< External::CAlarmMessage > Clone() const override;
@@ -68,7 +68,7 @@ namespace External {
 			NETWORKING_API virtual bool IsEmpty() const override;
 			NETWORKING_API virtual void SetAlarmToAllUsers(const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours);
 			NETWORKING_API virtual void SetAlarmTemplate(const std::string& alarmTemplate, const double& eventOpenPeriodInHours);
-			NETWORKING_API virtual void SetAlarmToDefinedUsers(const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::string>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours);
+			NETWORKING_API virtual void SetAlarmToDefinedUsers(const std::map<std::string, unsigned int>& labels, const std::vector<std::string>& scenarios, const std::vector<std::string>& units, const std::vector<std::pair<std::string, std::string>>& users, const std::string& messageText, const std::string& messageTemplate, const double& eventOpenPeriodInHours);
 			NETWORKING_API bool ToAllUsers() const;
 			NETWORKING_API bool ToAlarmTemplate() const;
 			NETWORKING_API bool ToLabels() const;
@@ -78,7 +78,7 @@ namespace External {
 			NETWORKING_API std::string GetAlarmTemplate() const;
 			NETWORKING_API std::map<std::string, unsigned int> GetLabels() const;
 			NETWORKING_API std::vector<std::string> GetUnits() const;
-			NETWORKING_API std::vector<std::string> GetUsers() const;
+			NETWORKING_API std::vector<std::pair<std::string, std::string>> GetUsers() const;
 			NETWORKING_API std::vector<std::string> GetScenarios() const;
 			NETWORKING_API double GetEventOpenPeriodInHours() const;
 			NETWORKING_API unsigned int GetEventOpenPeriodHour() const;
@@ -97,7 +97,7 @@ namespace External {
 			std::map<std::string, unsigned int> labels;
 			std::vector<std::string> scenarios;
 			std::vector<std::string> units;
-			std::vector<std::string> users;
+			std::vector<std::pair<std::string, std::string>> users;
 			std::string messageText;
 			std::string messageTemplate;
 			double eventOpenPeriodInHours;

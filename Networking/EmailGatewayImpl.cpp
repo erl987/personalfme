@@ -378,9 +378,10 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateEmailMessag
 */
 std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmMessageInfo( const External::Groupalarm::CGroupalarm2Message& message )
 {
+	using namespace std;
 	using namespace Utilities;
 
-	std::stringstream infoStream;
+	stringstream infoStream;
 
 	infoStream << u8"Groupalarm-Nachricht: ";
 
@@ -406,7 +407,12 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmM
 			}
 		}
 		if (message.ToUsers()) {
-			infoStream << u8"Teilnehmer: " << CStringUtilities().Join(message.GetUsers(), ",") << ", ";
+			vector<string> userNames;
+			for (const auto& user : message.GetUsers()) {
+				userNames.push_back(user.first + " " + user.second);
+			}
+
+			infoStream << u8"Teilnehmer: " << CStringUtilities().Join(userNames, ",") << ", ";
 		}
 		if (message.ToUnits()) {
 			if (message.GetUnits().size() == 1) {

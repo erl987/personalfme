@@ -60,15 +60,15 @@ bool Utilitites::XMLTest::XMLAlarmValiditiesTest::Test()
 	CXMLSerializableAlarmValidities setAlarmValidities, getAlarmValidities;
 
 	groupalarmMessage.SetAlarmToAllUsers("Alarm for all!", "", 2.5);
-	alarmMessages.push_back( make_shared<Groupalarm::CGroupalarm2Message>( groupalarmMessage ) );
+	alarmMessages.push_back(make_shared<Groupalarm::CGroupalarm2Message>(groupalarmMessage));
 
 	vector< pair<string, string> > recipients = { { "", "first.last@test.de" },{ "First2 Last2", "first2.last2@test.de" } };
-	emailMessage.Set( "siteID", "alarmID", recipients, "alarm text" );
-	emailMessage.SetRequiredState( false );
-	alarmMessages.push_back( make_shared<Email::CEmailMessage>( emailMessage ) );
-	alarmMessages.push_back( make_shared<Infoalarm::CInfoalarmMessageDecorator>( emailMessage.Clone() ) );
+	emailMessage.Set("siteID", "alarmID", recipients, "alarm text");
+	emailMessage.SetRequiredState(false);
+	alarmMessages.push_back(make_shared<Email::CEmailMessage>(emailMessage));
+	alarmMessages.push_back(make_shared<Infoalarm::CInfoalarmMessageDecorator>(emailMessage.Clone()));
 
-	groupalarmMessage2.SetAlarmToDefinedUsers({ {"label1", 2}, {"label2", 1} }, { "scenario1", "scenario2"}, { "unit1", "unit2"}, {"First Person1", "First Person2"}, "A message.", "", 2.3);
+	groupalarmMessage2.SetAlarmToDefinedUsers({ {"label1", 2}, {"label2", 1} }, { "scenario1", "scenario2" }, { "unit1", "unit2" }, {make_pair<>("First", "Person1"), make_pair<>("First", "Person2")}, "A message.", "", 2.3);
 	alarmMessages.push_back( make_shared<Infoalarm::CInfoalarmMessageDecorator>( groupalarmMessage2.Clone() ) );
 
 	setAlarmValidities.AddEntry( Validities::DEFAULT_VALIDITY, begin( alarmMessages ), end( alarmMessages ) );

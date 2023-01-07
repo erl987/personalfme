@@ -160,12 +160,12 @@ namespace Networking {
 			vector< pair<string, string> > tempRecipients = { { "Bob Foo", "bob.foo@provider.org" } };
 			shared_ptr< CAlarmMessage > alarmMessage( new Email::CEmailMessage( "Organisation", "Role", tempRecipients, u8"Einsatz! Kontakt mit der Leitstelle aufnehmen.", true ) );
 			messageDatabase.Add( code, Validities::DEFAULT_VALIDITY, alarmMessage );
-			shared_ptr< CAlarmMessage > alarmMessage2(new Groupalarm::CGroupalarm2Message({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, {"Bob Foo", "Alice Bar"}, "A message!", "", 2.53));
+			shared_ptr< CAlarmMessage > alarmMessage2(new Groupalarm::CGroupalarm2Message({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { make_pair<>("Bob", "Foo"), make_pair<>("Alice", "Bar") }, "A message!", "", 2.53));
 			messageDatabase.Add( code, Validities::DEFAULT_VALIDITY, alarmMessage2 );
 			shared_ptr< Validities::CSingleTimeValidity > singleTimeException = make_shared<Validities::CSingleTimeValidity>( CDateTime( 1, 1, 2015, CTime( 2, 0, 0 ) ), CDateTime( 1, 1, 2015, CTime( 3, 0, 0 ) ) ); // local time
 			messageDatabase.Add( code, singleTimeException, make_shared< Groupalarm::CGroupalarm2Message >() );
 
-			Groupalarm::CGroupalarm2Message infoMessage({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { "Bob Foo", "Alice Bar" }, "An infoalarm message!", "", 2.53);
+			Groupalarm::CGroupalarm2Message infoMessage({ {"label 1", 2}, {"label 2", 1} }, { "scenario 1", "scenario 2" }, { "unit 1", "unit 2" }, { make_pair<>("Bob", "Foo"), make_pair<>("Alice", "Bar") }, "An infoalarm message!", "", 2.53);
 			unique_ptr<CAlarmMessage> infoGroupalarmMessage = make_unique<Groupalarm::CGroupalarm2Message>(infoMessage);
 			unique_ptr<CAlarmMessage> infoalarmMessage = make_unique<Infoalarm::CInfoalarmMessageDecorator>( move( infoGroupalarmMessage ) );
 			

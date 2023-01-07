@@ -55,16 +55,15 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 	return errorInfo;
 }
 
-std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::ParseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId, const std::string& entry) {
+std::map<std::string, unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::ParseResponseJson(const std::string& json, const std::string& entry) {
 	using namespace std;
-	using namespace Utilities;
 	using namespace Poco::JSON;
 
 	Array::Ptr jsonObj;
 
 	Parser parser;
 	auto result = parser.parse(json);
-	
+
 	if (entry.empty()) {
 		jsonObj = result.extract<Array::Ptr>();
 	} else {
@@ -77,6 +76,32 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 		entityIdMap[entry->getValue<string>("name")] = entry->getValue<unsigned int>("id");
 	}
 
+	return entityIdMap;
+}
+
+std::map<std::pair<std::string, std::string>, unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::ParseResponseJsonForUsers(const std::string& json) {
+	using namespace std;
+	using namespace Poco::JSON;
+
+	Parser parser;
+	auto result = parser.parse(json);
+	Array::Ptr jsonObj = result.extract<Array::Ptr>();
+
+	map<pair<string, string>, unsigned int> userIdMap;
+	for (int i = 0; i < jsonObj->size(); i++) {
+		const auto& entry = jsonObj->get(i).extract<Object::Ptr>();
+		string firstName = entry->getValue<string>("name");
+		string lastName = entry->getValue<string>("surname");
+		userIdMap[make_pair<>(firstName, lastName)] = entry->getValue<unsigned int>("id");
+	}
+
+	return userIdMap;
+}
+
+std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdsForEntities(std::map<std::string, unsigned int> entityIdMap, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId) {
+	using namespace std;
+	using namespace Utilities;
+	
 	vector<string> foundEntityNames;
 	vector<unsigned int> entityIds;
 
@@ -98,6 +123,36 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 	return entityIds;
 }
 
+std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdsForUsers(std::map<std::pair<std::string, std::string>, unsigned int> userIdMap, const std::vector<std::pair<std::string, std::string>>& userNames, unsigned int organizationId) {
+	using namespace std;
+	using namespace Utilities;
+
+	vector<string> foundUserNames;
+	vector<unsigned int> userIds;
+
+	for (const auto& userName : userNames) {
+		if (userIdMap.count(userName) > 0) {
+			userIds.push_back(userIdMap[userName]);
+			foundUserNames.push_back(userName.first + " " + userName.second);
+		}
+	}
+
+	if (userIds.size() != userNames.size()) {
+		vector<string> allUserNames;
+		for (const auto& user : userNames) {
+			allUserNames.push_back(user.first + " " + user.second);
+		}
+
+		vector<string> missingUsers;
+		set_difference(allUserNames.begin(), allUserNames.end(), foundUserNames.begin(), foundUserNames.end(), inserter(missingUsers, missingUsers.begin()));
+
+		string errorMessage = "Did not find the following users in the Groupalarm organization " + to_string(organizationId) + ": " + CStringUtilities().Join(missingUsers.cbegin(), missingUsers.cend(), ", ");
+		throw Exception::GroupalarmClientError(errorMessage);
+	}
+
+	return userIds;
+}
+
 void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::RaiseForStatus(const Poco::Net::HTTPResponse& response, const std::string& responseBody) {
 	std::string errorInfo = ExtractErrorInfo(response, responseBody);
 	std::string errorMessage = "status code " + std::to_string(response.getStatus()) + ": " + response.getReason();
@@ -113,7 +168,7 @@ void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::RaiseFo
 	}
 }
 
-std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam, const std::string& entry) {
+std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetJsonFromEndpoint(const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam) {
 	using namespace std;
 	using namespace Poco;
 	using namespace Poco::Net;
@@ -131,15 +186,29 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 
 	HTTPResponse response;
 	istream& responseStream = session.receiveResponse(response);
-	string responseBody(istreambuf_iterator<char>(responseStream), {});
+	string jsonResponseBody(istreambuf_iterator<char>(responseStream), {});
 
-	RaiseForStatus(response, responseBody);
+	RaiseForStatus(response, jsonResponseBody);
 
-	return ParseResponseJson(responseBody, entityNames, subEndpoint, loginData.GetOrganizationId(), entry);
+	return jsonResponseBody;
 }
 
 std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData) {
-	return GetEntityIdsFromEndpoint(entityNames, subEndpoint, loginData, "organization", "");
+	std::string json = GetJsonFromEndpoint(subEndpoint, loginData, "organization");
+	auto entityIdMap = ParseResponseJson(json, "");
+	return GetIdsForEntities(entityIdMap, entityNames, subEndpoint, loginData.GetOrganizationId());
+}
+
+std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam) {
+	std::string json = GetJsonFromEndpoint(subEndpoint, loginData, organizationParam);
+	auto entityIdMap = ParseResponseJson(json, "");
+	return GetIdsForEntities(entityIdMap, entityNames, subEndpoint, loginData.GetOrganizationId());
+}
+
+std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam, const std::string& entry) {
+	std::string json = GetJsonFromEndpoint(subEndpoint, loginData, organizationParam);
+	auto entityIdMap = ParseResponseJson(json, entry);
+	return GetIdsForEntities(entityIdMap, entityNames, subEndpoint, loginData.GetOrganizationId());
 }
 
 std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdsForUnits(const std::vector<std::string>& unitNames, const CGroupalarm2LoginData& loginData) {
@@ -150,8 +219,10 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 	return GetEntityIdsFromEndpoint(labelNames, "labels", loginData);
 }
 
-std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdsForUsers(const std::vector<std::string>& userNames, const CGroupalarm2LoginData& loginData) {
-	return GetEntityIdsFromEndpoint(userNames, "users", loginData);
+std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdsForUsers(const std::vector<std::pair<std::string, std::string>>& userNames, const CGroupalarm2LoginData& loginData) {
+	std::string json = GetJsonFromEndpoint("users", loginData, "organization");
+	auto userIdMap = ParseResponseJsonForUsers(json);
+	return GetIdsForUsers(userIdMap, userNames, loginData.GetOrganizationId());
 }
 
 std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdsForScenarios(const std::vector<std::string>& scenarioNames, const CGroupalarm2LoginData& loginData) {
@@ -159,7 +230,7 @@ std::vector<unsigned int> External::Groupalarm::CGroupalarm2Gateway::CGroupalarm
 }
 
 unsigned int External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdForMessageTemplate(const std::string& messageTemplateName, const CGroupalarm2LoginData& loginData) {
-	return GetEntityIdsFromEndpoint({ messageTemplateName }, "alarms/templates", loginData, "organization_id", "")[0];
+	return GetEntityIdsFromEndpoint({ messageTemplateName }, "alarms/templates", loginData, "organization_id")[0];
 }
 
 unsigned int External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetIdForAlarmTemplate(const std::string& alarmTemplateName, const CGroupalarm2LoginData& loginData) {

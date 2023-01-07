@@ -248,7 +248,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 							<definition>
 								<resources>
 									<persons>
-										<name>Max Mustermann</name>
+										<person>
+											<firstName>Max</firstName>
+											<lastName>Mustermann</lastName>
+										</person>
 									</persons>
 								</resources>
 								<message type="freeText">Alarm für Max Mustermann!</message>

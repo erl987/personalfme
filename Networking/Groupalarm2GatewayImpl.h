@@ -40,16 +40,21 @@ private:
 
 	void SetProxy(Poco::Net::HTTPSClientSession& session, const CGroupalarm2LoginData& loginData);
 	std::string ExtractErrorInfo(const Poco::Net::HTTPResponse& response, const std::string& responseBody);
-	std::vector<unsigned int> ParseResponseJson(const std::string& json, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId, const std::string& entry);
+	std::map<std::string, unsigned int> ParseResponseJson(const std::string& json, const std::string& entry);
+	std::map<std::pair<std::string, std::string>, unsigned int> ParseResponseJsonForUsers(const std::string& json);
+	std::vector<unsigned int> GetIdsForEntities(std::map<std::string, unsigned int> entityIdMap, const std::vector<std::string>& entityNames, const std::string& subEndpoint, unsigned int organizationId);
+	std::vector<unsigned int> GetIdsForUsers(std::map<std::pair<std::string, std::string>, unsigned int> userIdMap, const std::vector<std::pair<std::string, std::string>>& userNames, unsigned int organizationId);
 	void RaiseForStatus(const Poco::Net::HTTPResponse& response, const std::string& responseBody);
 	Poco::JSON::Object CreateAlarmJson(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<External::CAlarmMessage> message, const CGroupalarm2LoginData& loginData);
 	Poco::JSON::Object GetJsonPayload(const CGroupalarm2Message& message, const std::string& currIsoTime, const std::string& eventName, const std::string& otherMessagesInfo, const CGroupalarm2LoginData& loginData);
 	Poco::JSON::Object GetAlarmResources(const CGroupalarm2Message& message, const CGroupalarm2LoginData& loginData);
-	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam, const std::string& entry);
+	std::string GetJsonFromEndpoint(const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam);
 	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData);
+	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam);
+	std::vector<unsigned int> GetEntityIdsFromEndpoint(const std::vector<std::string>& entityNames, const std::string& subEndpoint, const CGroupalarm2LoginData& loginData, const std::string& organizationParam, const std::string& entry);
 	std::vector<unsigned int> GetIdsForUnits(const std::vector<std::string>& unitNames, const CGroupalarm2LoginData& loginData);
 	std::vector<unsigned int> GetIdsForLabels(const std::vector<std::string>& labelNames, const CGroupalarm2LoginData& loginData);
-	std::vector<unsigned int> GetIdsForUsers(const std::vector<std::string>& userNames, const CGroupalarm2LoginData& loginData);
+	std::vector<unsigned int> GetIdsForUsers(const std::vector<std::pair<std::string, std::string>>& userNames, const CGroupalarm2LoginData& loginData);
 	std::vector<unsigned int> GetIdsForScenarios(const std::vector<std::string>& scenarioNames, const CGroupalarm2LoginData& loginData);
 	unsigned int GetIdForAlarmTemplate(const std::string& alarmTemplateName, const CGroupalarm2LoginData& loginData);
 	unsigned int GetIdForMessageTemplate(const std::string& messageTemplateName, const CGroupalarm2LoginData& loginData);

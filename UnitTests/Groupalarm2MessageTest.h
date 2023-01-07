@@ -42,7 +42,7 @@ namespace Networking {
 		const std::string alarmTemplateSet = "Alarm Template 1";
 		const std::map<std::string, unsigned int> labelsSet = { {"label1", 3}, {"label2", 4} };
 		const std::vector<std::string> unitsSet = {"unit1", "unit2"};
-		const std::vector<std::string> usersSet = {"user1", "user2"};
+		const std::vector<std::pair<std::string, std::string>> usersSet = {std::make_pair<>("First", "User 1"), std::make_pair<>("Second", "User 2") };
 		const std::vector<std::string> scenariosSet = {"scenario1", "scenario2"};
 		const std::string messageTextSet = "a message";
 		const std::string messageTemplateSet = "";
