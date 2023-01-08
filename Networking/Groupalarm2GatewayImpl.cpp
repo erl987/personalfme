@@ -479,7 +479,7 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 
 	// add information on the receiver ids (only available for e-mail messages)
 	if (!receiverIDs.empty()) {
-		otherMessagesInfo += "für: " + receiverIDs;
+		otherMessagesInfo += u8"für: " + receiverIDs;
 	}
 
 	// add information on all message types that were used
@@ -487,7 +487,7 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 		if (!receiverIDs.empty()) {
 			otherMessagesInfo += ". ";
 		}
-		otherMessagesInfo += "Ausgelöst: ";
+		otherMessagesInfo += u8"Ausgelöst: ";
 		for (auto type : otherMessageTypes) {
 			if (typeCounter > 0) {
 				otherMessagesInfo += ", ";
