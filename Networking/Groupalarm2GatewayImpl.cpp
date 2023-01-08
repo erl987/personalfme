@@ -361,18 +361,18 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 	string alarmType;
 
 	if (isInfoAlarm) {
-		alarmType = "Infoalarm";
+		alarmType = u8"Infoalarm";
 	} else {
 		if (isRealAlarm) {
-			alarmType = "Einsatzalarmierung";
+			alarmType = u8"Einsatzalarmierung";
 		}
 		else {
-			alarmType = "Probealarm";
+			alarmType = u8"Probealarm";
 		}
 	}
 
 	stringstream ss;
-	ss << "[Funkmelderalarm] Schleife " << CStringUtilities().Join(code.cbegin(), code.cend(), "") << " " << german_local_date_time(CBoostStdTimeConverter::ConvertToBoostTime(alarmTime)) << " (" + alarmType << ")";
+	ss << u8"[Funkmelderalarm] Schleife " << CStringUtilities().Join(code.cbegin(), code.cend(), "") << " " << german_local_date_time(CBoostStdTimeConverter::ConvertToBoostTime(alarmTime)) << " (" + alarmType << ")";
 	string eventName = ss.str();
 
 	string currIsoTime = to_iso_extended_string(second_clock::universal_time()) + "Z";
@@ -450,73 +450,160 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 	using namespace Groupalarm;
 	using namespace ExternalProgram;
 
-	unsigned int emailCounter = 0;
-	unsigned int typeCounter = 0;
-	set<string> otherMessageTypes;
-	string receiverIDs;
+	unsigned int counter = 1;
 	vector< shared_ptr<External::CAlarmMessage> > otherMessages;
-	string otherMessagesInfo;
+	string otherMessagesInfo, newMessageInfo;
 
 	otherMessages = infoalarmMessage.GetOtherMessages();
 
-	for (const auto& message : otherMessages) {
+	for (auto message : otherMessages) {
+		newMessageInfo.clear();
+
 		// infoalarms are not included
-		if (typeid(*message) == typeid(CEmailMessage)) {
-			otherMessageTypes.insert(u8"E-Mail");
-			if (emailCounter > 0) {
-				receiverIDs += " / ";
-			}
-			receiverIDs += GetAlarmReceiverID(dynamic_cast<const Email::CEmailMessage&>(*message));
-			emailCounter++;
+		if (typeid(CEmailMessage) == typeid(*message)) {
+			newMessageInfo = CreateEmailMessageInfo(dynamic_cast<const CEmailMessage&>(*message));
 		}
-		else if (typeid(*message) == typeid(CGroupalarm2Message)) {
-			otherMessageTypes.insert(u8"Groupalarm");
+		else if (typeid(CGroupalarm2Message) == typeid(*message)) {
+			newMessageInfo = CreateGroupalarmMessageInfo(dynamic_cast<const CGroupalarm2Message&>(*message));
 		}
-		else if (typeid(*message) == typeid(CExternalProgramMessage)) {
-			otherMessageTypes.insert(u8"Externes Programm");
+		else if (typeid(CExternalProgramMessage) == typeid(*message)) {
+			newMessageInfo = CreateExternalProgramMessageInfo(dynamic_cast<const CExternalProgramMessage&>(*message));
+		}
+
+		if (!newMessageInfo.empty()) {
+			otherMessagesInfo += to_string(counter) + u8". " + newMessageInfo + u8"\r\n";
+			counter++;
 		}
 	}
 
-	// add information on the receiver ids (only available for e-mail messages)
-	if (!receiverIDs.empty()) {
-		otherMessagesInfo += u8"für: " + receiverIDs;
-	}
-
-	// add information on all message types that were used
-	if (!otherMessageTypes.empty()) {
-		if (!receiverIDs.empty()) {
-			otherMessagesInfo += u8". ";
-		}
-		otherMessagesInfo += u8"Ausgelöst: ";
-		for (auto type : otherMessageTypes) {
-			if (typeCounter > 0) {
-				otherMessagesInfo += u8", ";
-			}
-			otherMessagesInfo += type;
-			typeCounter++;
-		}
+	if (otherMessagesInfo.empty()) {
+		otherMessagesInfo = u8"Keine";
 	}
 
 	return otherMessagesInfo;
 }
 
 
-/**	@brief		Provides a string containing the receiver ID of an alarm e-mail message
+/**	@brief		Provides a string containing information about an alarm e-mail message
 *	@param		message							E-mail alarm message
-*	@return										String containing the receiver ID of the e-mail message
+*	@return										String containing the summary information of the e-mail message
 *	@exception									None
 *	@remarks									None
 */
-std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::GetAlarmReceiverID(const External::Email::CEmailMessage& message)
+std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::CreateEmailMessageInfo(const External::Email::CEmailMessage& message)
 {
 	using namespace std;
 
-	bool isWithAlarmMessage;
-	string siteID, alarmID, alarmText, alarmReceiverID;
+	bool isWithoutAlarmAudio;
+	string siteID, alarmID, alarmText, infoMessage;
 	vector< pair<string, string> > recipients;
 
-	message.Get(siteID, alarmID, recipients, alarmText, isWithAlarmMessage);
-	alarmReceiverID = siteID + ", " + alarmID;
+	message.Get(siteID, alarmID, recipients, alarmText, isWithoutAlarmAudio);
+	infoMessage = u8"Email an " + siteID + ", " + alarmID + ": \"" + alarmText + "\"";
+	if (isWithoutAlarmAudio) {
+		infoMessage += u8", ohne Alarmdurchsage";
+	}
+	else {
+		infoMessage += u8", mit Alarmdurchsage";
+	}
 
-	return alarmReceiverID;
+	return infoMessage;
+}
+
+
+/**	@brief		Provides a string containing information about a groupalarm message
+*	@param		message							Groupalarm message
+*	@return										String containing the summary information of the groupalarm message
+*	@exception									None
+*	@remarks									None
+*/
+std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::CreateGroupalarmMessageInfo(const External::Groupalarm::CGroupalarm2Message& message)
+{
+	using namespace std;
+	using namespace Utilities;
+
+	stringstream infoStream;
+
+	infoStream << u8"Groupalarm-Nachricht: ";
+
+	if (message.ToAllUsers()) {
+		infoStream << u8"Vollalarm" << ", ";
+	}
+	else {
+		if (message.ToScenarios()) {
+			if (message.GetScenarios().size() == 1) {
+				infoStream << u8"Szenario: ";
+			}
+			else {
+				infoStream << u8"Szenarien: ";
+			}
+			infoStream << CStringUtilities().Join(message.GetScenarios(), ",") << ", ";
+		}
+		if (message.ToLabels()) {
+			if (message.GetLabels().size() == 1) {
+				infoStream << u8"Label: ";
+			}
+			else {
+				infoStream << u8"Labels: ";
+			}
+			for (const auto& labelInfo : message.GetLabels()) {
+				infoStream << labelInfo.first << ": " << labelInfo.second << ", ";
+			}
+		}
+		if (message.ToUsers()) {
+			vector<string> userNames;
+			for (const auto& user : message.GetUsers()) {
+				userNames.push_back(user.first + " " + user.second);
+			}
+
+			infoStream << u8"Teilnehmer: " << CStringUtilities().Join(userNames, ",") << ", ";
+		}
+		if (message.ToUnits()) {
+			if (message.GetUnits().size() == 1) {
+				infoStream << u8"Einheit: ";
+			}
+			else {
+				infoStream << u8"Einheiten: ";
+			}
+			infoStream << CStringUtilities().Join(message.GetUnits(), ",") << ", ";
+		}
+	}
+
+	if (message.ToAlarmTemplate()) {
+		infoStream << u8"Alarmvorlage: " << message.GetAlarmTemplate();
+	}
+	else {
+		if (message.HasMessageText()) {
+			infoStream << u8"Alarmtext: " << message.GetMessageText();
+		}
+		else {
+			infoStream << u8"Textvorlage: " << message.GetMessageTemplate();
+		}
+	}
+
+	return infoStream.str();
+}
+
+
+/**	@brief		Provides a string containing information about an external program call
+*	@param		message							External program call message
+*	@return										String containing the summary information of the external program call
+*	@exception									None
+*	@remarks									None
+*/
+std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::CreateExternalProgramMessageInfo(const External::ExternalProgram::CExternalProgramMessage& message)
+{
+	using namespace std;
+
+	string infoMessage, command, programArguments;
+
+	command = message.GetCommand();
+	programArguments = message.GetProgramArguments();
+
+	infoMessage += "Externes Programm: \"" + command + "\"";
+	if (!programArguments.empty()) {
+		infoMessage += ", Argumente: \"" + programArguments + "\"";
+	}
+
+	return infoMessage;
 }

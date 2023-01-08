@@ -21,6 +21,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "Poco/Net/HTTPSClientSession.h"
 #include "InfoalarmMessageDecorator.h"
 #include "EmailMessage.h"
+#include "ExternalProgramMessage.h"
 #include "Groupalarm2LoginData.h"
 #include "Groupalarm2Message.h"
 #include "Groupalarm2Gateway.h"
@@ -58,7 +59,9 @@ private:
 	unsigned int GetIdForAlarmTemplate(const std::string& alarmTemplateName, const CGroupalarm2LoginData& loginData);
 	unsigned int GetIdForMessageTemplate(const std::string& messageTemplateName, const CGroupalarm2LoginData& loginData);
 	std::string CreateOtherMessagesInfo(const External::Infoalarm::CInfoalarmMessageDecorator& infoalarmMessage);
-	std::string GetAlarmReceiverID(const External::Email::CEmailMessage& message);
+	std::string CreateEmailMessageInfo(const External::Email::CEmailMessage& message);
+	std::string CreateGroupalarmMessageInfo(const External::Groupalarm::CGroupalarm2Message& message);
+	std::string CreateExternalProgramMessageInfo(const External::ExternalProgram::CExternalProgramMessage& message);
 	void PerformSend(const std::vector<int>& code, const Utilities::CDateTime& alarmTime, const bool& isRealAlarm, std::unique_ptr<CGatewayLoginData> loginData, std::unique_ptr<CAlarmMessage> message, const Utilities::CMediaFile& audioFile);
 };
 /*@}*/
