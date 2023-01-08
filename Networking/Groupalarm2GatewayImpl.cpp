@@ -318,7 +318,7 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 		if (message.HasMessageText()) {
 			std::string messageText = message.GetMessageText();
 			if (!otherMessagesInfo.empty()) {
-				messageText += "\n\n" + otherMessagesInfo;
+				messageText += u8"\n\n" + otherMessagesInfo;
 			}
 
 			jsonPayload.set("message", messageText);
@@ -462,7 +462,7 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 	for (const auto& message : otherMessages) {
 		// infoalarms are not included
 		if (typeid(*message) == typeid(CEmailMessage)) {
-			otherMessageTypes.insert("E-Mail");
+			otherMessageTypes.insert(u8"E-Mail");
 			if (emailCounter > 0) {
 				receiverIDs += " / ";
 			}
@@ -470,10 +470,10 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 			emailCounter++;
 		}
 		else if (typeid(*message) == typeid(CGroupalarm2Message)) {
-			otherMessageTypes.insert("Groupalarm");
+			otherMessageTypes.insert(u8"Groupalarm");
 		}
 		else if (typeid(*message) == typeid(CExternalProgramMessage)) {
-			otherMessageTypes.insert("Externes Programm");
+			otherMessageTypes.insert(u8"Externes Programm");
 		}
 	}
 
@@ -485,12 +485,12 @@ std::string External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::
 	// add information on all message types that were used
 	if (!otherMessageTypes.empty()) {
 		if (!receiverIDs.empty()) {
-			otherMessagesInfo += ". ";
+			otherMessagesInfo += u8". ";
 		}
 		otherMessagesInfo += u8"Ausgelöst: ";
 		for (auto type : otherMessageTypes) {
 			if (typeCounter > 0) {
-				otherMessagesInfo += ", ";
+				otherMessagesInfo += u8", ";
 			}
 			otherMessagesInfo += type;
 			typeCounter++;
