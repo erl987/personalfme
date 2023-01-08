@@ -318,7 +318,7 @@ Poco::JSON::Object External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2Gatewa
 		if (message.HasMessageText()) {
 			std::string messageText = message.GetMessageText();
 			if (!otherMessagesInfo.empty()) {
-				messageText += u8"\n\n" + otherMessagesInfo;
+				messageText += u8"\r\n\r\nDurchgef\u00FChrte Alarmierungen:\r\n" + otherMessagesInfo;
 			}
 
 			jsonPayload.set("message", messageText);
