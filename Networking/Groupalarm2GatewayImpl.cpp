@@ -429,7 +429,7 @@ void External::Groupalarm::CGroupalarm2Gateway::CGroupalarm2GatewayImpl::Send(co
 	}
 	catch (const Poco::Net::HostNotFoundException& e) {
 		// retry makes sense
-		throw std::runtime_error(e.displayText());
+		throw std::domain_error(e.displayText());
 	}
 	catch (const Poco::Exception& e) {
 		// retry does not make sense
