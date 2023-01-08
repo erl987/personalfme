@@ -426,12 +426,12 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmM
 	}
 
 	if (message.ToAlarmTemplate()) {
-		infoStream << u8"Alarmvorlage: " << message.GetAlarmTemplate() << ", ";
+		infoStream << u8"Alarmvorlage: " << message.GetAlarmTemplate();
 	} else {
 		if (message.HasMessageText()) {
-			infoStream << u8"Alarmtext: " << message.GetMessageText() << ", ";
+			infoStream << u8"Alarmtext: " << message.GetMessageText();
 		} else {
-			infoStream << u8"Textvorlage: " << message.GetMessageTemplate() << ", ";
+			infoStream << u8"Textvorlage: " << message.GetMessageTemplate();
 		}
 	}
 
