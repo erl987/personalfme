@@ -53,7 +53,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 namespace External {
 	/**	\ingroup Networking
-	*	Class implementing the access to the alarm gateways (for example: SMS-gateway, e-mail ...).
+	*	Class implementing the access to the alarm gateways (for example: messenger app gateway, e-mail ...).
 	*/
 	class CAlarmGatewaysManager
 	{
