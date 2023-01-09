@@ -16,8 +16,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 #pragma once
 
-#include <string>
-#include "GatewayLoginData.h"
+#include <Poco/Util/AbstractConfiguration.h>
+#include "Groupalarm2LoginData.h"
+#include "XMLSerializable.h"
 
 #if defined _WIN32 || defined __CYGWIN__
 	#ifdef NETWORKING_API
@@ -49,27 +50,18 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 namespace External {
 	namespace Groupalarm {
 		/** \ingroup Networking
-		*	Class representing the login data for sending alarms via the gateway www.groupalarm.de
+		*	XML-serializable class representing the login data for sending alarms via the gateway www.groupalarm.de
 		*/
-		class CGroupalarmLoginData : public CGatewayLoginData
+		class CXMLSerializableGroupalarm2LoginData : public CGroupalarm2LoginData, public Utilities::XML::CXMLSerializable
 		{
 		public:
-			NETWORKING_API CGroupalarmLoginData(void);
-			NETWORKING_API virtual ~CGroupalarmLoginData(void);
-			NETWORKING_API virtual std::unique_ptr< CGatewayLoginData > Clone(void) const override;
-			NETWORKING_API virtual void SetServerInformation(const std::string& userName, const bool& isHashedPassword, const std::string& password, const std::string& proxyServerName = std::string(), const unsigned short& proxyServerPort = 0);
-			NETWORKING_API virtual void GetServerInformation(std::string& userName, bool& isHashedPassword, std::string& password, std::string& proxyServerName, unsigned short& proxyServerPort) const;
-			NETWORKING_API virtual bool IsValid() const;
-		protected:
-			NETWORKING_API virtual bool IsEqual( const CGatewayLoginData& rhs ) const override;
-		private:
-			std::string userName;
-			bool isHashedPassword;
-			std::string password;
-			std::string proxyServerName;
-			unsigned short proxyServerPort;
-			bool isServerSet;
+			NETWORKING_API CXMLSerializableGroupalarm2LoginData() {};
+			NETWORKING_API CXMLSerializableGroupalarm2LoginData( const CGroupalarm2LoginData& other ) : CGroupalarm2LoginData( other ) {};
+			NETWORKING_API virtual ~CXMLSerializableGroupalarm2LoginData() {};
+			NETWORKING_API virtual void SetFromXML( Poco::AutoPtr<Poco::Util::AbstractConfiguration> xmlFile );
+			NETWORKING_API virtual void GenerateXML( Poco::AutoPtr<Poco::Util::AbstractConfiguration> xmlFile ) const;
 		};
 	}
 }
 /*@}*/
+

@@ -20,44 +20,105 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			xmlns="http://www.personalfme.de/v1"
 			elementFormDefault="qualified">
 
+<xs:complexType name="unitsType">
+	<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		<xs:choice>
+			<xs:element name="unit" type="xs:string"/>
+		</xs:choice>
+	</xs:sequence>
+</xs:complexType>
 
-<xs:complexType name="groupalarmCodeType" >
-	<xs:choice minOccurs="1" maxOccurs="unbounded">
-		<xs:element name="list" type="xs:nonNegativeInteger"/>
-		<xs:element name="group" type="xs:nonNegativeInteger"/>
+<xs:complexType name="scenariosType">
+	<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		<xs:choice>
+			<xs:element name="scenario" type="xs:string"/>
+		</xs:choice>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="personsType">
+	<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		<xs:element name="person">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="firstName" type="xs:string"/>
+					<xs:element name="lastName" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="labelsType">
+	<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		<xs:choice>
+			<xs:element name="label">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="label" type="xs:string"/>
+						<xs:element name="amount" type="xs:unsignedInt"/>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:sequence>
+</xs:complexType>	
+
+<xs:complexType name="messageType">
+	<xs:simpleContent>
+		<xs:extension base="xs:string">
+			<xs:attribute name="type" use="required"> 
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="freeText"/>
+						<xs:enumeration value="template"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:extension>
+	</xs:simpleContent>
+</xs:complexType>	
+
+<xs:simpleType name="nonNegativeDoubleType">
+    <xs:restriction base="xs:double">
+        <xs:minInclusive value="0"/>
+    </xs:restriction>
+</xs:simpleType>
+
+<xs:complexType name="resourcesType">
+	<xs:choice>
+		<xs:element name="all">
+			<xs:complexType/>
+		</xs:element>
+		<xs:sequence>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="units" type="unitsType"/>
+				<xs:element name="scenarios" type="scenariosType"/>
+				<xs:element name="persons" type="personsType"/>
+				<xs:element name="labels" type="labelsType"/>
+			</xs:choice>
+		</xs:sequence>
 	</xs:choice>
 </xs:complexType>
-			
-			
+
 <xs:complexType name="groupalarmMessageType">
 	<xs:all>
-        <xs:element name="alarm">
+		<xs:element name="alarm">
 			<xs:complexType>
 				<xs:choice>
-					<xs:element name="phoneNumber" type="xs:string"/>
-					<xs:element name="code" type="groupalarmCodeType"/>
+					<xs:element name="template" type="xs:string"/>
+					<xs:element name="definition">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="resources" type="resourcesType"/>
+								<xs:element name="message" type="messageType"/>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
 				</xs:choice>
 			</xs:complexType>
 		</xs:element>
-		<xs:element name="message">
-			<xs:complexType>
-				<xs:simpleContent>
-					<xs:extension base="xs:string">
-						<xs:attribute name="type" use="required"> 
-							<xs:simpleType>
-								<xs:restriction base="xs:string">
-									<xs:enumeration value="freeText"/>
-									<xs:enumeration value="code"/>
-								</xs:restriction>
-							</xs:simpleType>
-						</xs:attribute>
-					</xs:extension>
-				</xs:simpleContent>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="feedbackReset" type="xs:boolean"/>
-		<xs:element name="normalSMS" type="xs:boolean"/>
-		<xs:element name="suppressFax" type="xs:boolean"/>
+		<xs:element name="eventOpenPeriodInHours" type="nonNegativeDoubleType"/>
 	</xs:all>
 </xs:complexType>
 

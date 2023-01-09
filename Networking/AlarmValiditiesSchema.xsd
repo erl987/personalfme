@@ -32,7 +32,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 	<xs:sequence minOccurs="0" maxOccurs="unbounded">
 		<xs:choice>
 			<xs:element name="infoalarm" type="infoalarmDecoratorType" maxOccurs="unbounded"/>
-			<xs:element name="groupalarm" type="groupalarmMessageType" maxOccurs="unbounded"/>
+			<xs:element name="groupalarm2" type="groupalarmMessageType" maxOccurs="unbounded"/>
 			<xs:element name="email" type="emailMessageType" maxOccurs="unbounded"/>
 			<xs:element name="external" type="externalProgramMessageType" maxOccurs="unbounded"/>
 		</xs:choice>

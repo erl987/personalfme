@@ -21,7 +21,7 @@ if( WIN32 )
 		Net
 		NetSSLWin
 		Util
-		JSON  # only required on Windows
+		JSON
 		XML
 	REQUIRED )
 else()
@@ -30,6 +30,7 @@ else()
 		Net
 		NetSSL
 		Util
+		JSON
 		XML
 	REQUIRED )
 	find_package( OpenSSL REQUIRED )
@@ -65,12 +66,12 @@ set( SOURCE
 	FMEServerDebug.cpp
 	GatewayLoginData.cpp
 	GatewayLoginDatabase.cpp
-	GroupalarmGateway.cpp
-	GroupalarmLoginData.cpp	
-	GroupalarmMessage.cpp
+	Groupalarm2Gateway.cpp
+	Groupalarm2GatewayImpl.cpp
+	Groupalarm2LoginData.cpp	
+	Groupalarm2Message.cpp
 	InfoalarmMessageDecorator.cpp
 	MonthlyValidity.cpp
-	SimpleHTTPClient.cpp
 	SingleTimeValidity.cpp
 	Validity.cpp
 	WeeklyValidity.cpp
@@ -81,8 +82,8 @@ set( SOURCE
 	XMLSerializableExternalProgramLoginData.cpp
 	XMLSerializableExternalProgramMessage.cpp
 	XMLSerializableGatewayLoginDatabase.cpp
-	XMLSerializableGroupalarmLoginData.cpp
-	XMLSerializableGroupalarmMessage.cpp
+	XMLSerializableGroupalarm2LoginData.cpp
+	XMLSerializableGroupalarm2Message.cpp
 	XMLSerializableMonthlyValidity.cpp
 	XMLSerializableSingleTimeValidity.cpp
 	XMLSerializableWeeklyValidity.cpp
@@ -118,12 +119,12 @@ set( HEADERS
 	FMESessionManagerDebug.h
 	GatewayLoginData.h
 	GatewayLoginDatabase.h
-	GroupalarmGateway.h
-	GroupalarmLoginData.h	
-	GroupalarmMessage.h
+	Groupalarm2Gateway.h
+	Groupalarm2GatewayImpl.h	
+	Groupalarm2LoginData.h
+	Groupalarm2Message.h
 	InfoalarmMessageDecorator.h
 	MonthlyValidity.h
-	SimpleHTTPClient.h
 	SingleTimeValidity.h
 	Validity.h
 	WeeklyValidity.h
@@ -134,8 +135,8 @@ set( HEADERS
     XMLSerializableExternalProgramLoginData.h
 	XMLSerializableExternalProgramMessage.h
 	XMLSerializableGatewayLoginDatabase.h
-	XMLSerializableGroupalarmLoginData.h
-	XMLSerializableGroupalarmMessage.h
+	XMLSerializableGroupalarm2LoginData.h
+	XMLSerializableGroupalarm2Message.h
 	XMLSerializableMonthlyValidity.h
 	XMLSerializableSingleTimeValidity.h
 	XMLSerializableWeeklyValidity.h
@@ -165,6 +166,11 @@ else()
 endif()
 
 target_link_libraries( Networking PUBLIC Utilities )
+
+if ( WIN32 )
+	set_target_properties( Networking PROPERTIES LINK_FLAGS "/ignore:4217")
+endif()
+
 
 # installer settings
 install( TARGETS Networking

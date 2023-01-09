@@ -18,7 +18,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include <memory>
 #include <boost/test/unit_test.hpp>
-#include "GroupalarmGateway.h"
+#include "Groupalarm2Gateway.h"
 #include "EmailGateway.h"
 
 using boost::unit_test::label;
@@ -58,7 +58,7 @@ namespace Networking {
 				using namespace External;
 
 				unique_ptr< External::CAlarmGateway> gateway1 = make_unique<Email::CEmailGateway>();
-				unique_ptr< External::CAlarmGateway> gateway2 = make_unique<Groupalarm::CGroupalarmGateway>();
+				unique_ptr< External::CAlarmGateway> gateway2 = make_unique<Groupalarm::CGroupalarm2Gateway>();
 
 				// test valid comparisons
 				BOOST_REQUIRE( gateway1 == gateway1 );

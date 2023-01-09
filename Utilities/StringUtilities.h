@@ -16,6 +16,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 */
 #pragma once
 #include <string>
+#include <vector>
 
 #if defined _WIN32 || defined __CYGWIN__
 	#ifdef UTILITY_API
@@ -40,13 +41,43 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 	#endif		
 #endif
 
-
 /*@{*/
 /** \ingroup Utilities
 */
 namespace Utilities {
-	namespace String {
-		UTILITY_API std::string GetUTF8FromWestern( const std::string& str );
-	}
+	/**	\ingroup Utilities
+	*	Class for handling strings
+	*/
+	class CStringUtilities
+	{
+	public:
+		template <class T> std::string Join(const std::vector<T>& elements, const std::string& delim);
+		template <class InputIt> std::string Join(InputIt first, InputIt last, const std::string& delim);
+	};
 }
 /*@}*/
+
+
+template <class InputIt>
+std::string Utilities::CStringUtilities::Join(InputIt first, InputIt last, const std::string& delim) {
+	std::stringstream ss;
+	size_t length = std::distance(first, last);
+
+	size_t i = 0;
+	for (auto it = first; it != last; ++it) {
+		ss << *it;
+		if (i < length - 1) {
+			ss << delim;
+		}
+		i++;
+	}
+
+	return ss.str();
+}
+
+
+template <class T>
+std::string Utilities::CStringUtilities::Join(const std::vector<T>& elements, const std::string& delim) {
+	return Join(cbegin(elements), cend(elements), delim);
+}
+

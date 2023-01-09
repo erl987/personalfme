@@ -42,16 +42,18 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			<trials>10</trials>
 			<waitTime>60</waitTime>
 		</email>
-		<groupalarm>
-			<user>user</user>
-			<password type="plain">pass</password>
+		<groupalarm2>
+			<organizationid>12345</organizationid>
+			<apitoken>Us4j4tw!rw5*w6NPWB9^sL3M6Gx$z4ynrJiZtakPFoe^MRSFWo$3WiepQe*r</apitoken>
 			<proxy>
-				<server>proxy.orga.de</server>
+				<address>proxy.orga.de</address>
 				<port>8080</port>
+				<username>user</username>
+				<password>passwd</password>
 			</proxy>
 			<trials>10</trials>
 			<waitTime>60</waitTime>
-		</groupalarm>
+		</groupalarm2>
 	</logins>
 	<alarms>
 		<all>
@@ -101,20 +103,18 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 					<end>13:10:00</end>
 				</validity>
 				<alarms>
-					<groupalarm>
+					<groupalarm2>
 						<!--zum Ausnahmezeitpunkt wird eine Groupalarm-Alarmierung als Fallback ausgelöst-->
 						<alarm>
-							<code>
-								<group>12345</group>
-								<list>23456</list>
-								<group>98765</group>
-							</code>
+							<definition>
+								<resources>
+									<all/>
+								</resources>
+								<message type="freeText">Vollalarm!</message>
+							</definition>
 						</alarm>
-						<message type="code">34567</message>
-						<feedbackReset>true</feedbackReset>
-						<normalSMS>true</normalSMS>
-						<suppressFax>false</suppressFax>
-					</groupalarm>
+						<eventOpenPeriodInHours>2.0</eventOpenPeriodInHours>
+					</groupalarm2>
 				</alarms>
 			</monthlyException>
 		</fallback>		
@@ -217,28 +217,48 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			<default>
 				<alarms>
 					<!--mehrere Groupalarm- bzw. E-Mail-Nachrichten sind möglich-->
-					<groupalarm>
+					<groupalarm2>
 						<alarm>
-							<code>
-								<group>12345</group>
-								<list>23456</list>
-								<group>98765</group>
-							</code>
+							<definition>
+								<resources>
+									<units>
+										<unit>B</unit>
+									</units>
+									<labels>
+										<label>
+											<label>Kraftfahrer</label>
+											<amount>1</amount>
+										</label>
+										<label>
+											<label>CBRN</label>
+											<amount>2</amount>
+										</label>
+									</labels>
+									<scenarios>
+										<scenario>SEG-Alarm</scenario>
+									</scenarios>
+								</resources>
+								<message type="template">SEG-Alarm</message>
+							</definition>
 						</alarm>
-						<message type="code">34567</message>
-						<feedbackReset>true</feedbackReset>
-						<normalSMS>true</normalSMS>
-						<suppressFax>false</suppressFax>
-					</groupalarm>
-					<groupalarm>
+						<eventOpenPeriodInHours>2.5</eventOpenPeriodInHours>
+					</groupalarm2>
+					<groupalarm2>
 						<alarm>
-							<phoneNumber>015112345</phoneNumber>
+							<definition>
+								<resources>
+									<persons>
+										<person>
+											<firstName>Max</firstName>
+											<lastName>Mustermann</lastName>
+										</person>
+									</persons>
+								</resources>
+								<message type="freeText">Alarm für Max Mustermann!</message>
+							</definition>
 						</alarm>
-						<message type="freeText">Probealarm für die Schleife 98765.</message>
-						<feedbackReset>true</feedbackReset>
-						<normalSMS>true</normalSMS>
-						<suppressFax>false</suppressFax>
-					</groupalarm>
+						<eventOpenPeriodInHours>2.5</eventOpenPeriodInHours>
+					</groupalarm2>
 				</alarms>
 			</default>
 		</code>

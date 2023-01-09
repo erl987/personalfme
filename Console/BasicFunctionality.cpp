@@ -119,7 +119,7 @@ std::string CBasicFunctionality::GetHelpText()
 	string softwareName = Utilities::CVersionInfo::SoftwareName();
 	
 	ss << endl;
-	ss << u8"Software-Gateway zur Umsetzung von 5-Tonfolgen der BOS in SMS- und E-Mail-Nachrichten" << endl;
+	ss << u8"Software-Gateway zur Umsetzung von 5-Tonfolgen der BOS in Alarm Messenger Apps und E-Mail-Nachrichten" << endl;
 	ss << endl;
 	ss << u8"Mögliche Aufrufoptionen über die Kommandozeile:" << endl;
 	ss << endl;

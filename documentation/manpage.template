@@ -45,7 +45,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 
 	<refsect1 id='description'><title>Description</title>
 		<para>
-			<command>personalfme</command> is a gateway for forwarding selcalls from the analog radio network of the German Security Services ("BOS-Funk") to internet services. Currently implemented are e-mails, SMS / app messages via the external service <link>www.groupalarm.de</link> and any external program calls. It requires an external radio device connected to the sound card of the computer.
+			<command>personalfme</command> is a gateway for forwarding selcalls from the analog radio network of the German Security Services ("BOS-Funk") to internet services. Currently implemented are e-mails, alarm messages via the external app service <link>www.groupalarm.de</link> and any external program calls. It requires an external radio device connected to the sound card of the computer.
 		</para>
 	</refsect1>
 

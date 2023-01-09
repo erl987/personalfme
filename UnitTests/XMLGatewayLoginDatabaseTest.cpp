@@ -18,9 +18,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 	#include "stdafx.h"
 #endif
 #include "EmailGateway.h"
-#include "GroupalarmGateway.h"
+#include "Groupalarm2Gateway.h"
 #include "EmailLoginData.h"
-#include "GroupalarmLoginData.h"
+#include "Groupalarm2LoginData.h"
 #include "XMLUtilities.h"
 #include "XMLSerializableGatewayLoginDatabase.h"
 #include "XMLGatewayLoginDatabaseTest.h"
@@ -46,7 +46,7 @@ bool Utilitites::XMLTest::XMLGatewayLoginDatabaseTest::Test()
 
 	External::CXMLSerializableGatewayLoginDatabase setDatabase, getDatabase;
 	External::Email::CEmailLoginData emailLoginData;
-	External::Groupalarm::CGroupalarmLoginData groupalarmLoginData;
+	External::Groupalarm::CGroupalarm2LoginData groupalarmLoginData;
 
 	emailLoginData.SetConnectionTrialInfos( 7, 19.3f, 5 );
 	emailLoginData.SetLoginInformation( "First Last <first.last@test.de>", External::Email::UNENCRYPTED_AUTH, "user3", "password10" );
@@ -54,8 +54,8 @@ bool Utilitites::XMLTest::XMLGatewayLoginDatabaseTest::Test()
 	setDatabase.Add( make_unique<External::Email::CEmailGateway>(), make_unique<External::Email::CEmailLoginData>( emailLoginData ) );
 
 	groupalarmLoginData.SetConnectionTrialInfos( 7, 19.3f, 5 );
-	groupalarmLoginData.SetServerInformation( "user3", false, "password4", "proxy.wan.de", 8080 );
-	setDatabase.Add( make_unique<External::Groupalarm::CGroupalarmGateway>(), make_unique<External::Groupalarm::CGroupalarmLoginData>( groupalarmLoginData ) );
+	groupalarmLoginData.Set(12345, "aToken", "proxy.provider.org", 8080, "aUser", "aPasswd");
+	setDatabase.Add( make_unique<External::Groupalarm::CGroupalarm2Gateway>(), make_unique<External::Groupalarm::CGroupalarm2LoginData>( groupalarmLoginData ) );
 
 	// write the XML-file
 	Utilities::XML::WriteXML( xmlFileName, setDatabase, rootTag, make_pair( namespaceName, schemaDefinitionFilePath ) );

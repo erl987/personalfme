@@ -21,6 +21,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "DateTime.h"
 #include "german_local_date_time.h"
 #include "BoostStdTimeConverter.h"
+#include "StringUtilities.h"
 #include "InfoalarmMessageDecorator.h"
 #include "Logger.h"
 
@@ -190,8 +191,8 @@ std::string Logger::CLogger::GenerateSendStatusMessage( const Utilities::Message
 			alarmMessage = std::move( receivedAlarmMessage );
 		}
 
-		if ( typeid( *alarmMessage ) == typeid( Groupalarm::CGroupalarmMessage ) ) {
-			GetGroupalarmInfo( dynamic_cast<const Groupalarm::CGroupalarmMessage&> ( *alarmMessage ), messageInfoString, messageTypeString );
+		if ( typeid( *alarmMessage ) == typeid( Groupalarm::CGroupalarm2Message ) ) {
+			GetGroupalarmInfo( dynamic_cast<const Groupalarm::CGroupalarm2Message&> ( *alarmMessage ), messageInfoString, messageTypeString );
 		} else if ( typeid( *alarmMessage ) == typeid( Email::CEmailMessage ) ) {
 			GetEmailInfo( dynamic_cast<const Email::CEmailMessage&>( *alarmMessage ), messageInfoString, messageTypeString );
 		}
@@ -289,26 +290,67 @@ std::string Logger::CLogger::GenerateGeneralStatusMessage( const Utilities::Mess
 *	@exception 										None
 *	@remarks 										None
 */
-void Logger::CLogger::GetGroupalarmInfo( const External::Groupalarm::CGroupalarmMessage& alarmMessage, std::string& messageInfoString, std::string& messageTypeString ) const
+void Logger::CLogger::GetGroupalarmInfo( const External::Groupalarm::CGroupalarm2Message& alarmMessage, std::string& messageInfoString, std::string& messageTypeString ) const
 {
 	using namespace std;
+	using namespace Utilities;
 
 	stringstream infoStream;
-	string alarmString, messageText;
-	bool isCode;
 
 	if ( alarmMessage.IsEmpty() ) {
 		infoStream << u8"keine Groupalarm-Auslösung";
 	} else {
-		isCode = alarmMessage.GetAlarmString( alarmString );
-		alarmMessage.GetAlarmMessage( messageText );
-		if ( isCode ) {
-			infoStream << u8"Liste(n)/Gruppe(n): ";
+		if (alarmMessage.ToAllUsers()) {
+			infoStream << u8"Vollalarm" << ", ";
 		} else {
-			infoStream << u8"Telefonnummer: ";
+			if (alarmMessage.ToScenarios()) {
+				if (alarmMessage.GetScenarios().size() == 1) {
+					infoStream << u8"Szenario: ";
+				} else {
+					infoStream << u8"Szenarien: ";
+				}
+				infoStream << CStringUtilities().Join(alarmMessage.GetScenarios(), ",") << ", ";
+			}
+			if (alarmMessage.ToLabels()) {
+				if (alarmMessage.GetLabels().size() == 1) {
+					infoStream << u8"Label: ";
+				} else {
+					infoStream << u8"Labels: ";
+				}
+				for (const auto& labelInfo : alarmMessage.GetLabels()) {
+					infoStream << labelInfo.first << ": " << labelInfo.second << ", ";
+				}
+			}
+			if (alarmMessage.ToUsers()) {
+				vector<string> userNames;
+				for (const auto& user : alarmMessage.GetUsers()) {
+					userNames.push_back(user.first + " " + user.second);
+				}
+
+				infoStream << u8"Teilnehmer: " << CStringUtilities().Join(userNames, ",") << ", ";
+			}
+			if (alarmMessage.ToUnits()) {
+				if (alarmMessage.GetUnits().size() == 1) {
+					infoStream << u8"Einheit: ";
+				}
+				else {
+					infoStream << u8"Einheiten: ";
+				}
+				infoStream << CStringUtilities().Join(alarmMessage.GetUnits(), ",") << ", ";
+			}
 		}
-		infoStream << alarmString << ", ";
-		infoStream << u8"Alarmtext: " << messageText;
+
+		if (alarmMessage.ToAlarmTemplate()) {
+			infoStream << u8"Alarmvorlage: " << alarmMessage.GetAlarmTemplate() << ", ";
+		} else {
+			if (alarmMessage.HasMessageText()) {
+				infoStream << u8"Alarmtext: " << alarmMessage.GetMessageText() << ", ";
+			} else {
+				infoStream << u8"Textvorlage: " << alarmMessage.GetMessageTemplate() << ", ";
+			}
+		}
+
+		infoStream << u8"Ereignis aktiv für " << alarmMessage.GetEventOpenPeriodInHours() << " Stunden";
 	}
 
 	messageInfoString = infoStream.str();

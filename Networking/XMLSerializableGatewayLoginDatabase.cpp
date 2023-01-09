@@ -25,16 +25,16 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 
 #include <memory>
 #include <vector>
-#include "GroupalarmGateway.h"
+#include "Groupalarm2Gateway.h"
 #include "EmailGateway.h"
 #include "ExternalProgramGateway.h"
-#include "XMLSerializableGroupalarmLoginData.h"
+#include "XMLSerializableGroupalarm2LoginData.h"
 #include "XMLSerializableEmailLoginData.h"
 #include "XMLSerializableExternalProgramLoginData.h"
 #include "XMLSerializableGatewayLoginDatabase.h"
 
 const std::string EMAIL_KEY = "email";
-const std::string GROUPALARM_KEY = "groupalarm";
+const std::string GROUPALARM_KEY = "groupalarm2";
 const std::string EXTERNAL_PROGRAM_KEY = "external";
 
 
@@ -50,7 +50,7 @@ void External::CXMLSerializableGatewayLoginDatabase::SetFromXML( Poco::AutoPtr<P
 	using namespace Poco::Util;
 
 	vector<string> availableLogins;
-	External::Groupalarm::CXMLSerializableGroupalarmLoginData groupalarmLogin;
+	External::Groupalarm::CXMLSerializableGroupalarm2LoginData groupalarmLogin;
 	External::Email::CXMLSerializableEmailLoginData emailLogin;
 	External::ExternalProgram::CXMLSerializableExternalProgramLoginData externalProgramLoginData;
 
@@ -61,7 +61,7 @@ void External::CXMLSerializableGatewayLoginDatabase::SetFromXML( Poco::AutoPtr<P
 
 		if ( login == GROUPALARM_KEY ) {
 			groupalarmLogin.SetFromXML( gatewayView );
-			Add( make_unique<External::Groupalarm::CGroupalarmGateway>(), make_unique<External::Groupalarm::CGroupalarmLoginData>( groupalarmLogin ) );
+			Add( make_unique<External::Groupalarm::CGroupalarm2Gateway>(), make_unique<External::Groupalarm::CGroupalarm2LoginData>( groupalarmLogin ) );
 		} else if ( login == EMAIL_KEY ) {
 			emailLogin.SetFromXML( gatewayView );
 			Add( make_unique<External::Email::CEmailGateway>(), make_unique<External::Email::CEmailLoginData>( emailLogin ) );
@@ -96,9 +96,9 @@ void External::CXMLSerializableGatewayLoginDatabase::GenerateXML( Poco::AutoPtr<
 			Poco::AutoPtr<AbstractConfiguration> gatewayView( xmlFile->createView( EMAIL_KEY ) );
 			auto emailLoginData = CXMLSerializableEmailLoginData( *dynamic_cast<CEmailLoginData*>( login.second.get() ) );
 			emailLoginData.GenerateXML( gatewayView );			
-		} else if ( login.first == typeid( External::Groupalarm::CGroupalarmGateway ) ) {
+		} else if ( login.first == typeid( External::Groupalarm::CGroupalarm2Gateway ) ) {
 			Poco::AutoPtr<AbstractConfiguration> gatewayView( xmlFile->createView( GROUPALARM_KEY ) );
-			auto groupalarmLoginData = CXMLSerializableGroupalarmLoginData( *dynamic_cast<CGroupalarmLoginData*>( login.second.get() ) );
+			auto groupalarmLoginData = CXMLSerializableGroupalarm2LoginData( *dynamic_cast<CGroupalarm2LoginData*>( login.second.get() ) );
 			groupalarmLoginData.GenerateXML( gatewayView );
 		} else if ( login.first == typeid( External::ExternalProgram::CExternalProgramGateway ) ) {
 			Poco::AutoPtr<AbstractConfiguration> gatewayView( xmlFile->createView( EXTERNAL_PROGRAM_KEY ) );

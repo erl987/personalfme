@@ -27,7 +27,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 <xs:complexType name="infoalarmDecoratorType">
 	<xs:sequence>
 		<xs:choice>
-			<xs:element name="groupalarm" type="groupalarmMessageType"/>
+			<xs:element name="groupalarm2" type="groupalarmMessageType"/>
 			<xs:element name="email" type="emailMessageType"/>
 			<xs:element name="external" type="externalProgramMessageType"/>
 		</xs:choice>

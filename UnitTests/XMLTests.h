@@ -24,8 +24,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "XMLSettingsParamTest.h"
 #include "XMLEmailLoginDataTest.h"
 #include "XMLEmailMessageTest.h"
-#include "XMLGroupalarmLoginDataTest.h"
-#include "XMLGroupalarmMessageTest.h"
+#include "XMLGroupalarm2LoginDataTest.h"
+#include "XMLGroupalarm2MessageTest.h"
 #include "XMLExternalProgramLoginDataTest.h"
 #include "XMLExternalProgramMessageTest.h"
 #include "XMLAlarmValiditiesTest.h"
@@ -87,7 +87,9 @@ namespace Utilitites {
 		*/
 		BOOST_AUTO_TEST_CASE( XML_GroupalarmMessageTest_test_case )
 		{
-			BOOST_REQUIRE( XMLGroupalarmMessageTest::Test() );
+			BOOST_REQUIRE( XMLGroupalarmMessageTest::TestDefinedUsers() );
+			BOOST_REQUIRE(XMLGroupalarmMessageTest::TestAllUsers());
+			BOOST_REQUIRE(XMLGroupalarmMessageTest::TestAlarmTemplate());
 		}
 
 		/**	@brief		Testing XML serialization and deserialization of the CEmailMessage class

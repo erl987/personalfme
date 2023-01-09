@@ -41,6 +41,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #endif
 #include "VersionInfo.h"
 #include "BoostStdTimeConverter.h"
+#include "StringUtilities.h"
 #include "german_local_date_time.h"
 #include "EmailLoginData.h"
 #include "EmailGatewayImpl.h"
@@ -323,8 +324,8 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateOtherMessag
 		// infoalarms are not included
 		if ( typeid( CEmailMessage ) == typeid( *message ) ) {
 			newMessageInfo = CreateEmailMessageInfo( dynamic_cast<const CEmailMessage&>( *message ) );
-		} else if ( typeid( CGroupalarmMessage ) == typeid( *message ) ) {
-			newMessageInfo = CreateGroupalarmMessageInfo( dynamic_cast<const CGroupalarmMessage&>( *message ) );
+		} else if ( typeid( CGroupalarm2Message ) == typeid( *message ) ) {
+			newMessageInfo = CreateGroupalarmMessageInfo( dynamic_cast<const CGroupalarm2Message&>( *message ) );
 		} else if ( typeid( CExternalProgramMessage ) == typeid( *message ) ) {
 			newMessageInfo = CreateExternalProgramMessageInfo( dynamic_cast<const CExternalProgramMessage&>( *message ) );
 		}
@@ -375,67 +376,66 @@ std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateEmailMessag
 *	@exception									None
 *	@remarks									None
 */
-std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmMessageInfo( const External::Groupalarm::CGroupalarmMessage& message )
+std::string External::Email::CEmailGateway::CEmailGatewayImpl::CreateGroupalarmMessageInfo( const External::Groupalarm::CGroupalarm2Message& message )
 {
 	using namespace std;
+	using namespace Utilities;
 
-	unsigned int listCounter = 0;
-	unsigned int groupCounter = 0;
-	bool isUsingListOrGroups, isFreeText;
-	string infoMessage, messageText, alarmPhoneNum;
-	vector<int> alarmLists, alarmGroups;
+	stringstream infoStream;
 
-	isUsingListOrGroups = message.GetAlarmData( alarmPhoneNum, alarmLists, alarmGroups );
-	isFreeText = message.GetAlarmMessage( messageText );
+	infoStream << u8"Groupalarm-Nachricht: ";
 
-	infoMessage = u8"Groupalarm-Nachricht an ";
-	if ( isUsingListOrGroups ) {
-		if ( !alarmLists.empty() ) {
-			if ( alarmLists.size() == 1 ) {
-				infoMessage += "Liste: ";
-			} else {
-				infoMessage += "Listen: ";
-			}
-			for ( auto permanentListID : alarmLists ) {
-				if ( listCounter > 0 ) {
-					infoMessage += ", ";
-				}
-				infoMessage += to_string( permanentListID );
-				listCounter++;
-			}
-			infoMessage += ", ";
-
-		}
-		if ( !alarmGroups.empty() ) {
-			if ( alarmGroups.size() == 1 ) {
-				infoMessage += "Gruppe: ";
-			} else {
-				infoMessage += "Gruppen: ";
-			}
-			for ( auto permanentGroupID : alarmGroups ) {
-				if ( groupCounter > 0 ) {
-					infoMessage += ", ";
-				}
-				infoMessage += to_string( permanentGroupID );
-				groupCounter++;
-			}
-			infoMessage += ", ";
-		}
+	if (message.ToAllUsers()) {
+		infoStream << u8"Vollalarm" << ", ";
 	} else {
-		infoMessage += "Telefonnummer: " + alarmPhoneNum + ", ";
+		if (message.ToScenarios()) {
+			if (message.GetScenarios().size() == 1) {
+				infoStream << u8"Szenario: ";
+			} else {
+				infoStream << u8"Szenarien: ";
+			}
+			infoStream << CStringUtilities().Join(message.GetScenarios(), ",") << ", ";
+		}
+		if (message.ToLabels()) {
+			if (message.GetLabels().size() == 1) {
+				infoStream << u8"Label: ";
+			} else {
+				infoStream << u8"Labels: ";
+			}
+			for (const auto& labelInfo : message.GetLabels()) {
+				infoStream << labelInfo.first << ": " << labelInfo.second << ", ";
+			}
+		}
+		if (message.ToUsers()) {
+			vector<string> userNames;
+			for (const auto& user : message.GetUsers()) {
+				userNames.push_back(user.first + " " + user.second);
+			}
+
+			infoStream << u8"Teilnehmer: " << CStringUtilities().Join(userNames, ",") << ", ";
+		}
+		if (message.ToUnits()) {
+			if (message.GetUnits().size() == 1) {
+				infoStream << u8"Einheit: ";
+			}
+			else {
+				infoStream << u8"Einheiten: ";
+			}
+			infoStream << CStringUtilities().Join(message.GetUnits(), ",") << ", ";
+		}
 	}
 
-	if ( isFreeText ) {
-		infoMessage += "Alarmtext: ";
+	if (message.ToAlarmTemplate()) {
+		infoStream << u8"Alarmvorlage: " << message.GetAlarmTemplate();
 	} else {
-		infoMessage += "Alarmtext (Groupalarm-Code): \"";
-	}
-	infoMessage += messageText;
-	if ( !isFreeText ) {
-		infoMessage += "\"";
+		if (message.HasMessageText()) {
+			infoStream << u8"Alarmtext: " << message.GetMessageText();
+		} else {
+			infoStream << u8"Textvorlage: " << message.GetMessageTemplate();
+		}
 	}
 
-	return infoMessage;
+	return infoStream.str();
 }
 
 

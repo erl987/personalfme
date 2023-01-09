@@ -36,7 +36,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			<para>Auswertung des Funksignals über die Soundkarte</para>
 		</listitem>
 		<listitem>
-			<para>Integriertes Gateway zum Weiterleiten der Alarmierungen über das Internet per SMS bzw. Handy-Apps (mittels <acronym>www.Groupalarm.de</acronym>) und E-Mail</para>
+			<para>Integriertes Gateway zum Weiterleiten der Alarmierungen über das Internet per Messenger-App (mittels <acronym>www.Groupalarm.de</acronym>) und E-Mail</para>
 		</listitem>
 		<listitem>
 			<para>Ansteuerung von externen Programmen und Skripten (z.B. für Torsteuerungen, optische Alarmierungen)</para>

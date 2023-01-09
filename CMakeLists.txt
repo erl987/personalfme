@@ -27,13 +27,13 @@ endif()
 set( CMAKE_PROJECT_NAME ${PROJECT_NAME} )
 
 set( PROJECT_VERSION_MAJOR 1 ) 		 # Adjust here the version number manually
-set( PROJECT_VERSION_MINOR 0 ) 		 # Adjust here the version number manually
-set( PROJECT_VERSION_PATCH 1 ) 		 # Adjust here the version number manually
+set( PROJECT_VERSION_MINOR 1 ) 		 # Adjust here the version number manually
+set( PROJECT_VERSION_PATCH 0 ) 		 # Adjust here the version number manually
 set( PROJECT_VERSION_TYPE "" )	 	 # Adjust here the version number manually (i.e. "" = Release to Manufacturing, "RC1" = Release candidate 1, "pre-release" = Development version)
-set( IS_NEW_CONFIG_FILE_SYNTAX OFF ) # Set this flag to ON in order to warn the user that the syntax of the configuration file config.xml has been changed and his file may require updating
+set( IS_NEW_CONFIG_FILE_SYNTAX ON )  # Set this flag to ON in order to warn the user that the syntax of the configuration file config.xml has been changed and his file may require updating
 set( PROJECT_VENDOR_NAME "Ralf Rettig" )
 set( PROJECT_MAINTAINER_CONTACT "Ralf Rettig <info@${PROJECT_NAME}.de>" )
-set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Gateway for forwarding selcalls to internet services\\n Forwarding to e-mail and SMS-services (www.groupalarm.de) is possible.\\n The program is suitable for the analog radio network of the German\\n security services (BOS).\\n It requires a radio device connected to the sound card.\\n It is running 24/7 as a daemon in the background.\\n WARNING: YOU MAY ONLY DECODE SELCALLS FROM ANY OFFICIAL RADIO NETWORK IF\\n YOU ARE AUTHORIZED TO DO SO. OTHERWISE YOU MAY BE SUBJECT TO\\n CRIMINAL PROSECUTION." )
+set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Gateway for forwarding selcalls to internet services\\n Forwarding to e-mail and alarm messenger apps (www.groupalarm.de) is possible.\\n The program is suitable for the analog radio network of the German\\n security services (BOS).\\n It requires a radio device connected to the sound card.\\n It is running 24/7 as a daemon in the background.\\n WARNING: YOU MAY ONLY DECODE SELCALLS FROM ANY OFFICIAL RADIO NETWORK IF\\n YOU ARE AUTHORIZED TO DO SO. OTHERWISE YOU MAY BE SUBJECT TO\\n CRIMINAL PROSECUTION." )
 
 # compiler configuration
 add_definitions( -DUNICODE -D_UNICODE )

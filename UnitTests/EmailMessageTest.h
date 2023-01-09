@@ -19,7 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <boost/test/unit_test.hpp>
 #include "EmailMessage.h"
 #include "EmailGateway.h"
-#include "GroupalarmMessage.h"
+#include "Groupalarm2Message.h"
 
 using boost::unit_test::label;
 
@@ -153,7 +153,7 @@ namespace Networking {
 				using namespace External::Groupalarm;
 				using namespace External::Email;
 				CEmailMessage message1, message2;
-				CGroupalarmMessage message3;
+				CGroupalarm2Message message3;
 
 				message1 = CEmailMessage( siteIDset, alarmIDset, recipientsSet, alarmTextSet, requiredStateSet );
 				message2 = CEmailMessage( siteIDset, "alarmID2", recipientsSet, alarmTextSet, requiredStateSet );

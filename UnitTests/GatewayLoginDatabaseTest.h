@@ -19,8 +19,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <boost/test/unit_test.hpp>
 #include "EmailLoginData.h"
 #include "EmailGateway.h"
-#include "GroupalarmLoginData.h"
-#include "GroupalarmGateway.h"
+#include "Groupalarm2LoginData.h"
+#include "Groupalarm2Gateway.h"
 #include "GatewayLoginDatabase.h"
 
 using boost::unit_test::label;
@@ -41,15 +41,15 @@ namespace Networking {
 
 			vector< unique_ptr<CGatewayLoginData> > logins;
 			unique_ptr<CGatewayLoginData> emailLoginData = make_unique<Email::CEmailLoginData>();
-			unique_ptr<CGatewayLoginData> groupalarmLoginData = make_unique<Groupalarm::CGroupalarmLoginData>();
+			unique_ptr<CGatewayLoginData> groupalarmLoginData = make_unique<Groupalarm::CGroupalarm2LoginData>();
 
 			dynamic_cast< Email::CEmailLoginData* >( emailLoginData.get() )->SetServerInformation( Email::TLS_SSL_CONN, "mail.gmx.net" );
-			dynamic_cast< Email::CEmailLoginData* >( emailLoginData.get() )->SetLoginInformation( "ralf.rettig@gmx.de", Email::UNENCRYPTED_AUTH, "ralf.rettig@gmx.de", "" );
+			dynamic_cast< Email::CEmailLoginData* >( emailLoginData.get() )->SetLoginInformation( "foo.bar@provider.org", Email::UNENCRYPTED_AUTH, "foo.bar@provider.org", "" );
 			dynamic_cast< Email::CEmailLoginData* >( emailLoginData.get() )->SetConnectionTrialInfos( 10, 30.0, 1 );
 			logins.push_back( move( emailLoginData ) );
 
-			dynamic_cast< Groupalarm::CGroupalarmLoginData* >( groupalarmLoginData.get() )->SetServerInformation( "user", false, "pass" );
-			dynamic_cast< Groupalarm::CGroupalarmLoginData* >( groupalarmLoginData.get() )->SetConnectionTrialInfos( 10, 30.0, 1 );
+			dynamic_cast< Groupalarm::CGroupalarm2LoginData* >( groupalarmLoginData.get() )->Set(12345, "aToken", "proxy.provider.org", 8080, "aUser", "aPasswd");
+			dynamic_cast< Groupalarm::CGroupalarm2LoginData* >( groupalarmLoginData.get() )->SetConnectionTrialInfos( 10, 30.0, 1 );
 			logins.push_back( move( groupalarmLoginData ) );
 
 			return logins;
@@ -66,7 +66,7 @@ namespace Networking {
 
 			logins = GetTestLogins();
 			loginDatabase.Add( make_unique<Email::CEmailGateway>(), move( logins[0] ) );
-			loginDatabase.Add( make_unique<Groupalarm::CGroupalarmGateway>(), move( logins[1] ) );
+			loginDatabase.Add( make_unique<Groupalarm::CGroupalarm2Gateway>(), move( logins[1] ) );
 
 			return loginDatabase;
 		}
@@ -120,7 +120,7 @@ namespace Networking {
 			BOOST_REQUIRE_THROW( loginDatabase.Replace( make_unique<Email::CEmailGateway>(), nullptr ), std::runtime_error );
 			BOOST_REQUIRE_THROW( loginDatabase.Replace( nullptr, nullptr ), std::runtime_error );
 
-			BOOST_REQUIRE_THROW( loginDatabase.Remove( typeid( Groupalarm::CGroupalarmGateway ) ), std::runtime_error ); // this gateway is not present in the database and needs to cause an exception
+			BOOST_REQUIRE_THROW( loginDatabase.Remove( typeid( Groupalarm::CGroupalarm2Gateway ) ), std::runtime_error ); // this gateway is not present in the database and needs to cause an exception
 		}
 
 
@@ -144,7 +144,7 @@ namespace Networking {
 			auto emailPosIt = find_if( begin( loginDatasetGet ), end( loginDatasetGet ), []( const auto& val ) { return ( val.first == typeid( Email::CEmailGateway ) ); } );
 			BOOST_REQUIRE( emailPosIt != end( loginDatasetGet ) );
 			BOOST_REQUIRE( *( emailPosIt->second ) == *( origLogins[0] ) );
-			auto groupalarmPosIt = find_if( begin( loginDatasetGet ), end( loginDatasetGet ), []( const auto& val ) { return ( val.first == typeid( Groupalarm::CGroupalarmGateway ) ); } );
+			auto groupalarmPosIt = find_if( begin( loginDatasetGet ), end( loginDatasetGet ), []( const auto& val ) { return ( val.first == typeid( Groupalarm::CGroupalarm2Gateway ) ); } );
 			BOOST_REQUIRE( groupalarmPosIt != end( loginDatasetGet ) );
 			BOOST_REQUIRE( *( groupalarmPosIt->second ) == *( origLogins[1] ) );
 
@@ -153,9 +153,9 @@ namespace Networking {
 			auto emailPosIt2 = find_if( begin( gatewaysGet ), end( gatewaysGet ), []( const auto& val ) { return( val.first == typeid( Email::CEmailGateway ) ); } );
 			BOOST_REQUIRE( emailPosIt2 != end( gatewaysGet ) );
 			BOOST_REQUIRE( *( emailPosIt2->second ) == *( make_unique<Email::CEmailGateway>() ) );
-			auto groupalarmPosIt2 = find_if( begin( gatewaysGet ), end( gatewaysGet ), []( const auto& val ) { return( val.first == typeid( Groupalarm::CGroupalarmGateway ) ); } );
+			auto groupalarmPosIt2 = find_if( begin( gatewaysGet ), end( gatewaysGet ), []( const auto& val ) { return( val.first == typeid( Groupalarm::CGroupalarm2Gateway ) ); } );
 			BOOST_REQUIRE( groupalarmPosIt2 != end( gatewaysGet ) );
-			BOOST_REQUIRE( *( groupalarmPosIt2->second ) == *( make_unique<Groupalarm::CGroupalarmGateway>() ) );
+			BOOST_REQUIRE( *( groupalarmPosIt2->second ) == *( make_unique<Groupalarm::CGroupalarm2Gateway>() ) );
 
 			loginDataGet = loginDatabase.Search( typeid( Email::CEmailGateway ) );
 			BOOST_REQUIRE( *loginDataGet == *( origLogins[0] ) );

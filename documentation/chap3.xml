@@ -296,9 +296,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 	<email>
 		<!--Einstellungen für Emails-->
 	</email>
-	<groupalarm>
+	<groupalarm2>
 		<!--Einstellungen für Groupalarm-->
-	</groupalarm>
+	</groupalarm2>
 	<external>
 		<!--Einstellungen für externe Programmaufrufe-->
 	</external>
@@ -414,67 +414,68 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 		</section>
 		
 		<section xml:id="groupalarm_settings">
-			<title>Groupalarm (<code language="xml"><![CDATA[<groupalarm>]]></code>)</title>
-			<ulink url="www.groupalarm.de"></ulink> ist ein kostenpflichtiger externer Dienst für den schnellen Versand von Massen-SMS bzw. Nachrichten 
-			auf Mobiltelefon-Apps. Detaillierte Informationen zur Konfiguration von Groupalarm gibt es unter: <ulink url="http://prowiki.groupalarm.de"></ulink>.
+			<title>Groupalarm (<code language="xml"><![CDATA[<groupalarm2>]]></code>)</title>
+			<ulink url="www.groupalarm.de"></ulink> ist ein kostenpflichtiger externer Dienst für den schnellen Versand von Gruppenalarmierungen über
+			eine Messenger-App und auch traditionelle Telefondienste. Detaillierte Informationen zur Konfiguration von Groupalarm gibt es unter: <ulink url="https://docs.groupalarm.de"></ulink>,
+			die Konfiguration Ihrer Organisation erfolgt unter <ulink url="https://app.groupalarm.com"></ulink>.
 			<para>
 				<emphasis role="underline">Syntax:</emphasis>
 				<programlisting language="xml">
 <![CDATA[
-<groupalarm>
-	<user>user</user>
-	<password type="plain">passwort</password>
+<groupalarm2>
+	<organizationid>12345</organizationid>
+	<apitoken>U&s4j4&tw!rw5*w6NPWB9^sL3M6Gx</apitoken>
 	<proxy>
-		<server>proxy.orga.de</server>
+		<address>proxy.orga.de</address>
 		<port>8080</port>
+		<username>user</username>
+		<password>passwd</password>
 	</proxy>
 	<trials>10</trials>
 	<waitTime>60</waitTime>
 	<connections>1</connections>
-</groupalarm>
+</groupalarm2>
 ]]>
 				</programlisting>
 			</para>
 			<itemizedlist>
 				<listitem>
-					<code language="xml"><![CDATA[<user>]]></code>: Benutzername bei Groupalarm
+					<code language="xml"><![CDATA[<organizationid>]]></code>: ID Ihrer Organisation bei Groupalarm ("Organisation" -> ... -> "Einstellungen" auf <ulink url="https://app.groupalarm.com"></ulink>)
 				</listitem>
 				<listitem>
-					<code language="xml"><![CDATA[<password>]]></code>: Groupalarm-Passwort für das Login. Groupalarm bietet die Übertragung 
-					von Passwörtern in Klartext und als Hash (verschlüsselt) an. Beide Optionen können genutzt werden:
+					<code language="xml"><![CDATA[<apitoken>]]></code>: Der Schlüssel zum Auslösen eines Alarms (Sie können Ihren API-Schlüssel unter "Admin" -> "Berechtigungen" -> "API-Schlüssel" erzeugen).
+					Geben Sie dem API-Schlüssel einen sinnvollen Namen wie z.B. PersonalFME.
+					
+					<warning>
+					Der API-Schlüssel funktioniert wie ein Passwort und sollte entsprechend behandelt werden. Jeder kann mit diesem Schlüssel Alarmierungen auslösen.
+					Er wird unverschlüsselt in der XML-Konfigurationsdatei gespeichert. Sorgen Sie durch Festlegung der Benutzerrechte und Begrenzung des Zugangs zum Rechner dafür, dass der Schlüssel nicht in falsche
+					Hände gerät. Geben Sie die XML-Konfigurationsdatei nicht mit Ihrem Passwort weiter.
+					</warning>
+				</listitem>
+				<listitem>
+					<code language="xml"><![CDATA[<proxy>]]></code>: Proxy-Server
+					<para><emphasis>Standard (wenn weggelassen)</emphasis>: Keine Nutzung eines Proxy-Servers</para>
+					<para><emphasis>Einstellungen:</emphasis></para>
 					<itemizedlist>
 						<listitem>
-							<code language="xml"><![CDATA[<password type="plain">]]></code>: Passwort als Klartext
+							<code language="xml"><![CDATA[<address>]]></code>: Name des Proxy-Servers
 						</listitem>
 						<listitem>
-							<code language="xml"><![CDATA[<password type="hashed">]]></code>: Passwort als Hash
-							<warning>
-								Das Passwort wird unverschlüsselt in der XML-Konfigurationsdatei gespeichert. Sorgen Sie durch Festlegung der Benutzerrechte 
-								und Begrenzung des Zugangs zum Rechner dafür, dass das Passwort nicht in falsche Hände gerät. Geben Sie die XML-Konfigurationsdatei nicht mit Ihrem Passwort weiter.
-							</warning>
-							<warning>
-								Der Versand der Alarmierung inklusive Passwort erfolgt unverschlüsselt an den Groupalarm-Server. Nutzen Sie für die Alarmierung einen eigenen Groupalarm-Benutzer 
-								welcher ausschließlich das Recht hat, Alarmierungen über den Weblink anzunehmen. Damit wird vermieden, dass ein Angreifer Ihre Groupalarm-Konfiguration verändern kann.
-							</warning>
+							<code language="xml"><![CDATA[<port>]]></code>: Port des Servers
+							<para><emphasis>Standard (wenn weggelassen)</emphasis>: Port 8080</para>
 						</listitem>
 						<listitem>
-							<code language="xml"><![CDATA[<proxy>]]></code>: Proxy-Server
-							<para><emphasis>Standard (wenn weggelassen)</emphasis>: Keine Nutzung eines Proxy-Servers</para>
-							<para><emphasis>Einstellungen:</emphasis></para>
-							<itemizedlist>
-								<listitem>
-									<code language="xml"><![CDATA[<server>]]></code>: Name des Servers
-								</listitem>
-								<listitem>
-									<code language="xml"><![CDATA[<port>]]></code>: Port des Servers
-									<para><emphasis>Standard (wenn weggelassen)</emphasis>: Port 8080</para>
-								</listitem>
-							</itemizedlist>
-							<para>
-								In vielen Einrichtungen ist der Datenverkehr ins Internet nur über einen Proxy-Server möglich.
-							</para>
+							<code language="xml"><![CDATA[<username>]]></code>: Benutzername für den Proxy-Server
+							<para><emphasis>Standard (wenn weggelassen)</emphasis>: kein Benutzername</para>
+						</listitem>
+						<listitem>
+							<code language="xml"><![CDATA[<username>]]></code>: Password für den Proxy-Server
+							<para><emphasis>Standard (wenn weggelassen)</emphasis>: kein Passwort</para>
 						</listitem>
 					</itemizedlist>
+					<para>
+						In vielen Einrichtungen ist der Datenverkehr ins Internet nur über einen Proxy-Server möglich.
+					</para>
 				</listitem>
 			</itemizedlist>
 		</section>
@@ -532,9 +533,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 	<code call="12345">
 		<default>
 			<alarms>
-				<groupalarm>
+				<groupalarm2>
 					<!--Groupalarm-Nachricht-->
-				</groupalarm>
+				</groupalarm2>
 			</alarms>
 		</default>
 		<weeklyException>
@@ -845,156 +846,108 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			</para>
 		</section>
 		<section xml:id="groupalarm_messages">
-			<title>Groupalarm (<code language="xml"><![CDATA[<groupalarm>]]></code>)</title>
+			<title>Groupalarm (<code language="xml"><![CDATA[<groupalarm2>]]></code>)</title>
 			<para>
-				<emphasis role="underline">Syntax:</emphasis>
+				<emphasis role="underline">Syntax (ein Groupalarm-Event pro <code language="xml"><![CDATA[<groupalarm2>]]></code>-Tag):</emphasis>
 				<programlisting language="xml">
 <![CDATA[
-<groupalarm>
+<groupalarm2>
 	<alarm>
-		<code>
-			<group>23434</group>
-			<list>51234</list>
-			<group>98712</group>
-		</code>
+		<!--<template>SEG-Alarm</template>-->
+		<definition>
+			<resources>
+				<!--<all/>-->
+				<units>
+					<unit>B</unit>
+				</units>
+				<labels>
+					<label>
+						<label>Kraftfahrer</label>
+						<amount>1</amount>
+					</label>
+					<label>
+						<label>CBRN</label>
+						<amount>2</amount>
+					</label>
+				</labels>
+				<scenarios>
+					<scenario>SEG-Alarm</scenario>
+				</scenarios>
+				<persons>
+					<person>
+						<firstName>Max</firstName>
+						<lastName>Mustermann</lastName>
+					</person>
+				</persons>
+			</resources>
+			<message type="template">SEG-Alarm</message>
+		</definition>
 	</alarm>
-	<message type="code">92342</message>
-	<feedbackReset>true</feedbackReset>
-	<normalSMS>true</normalSMS>
-	<suppressFax>false</suppressFax>
-</groupalarm>
+	<eventOpenPeriodInHours>2.5</eventOpenPeriodInHours>
+</groupalarm2>
 ]]>
 				</programlisting>
 				<emphasis>Einstellungsmöglichkeiten</emphasis>
 				<itemizedlist>
 					<listitem>
-						<code language="xml"><![CDATA[<alarm>]]></code>: Definition der Alarmempfänger. Es bestehen folgende Wahlmöglichkeiten:
+						<code language="xml"><![CDATA[<template>]]></code>: Benutzung einer Alarmvorlage von Groupalarm (Best-Effort Alarmierung). Die Auswahl aller alarmierten Resourcen sowie der Alarmachricht erfolgt unter 
+						"Konfiguration" -> "Alarmvorlagen". <emphasis>In diesem Fall wird der Eventname immer durch die Alarmvorlage bestimmt.</emphasis>
+					</listitem>
+					
+					<listitem>
+						<code language="xml"><![CDATA[<definition>]]></code>: Detaillierte Definition der alarmierten Resourcen:
 						<itemizedlist>
 							<listitem>
-								<code language="xml"><![CDATA[<code>]]></code>: SMS an vordefinierte Gruppen / Listen von Groupalarm (Permanent-ID). Die jeweiligen 
-								IDs können Ihrem Konfigurationsmenü auf der Webseite von Groupalarm entnommen werden. Sie können beliebig viele Gruppen und Listen in beliebiger
-								Reihenfolge angeben. <emphasis>Vollalarm für alle Listen kann durch <code language="xml"><![CDATA[<list>0</list>]]></code> ausgelöst werden.</emphasis>
-								<para>
-									<itemizedlist>
-										<listitem>
-											<code language="xml"><![CDATA[<list>]]></code>: vordefinierte Liste (LID)
-										</listitem>
-										<listitem>
-											<code language="xml"><![CDATA[<group>]]></code>: vordefinierte Gruppe (GID)
-										</listitem>
-									</itemizedlist>
+								<code language="xml"><![CDATA[<resources>]]></code>: Definition der Alarmempfänger (Best-Effort Alarmierung). Es können entweder beliebige Kombinationen von Einheiten, Personen, usw. <emphasis>oder</emphasis>
+								Vollalarm ausgelöst werden.
+								
+								<itemizedlist>
+									<listitem>
+											<code language="xml"><![CDATA[<all>]]></code>: <emphasis>Vollalarm für alle Mitglieder der Organisation</emphasis>. Keine anderen
+											Resourcen können ausgewählt werden.
+									</listitem>
+								
+									<listitem>
+										<code language="xml"><![CDATA[<units>]]></code>: Alarm an die definierten Einheiten bei Groupalarm (<code language="xml"><![CDATA[<unit>]]></code>).
+										Hier wird der <emphasis>Name</emphasis> der Einheit angegeben (wie z.B. "B" oder "FGr_N", die Einstellung erfolgt unter "Konfiguration" -> "Einheiten").
+									</listitem>
 									
-									<para>Beispiele</para>
-									<itemizedlist>
-										<listitem>
-											Alarmierung der Liste 51234:
-											<programlisting language="xml">
-<![CDATA[
-<alarm>
-	<code>
-		<list>51234</list>
-	</code>
-</alarm>
-]]>
-											</programlisting>
-										</listitem>
-										<listitem>
-											Alarmierung der Gruppe 23434:
-											<programlisting language="xml">
-<![CDATA[
-<alarm>
-	<code>
-		<group>23434</group>
-	</code>
-</alarm>
-]]>
-											</programlisting>
-										</listitem>
-										<listitem>
-											Alarmierung der Listen 51234, 64542 und 72348
-											sowie der Gruppen 23434 und 12345:
-											<programlisting language="xml">
-<![CDATA[
-<alarm>
-	<code>
-		<list>51234</list>
-		<group>23434</group>
-		<list>64542</list>
-		<list>72348</list>
-		<group>12345</group>
-	</code>
-</alarm>
-]]>
-											</programlisting>
-										</listitem>
-									</itemizedlist>
-								</para>
-								<note>
-									Durch die Verwendung der Permanent-IDs wird sicherstellt, dass sich der notwendige Alarmcode für die SMS-Auslösung auch beim Anlegen oder Löschen von Gruppen nie ändert.
-								</note>
+									<listitem>
+										<code language="xml"><![CDATA[<labels>]]></code>: Alarm an die definierten Labels von Groupalarm. Dies sind definierte Funktionen über Einheiten hinweg, z.B. für
+										Kraftfahrer (<code language="xml"><![CDATA[<label>]]></code>). Angegeben werden jeweils der Name des Labels (definiert unter "Konfiguration" -> "Labels") sowie
+										die benötigte Anzahl.
+									</listitem>
+									
+									<listitem>
+										<code language="xml"><![CDATA[<scenarios>]]></code>: Alarmierung von definierten Szenarien von Groupalarm. Dies sind Kombinationen von z.B. verschiedenen Einheiten.
+										Angegeben werden jeweils der Name des Szenarios (<code language="xml"><![CDATA[<scenario>]]></code>, definiert unter "Konfiguration" -> "Szenarien").
+									</listitem>
+									
+									<listitem>
+										<code language="xml"><![CDATA[<persons>]]></code>: Alarm an die definierten Teilnehmer von Groupalarm (<code language="xml"><![CDATA[<name>]]></code>),
+										definiert unter "Konfiguration" -> "Teilnehmer").
+									</listitem>
+								</itemizedlist>
 							</listitem>
 							<listitem>
-								<code language="xml"><![CDATA[<phoneNumber>]]></code>: SMS an eine einzelne Telefonnummer. Die Rufnummer muss bei Groupalarm in Ihrem Profil 
-								registriert sein.
-								<para>Beispiel:</para>
-								<programlisting language="xml">
-<![CDATA[
-<alarm>
-	<phoneNumber>015112345</phoneNumber>
-</alarm>
-]]>
-								</programlisting>
+								<code language="xml"><![CDATA[<message>]]></code>: Definition der Alarmnachricht. Es bestehen folgende Wahlmöglichkeiten:
+								<itemizedlist>
+									<listitem>
+										<code language="xml"><![CDATA[<message type="template">]]></code>: Vordefinierte Groupalarm-Nachricht, angegeben wird der Name der Textvorlage ("Konfiguration" -> "Textvorlagen").
+									</listitem>
+									<listitem>
+										<code language="xml"><![CDATA[<message type="freeText">]]></code>: Frei definierte Nachricht:
+										<para>Beispiel: <code language="xml"><![CDATA[<message type="freeText">Probealarm für die SEG.</message>]]></code></para>
+									</listitem>
+								</itemizedlist>
 							</listitem>
 						</itemizedlist>
 					</listitem>
+					
 					<listitem>
-						<code language="xml"><![CDATA[<message>]]></code>: Definition der Alarmnachricht. Es bestehen folgende Wahlmöglichkeiten:
-						<itemizedlist>
-							<listitem>
-								<code language="xml"><![CDATA[<message type="code">]]></code>: Vordefinierte Groupalarm-Nachricht (Permanent-ID, TID):
-								<para>Beispiel: <code language="xml"><![CDATA[<message type="code">78923</message>]]></code>: Versand der bei Groupalarm gespeicherten Nachricht 78923</para>
-							</listitem>
-							<listitem>
-								<code language="xml"><![CDATA[<message type="freeText">]]></code>: Frei definierte Nachricht:
-								<para>Beispiel: <code language="xml"><![CDATA[<message type="freeText">Probealarm für die SEG.</message>]]></code></para>
-							</listitem>
-						</itemizedlist>
-					</listitem>
-					<listitem>
-						<code language="xml"><![CDATA[<feedbackReset>]]></code>: Zurücksetzen der Feedback-Liste in Groupalarm
-						<itemizedlist>
-							<listitem>
-								<code language="xml"><![CDATA[<feedbackReset>true</feedbackReset>]]></code>: Feedback-Liste zurücksetzen
-							</listitem>
-							<listitem>
-								<code language="xml"><![CDATA[<feedbackReset>false</feedbackReset>]]></code>: Feedback-Liste nicht zurücksetzen
-							</listitem>
-						</itemizedlist>
-					</listitem>
-					<listitem>
-						<code language="xml"><![CDATA[<normalSMS>]]></code>: Versand als normale SMS oder Flash-SMS
-						<itemizedlist>
-							<listitem>
-								<code language="xml"><![CDATA[<normalSMS>true</normalSMS>]]></code>: normale SMS werden versandt
-							</listitem>
-							<listitem>
-								<code language="xml"><![CDATA[<normalSMS>false</normalSMS>]]></code>: Versand von Flash-SMS
-							</listitem>
-						</itemizedlist>
-						<note>
-							Flash-SMS werden zwar direkt auf dem Display des Mobiltelefons angezeigt, aber meist nicht dauerhaft gespeichert.
-						</note>
-					</listitem>
-					<listitem>
-						<code language="xml"><![CDATA[<suppressFax>]]></code>: Alarm-Faxversand unterdrücken
-						<itemizedlist>
-							<listitem>
-								<code language="xml"><![CDATA[<suppressFax>true</suppressFax>]]></code>: Status-Faxe von Groupalarm werden unterdrückt, selbst wenn diese in Ihrem Groupalarm-Profil aktiviert sind
-							</listitem>
-							<listitem>
-								<code language="xml"><![CDATA[<suppressFax>false</suppressFax>]]></code>: Es gelten die Einstellungen in Ihrem Groupalarm-Profil
-							</listitem>
-						</itemizedlist>
+						<code language="xml"><![CDATA[<eventOpenPeriodInHours>]]></code>: Die Alarmierung wird nach dem angegeben Zeitraum geschlossen. Zum Beispiel stehen
+						nach diesem Zeitraum die alarmierten und zugesagten Kräfte wieder für neue Alarmierungen zur Verfügung. Für Details wird auf die Dokumentation von
+						Groupalarm verwiesen.
 					</listitem>
 				</itemizedlist>
 			</para>
@@ -1152,9 +1105,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 				<email>
 					<!--Definition der Alarmnachricht-->
 				</email>
-				<groupalarm>
+				<groupalarm2>
 					<!--Definition der Alarmnachricht-->
-				</groupalarm>
+				</groupalarm2>
 			</alarms>
 		</default>
 		
@@ -1218,7 +1171,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			file:   C:\Users\Benutzer\Documents\PersonalFME\config.xml
 			line:   55, column: 11
 			error:  element 'email' is not allowed for content model 
-					'All(groupalarm?,email?,external?)'
+					'All(groupalarm2?,email?,external?)'
 			</screen>
 		</para>
 	</section>
@@ -1229,6 +1182,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 			<itemizedlist>
 				<listitem>
 					Version 0.2.1: neue vereinfachte Syntax für Groupalarm-Auslösungen (Auszeichner: <code language="XML"><![CDATA[<groupalarm>]]></code>)
+				</listitem>
+				<listitem>
+					Version 1.1.0: neue Syntax für den neuen Dienst von Groupalarm.de  (Auszeichner: <code language="XML"><![CDATA[<groupalarm2>]]></code>),
+					<code language="XML"><![CDATA[<groupalarm>]]></code> wurde entfernt.
 				</listitem>
 			</itemizedlist>
 		</para>

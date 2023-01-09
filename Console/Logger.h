@@ -26,7 +26,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include "SendStatusMessage.h"
 #include "DetectorStatusMessage.h"
 #include "GeneralStatusMessage.h"
-#include "GroupalarmMessage.h"
+#include "Groupalarm2Message.h"
 #include "EmailMessage.h"
 
 
@@ -48,7 +48,7 @@ namespace Logger {
 		std::string GenerateSendStatusMessage( const Utilities::Message::CSendStatusMessage<External::CAlarmMessage>& message ) const;
 		std::string GenerateDetectorStatusMessage( const Utilities::Message::CDetectorStatusMessage& message ) const;
 		std::string GenerateGeneralStatusMessage( const Utilities::Message::CGeneralStatusMessage& message ) const;
-		void GetGroupalarmInfo( const External::Groupalarm::CGroupalarmMessage& alarmMessage, std::string& messageInfoString, std::string& messageTypeString ) const;
+		void GetGroupalarmInfo( const External::Groupalarm::CGroupalarm2Message& alarmMessage, std::string& messageInfoString, std::string& messageTypeString ) const;
 		void GetEmailInfo( const External::Email::CEmailMessage& alarmMessage, std::string& messageInfoString, std::string& messageTypeString ) const;
 
 		static std::unique_ptr<CLogger> instancePtr;

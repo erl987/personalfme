@@ -26,7 +26,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 								
 <xs:complexType name="gatewayLoginDatabaseType">
 	<xs:all>
-		<xs:element name="groupalarm" type="groupalarmLoginDataType" minOccurs="0"/>
+		<xs:element name="groupalarm2" type="groupalarmLoginDataType" minOccurs="0"/>
 		<xs:element name="email" type="emailLoginDataType" minOccurs="0"/>	
 		<xs:element name="external" type="externalProgramLoginDataType" minOccurs="0"/>
 	</xs:all>

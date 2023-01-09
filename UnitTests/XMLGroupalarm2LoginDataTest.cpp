@@ -18,8 +18,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 	#include "stdafx.h"
 #endif
 #include "XMLUtilities.h"
-#include "XMLSerializableGroupalarmLoginData.h"
-#include "XMLGroupalarmLoginDataTest.h"
+#include "XMLSerializableGroupalarm2LoginData.h"
+#include "XMLGroupalarm2LoginDataTest.h"
 
 const boost::filesystem::path xmlFileName = "./groupalarmLoginData.xml";
 #if defined( _WIN32 )
@@ -39,10 +39,10 @@ const std::string rootTag = "config";
 */
 bool Utilitites::XMLTest::XMLGroupalarmLoginDataTest::Test()
 {
-	External::Groupalarm::CXMLSerializableGroupalarmLoginData setLoginData, getLoginData;
+	External::Groupalarm::CXMLSerializableGroupalarm2LoginData setLoginData, getLoginData;
 
 	setLoginData.SetConnectionTrialInfos( 7, 19.3f, 5 );
-	setLoginData.SetServerInformation( "user3", false, "password4", "proxy.wan.de", 8080 );
+	setLoginData.Set(12345, "aToken", "proxy.provider.org", 8080, "aUser", "aPasswd");
 
 	// write the XML-file
 	Utilities::XML::WriteXML( xmlFileName, setLoginData, rootTag, make_pair( namespaceName, schemaDefinitionFilePath ) );

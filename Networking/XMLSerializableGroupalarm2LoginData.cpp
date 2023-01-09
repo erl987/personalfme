@@ -24,17 +24,16 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #endif
 
 #include <boost/algorithm/string/trim.hpp>
-#include "XMLSerializableGroupalarmLoginData.h"
+#include "XMLSerializableGroupalarm2LoginData.h"
 
-const std::string USER_KEY = "user";
-const std::string PASSWORD_KEY = "password";
-	const std::string PASSWORD_ATTRIB_KEY = "[@type]";
-	const std::string PASSWORD_ATTRIB_PLAIN = "plain";
-	const std::string PASSWORD_ATTRIB_HASHED = "hashed";
+const std::string ORGANIZATION_ID_KEY = "organizationid";
+const std::string API_TOKEN_KEY = "apitoken";
 
 const std::string PROXY_KEY = "proxy";
-	const std::string PROXY_SERVER_KEY = "server";
-	const std::string PROXY_SERVER_PORT = "port";
+	const std::string PROXY_ADDRESS_KEY = "address";
+	const std::string PROXY_PORT = "port";
+	const std::string PROXY_USER_NAME = "username";
+	const std::string PROXY_PASSWORD = "password";
 
 const std::string TRIALS_KEY = "trials";
 const std::string WAIT_TIME_KEY = "waitTime";
@@ -47,42 +46,37 @@ const std::string CONNECTIONS_KEY = "connections";
 *	@exception								None
 *	@remarks								The object is reset. It is assumed that the XML-file is well-formed and valid. Validate it before calling this method using the Utilities::XML::CXMLValidator class.
 */
-void External::Groupalarm::CXMLSerializableGroupalarmLoginData::SetFromXML( Poco::AutoPtr<Poco::Util::AbstractConfiguration> xmlFile )
+void External::Groupalarm::CXMLSerializableGroupalarm2LoginData::SetFromXML( Poco::AutoPtr<Poco::Util::AbstractConfiguration> xmlFile )
 {
 	using namespace std;
 
-	bool isProxy, isHashedPassword;
-	unsigned short proxyServerPort;
-	unsigned int numTrials, maxNumConnections;
-	string userName, password, proxyServerName;
+	unsigned short proxyPort;
+	unsigned int numTrials, maxNumConnections, organizationId;
+	string proxyAddress, apiToken, proxyUserName, proxyPassword;
 	float timeDistTrial;
-	string passwordType;
 
 	// read the data from the XML-file (it is assumed that the XML-file is well-formed and valid)
-	userName = boost::algorithm::trim_copy( xmlFile->getString( USER_KEY ) );
-	password = boost::algorithm::trim_copy( xmlFile->getString( PASSWORD_KEY ) );
-	passwordType = xmlFile->getString( PASSWORD_KEY + PASSWORD_ATTRIB_KEY );
-	if ( passwordType == PASSWORD_ATTRIB_PLAIN ) {
-		isHashedPassword = false;
-	} else if ( passwordType == PASSWORD_ATTRIB_HASHED ) {
-		isHashedPassword = true;
-	}
+	organizationId = xmlFile->getUInt( ORGANIZATION_ID_KEY );
+	apiToken = boost::algorithm::trim_copy( xmlFile->getString( API_TOKEN_KEY ) );
 
 	if ( xmlFile->hasProperty( PROXY_KEY ) ) {
-		isProxy = true;
-		proxyServerName = boost::algorithm::trim_copy( xmlFile->getString( PROXY_KEY + "." + PROXY_SERVER_KEY ) );
-		proxyServerPort = static_cast<unsigned short>( xmlFile->getInt( PROXY_KEY + "." + PROXY_SERVER_PORT, 8080 ) ); // default port is possible
+		proxyAddress = boost::algorithm::trim_copy( xmlFile->getString( PROXY_KEY + "." + PROXY_ADDRESS_KEY) );
+		proxyPort = static_cast<unsigned short>( xmlFile->getInt( PROXY_KEY + "." + PROXY_PORT, 8080 ) ); // default port is possible
+		proxyUserName = boost::algorithm::trim_copy(xmlFile->getString(PROXY_KEY + "." + PROXY_USER_NAME, "")); // empty user name is possible
+		proxyPassword = boost::algorithm::trim_copy(xmlFile->getString(PROXY_KEY + "." + PROXY_PASSWORD, "")); // empty password is possible
 	} else {
-		isProxy = false;
-		proxyServerName = "";
-		proxyServerPort = 0;
+		proxyAddress = "";
+		proxyPort = 0;
+		proxyUserName = "";
+		proxyPassword = "";
+
 	}
 
 	numTrials = xmlFile->getUInt( TRIALS_KEY, 10 ); // default value: 10 trials
 	timeDistTrial = static_cast<float>( xmlFile->getDouble( WAIT_TIME_KEY, 30.0 ) ); // default value: 30.0 s
 	maxNumConnections = xmlFile->getUInt( CONNECTIONS_KEY, 1 ); // default value: 1 parallel connection
 
-	SetServerInformation( userName, isHashedPassword, password, proxyServerName, proxyServerPort );
+	Set(organizationId, apiToken, proxyAddress, proxyPort, proxyUserName, proxyPassword);
 	SetConnectionTrialInfos( numTrials, timeDistTrial, maxNumConnections );
 }
 
@@ -93,34 +87,32 @@ void External::Groupalarm::CXMLSerializableGroupalarmLoginData::SetFromXML( Poco
 *	@exception								None
 *	@remarks								If the dataset is empty, nothing will be written to the XML-file
 */
-void External::Groupalarm::CXMLSerializableGroupalarmLoginData::GenerateXML( Poco::AutoPtr<Poco::Util::AbstractConfiguration> xmlFile ) const
+void External::Groupalarm::CXMLSerializableGroupalarm2LoginData::GenerateXML( Poco::AutoPtr<Poco::Util::AbstractConfiguration> xmlFile ) const
 {
 	using namespace std;
 
-	bool isHashedPassword;
-	unsigned short proxyServerPort;
-	unsigned int numTrials, maxNumConnections;
-	string userName, password, proxyServerName;
+	unsigned short proxyPort;
+	unsigned int numTrials, maxNumConnections, organizationId;
+	string proxyAddress, apiToken, proxyUserName, proxyPassword;
 	float timeDistTrial;
-	string passwordType;
 
 	if ( IsValid() ) {
-		GetServerInformation( userName, isHashedPassword, password, proxyServerName, proxyServerPort );
+		Get(organizationId, apiToken, proxyAddress, proxyPort, proxyUserName, proxyPassword);
 		GetConnectionTrialInfos( numTrials, timeDistTrial, maxNumConnections );
 
 		// write the data to the XML-file
-		xmlFile->setString( USER_KEY, userName );
-		xmlFile->setString( PASSWORD_KEY, password );
-		if ( isHashedPassword ) {
-			passwordType = PASSWORD_ATTRIB_HASHED;
-		} else {
-			passwordType = PASSWORD_ATTRIB_PLAIN;
-		}
-		xmlFile->setString( PASSWORD_KEY + PASSWORD_ATTRIB_KEY, passwordType );
+		xmlFile->setUInt( ORGANIZATION_ID_KEY, organizationId );
+		xmlFile->setString( API_TOKEN_KEY, apiToken );
 
-		if ( !proxyServerName.empty() ) {
-			xmlFile->setString( PROXY_KEY + "." + PROXY_SERVER_KEY, proxyServerName );
-			xmlFile->setInt( PROXY_KEY + "." + PROXY_SERVER_PORT, proxyServerPort );
+		if ( !proxyAddress.empty() ) {
+			xmlFile->setString( PROXY_KEY + "." + PROXY_ADDRESS_KEY, proxyAddress );
+			xmlFile->setInt( PROXY_KEY + "." + PROXY_PORT, proxyPort );
+			if (!proxyUserName.empty()) {
+				xmlFile->setString(PROXY_KEY + "." + PROXY_USER_NAME, proxyUserName );
+			}
+			if (!proxyPassword.empty()) {
+				xmlFile->setString(PROXY_KEY + "." + PROXY_PASSWORD, proxyPassword);
+			}
 		}
 
 		xmlFile->setUInt( TRIALS_KEY, numTrials );

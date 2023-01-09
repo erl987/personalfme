@@ -44,7 +44,6 @@ set( SOURCE
 	MediaFile.cpp
 	ParserErrorHandler.cpp
 	StatusMessage.cpp
-	StringUtils.cpp
 	VersionInfo.cpp
 	XercesString.cpp
 	XMLUtilities.cpp	
@@ -65,6 +64,7 @@ set( HEADERS
 	SerializableSeqDataComplete.h
 	SerializableDateTime.h
 	SerializableTime.h
+	StringUtilities.h
 	DateTime.h
 	CTime.h
 	TimeDatatypes.h
@@ -74,7 +74,6 @@ set( HEADERS
 	ParserErrorHandler.h
 	PluginLoader.h
 	SendStatusMessage.h
-	StringUtils.h
 	VersionInfo.h
 	XercesString.h
 	XMLException.h

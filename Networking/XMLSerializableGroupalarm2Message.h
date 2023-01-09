@@ -17,7 +17,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #pragma once
 
 #include <Poco/Util/AbstractConfiguration.h>
-#include "GroupalarmLoginData.h"
+#include "Groupalarm2Message.h"
 #include "XMLSerializable.h"
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -50,14 +50,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 namespace External {
 	namespace Groupalarm {
 		/** \ingroup Networking
-		*	XML-serializable class representing the login data for sending alarms via the gateway www.groupalarm.de
+		*	XML-serializable class implementing a dataset for the www.Groupalarm.de calling parameters
 		*/
-		class CXMLSerializableGroupalarmLoginData : public CGroupalarmLoginData, public Utilities::XML::CXMLSerializable
+		class CXMLSerializableGroupalarm2Message : public CGroupalarm2Message, public Utilities::XML::CXMLSerializable
 		{
 		public:
-			NETWORKING_API CXMLSerializableGroupalarmLoginData() {};
-			NETWORKING_API CXMLSerializableGroupalarmLoginData( const CGroupalarmLoginData& other ) : CGroupalarmLoginData( other ) {};
-			NETWORKING_API virtual ~CXMLSerializableGroupalarmLoginData() {};
+			NETWORKING_API CXMLSerializableGroupalarm2Message() {};
+			NETWORKING_API CXMLSerializableGroupalarm2Message( const CGroupalarm2Message& other ) : CGroupalarm2Message( other ) {};
+			NETWORKING_API virtual ~CXMLSerializableGroupalarm2Message() {};
 			NETWORKING_API virtual void SetFromXML( Poco::AutoPtr<Poco::Util::AbstractConfiguration> xmlFile );
 			NETWORKING_API virtual void GenerateXML( Poco::AutoPtr<Poco::Util::AbstractConfiguration> xmlFile ) const;
 		};

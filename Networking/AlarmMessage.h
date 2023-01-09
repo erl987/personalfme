@@ -54,7 +54,7 @@ namespace External {
 	{
 	public:
 		NETWORKING_API CAlarmMessage(const bool& requiredState);
-		NETWORKING_API virtual ~CAlarmMessage(void) {};
+		~CAlarmMessage(void) {};
 		NETWORKING_API friend bool operator==(const CAlarmMessage& lhs, const CAlarmMessage& rhs);
 		NETWORKING_API friend bool operator!=(const CAlarmMessage& lhs, const CAlarmMessage& rhs);
 		NETWORKING_API friend bool operator<(const CAlarmMessage& lhs, const CAlarmMessage& rhs);

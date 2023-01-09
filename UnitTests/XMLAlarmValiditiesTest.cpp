@@ -19,7 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #endif
 #include "XMLUtilities.h"
 #include "EmailMessage.h"
-#include "GroupalarmMessage.h"
+#include "Groupalarm2Message.h"
 #include "InfoalarmMessageDecorator.h"
 #include "DefaultValidity.h"
 #include "WeeklyValidity.h"
@@ -52,23 +52,23 @@ bool Utilitites::XMLTest::XMLAlarmValiditiesTest::Test()
 
 	vector< shared_ptr<External::CAlarmMessage> > alarmMessages, alarmMessagesException, alarmMessagesEmpty, alarmMessagesMonthly, infoalarmMessages;
 	Email::CEmailMessage emailMessage;
-	Groupalarm::CGroupalarmMessage groupalarmMessage, groupalarmMessage2, groupalarmMessage3;
+	Groupalarm::CGroupalarm2Message groupalarmMessage, groupalarmMessage2, groupalarmMessage3;
 	Validities::CWeeklyValidity weeklyException, weeklyException2;
 	Validities::CMonthlyValidity monthlyException;
 	Validities::CSingleTimeValidity singleTimeException;
 	vector<WeekType> exceptionWeeks;
 	CXMLSerializableAlarmValidities setAlarmValidities, getAlarmValidities;
 
-	groupalarmMessage.Set( "0151129496923", false, "3", true, false, true );
-	alarmMessages.push_back( make_shared<Groupalarm::CGroupalarmMessage>( groupalarmMessage ) );
+	groupalarmMessage.SetAlarmToAllUsers("Alarm for all!", "", 2.5);
+	alarmMessages.push_back(make_shared<Groupalarm::CGroupalarm2Message>(groupalarmMessage));
 
 	vector< pair<string, string> > recipients = { { "", "first.last@test.de" },{ "First2 Last2", "first2.last2@test.de" } };
-	emailMessage.Set( "siteID", "alarmID", recipients, "alarm text" );
-	emailMessage.SetRequiredState( false );
-	alarmMessages.push_back( make_shared<Email::CEmailMessage>( emailMessage ) );
-	alarmMessages.push_back( make_shared<Infoalarm::CInfoalarmMessageDecorator>( emailMessage.Clone() ) );
+	emailMessage.Set("siteID", "alarmID", recipients, "alarm text");
+	emailMessage.SetRequiredState(false);
+	alarmMessages.push_back(make_shared<Email::CEmailMessage>(emailMessage));
+	alarmMessages.push_back(make_shared<Infoalarm::CInfoalarmMessageDecorator>(emailMessage.Clone()));
 
-	groupalarmMessage2.Set( {}, { 3 }, true, "Exception alarm.", true, false, true );
+	groupalarmMessage2.SetAlarmToDefinedUsers({ {"label1", 2}, {"label2", 1} }, { "scenario1", "scenario2" }, { "unit1", "unit2" }, {make_pair<>("First", "Person1"), make_pair<>("First", "Person2")}, "A message.", "", 2.3);
 	alarmMessages.push_back( make_shared<Infoalarm::CInfoalarmMessageDecorator>( groupalarmMessage2.Clone() ) );
 
 	setAlarmValidities.AddEntry( Validities::DEFAULT_VALIDITY, begin( alarmMessages ), end( alarmMessages ) );
@@ -77,9 +77,9 @@ bool Utilitites::XMLTest::XMLAlarmValiditiesTest::Test()
 	alarmMessagesEmpty.clear();
 	setAlarmValidities.AddEntry( make_shared<Validities::CSingleTimeValidity>( singleTimeException ), begin( alarmMessagesEmpty ), end( alarmMessagesEmpty ) );
 
-	groupalarmMessage3.Set( { 2 }, {}, true, "Exception alarm 2.", true, false, true );
-	alarmMessagesException.push_back( make_shared<Groupalarm::CGroupalarmMessage>( groupalarmMessage2 ) );
-	alarmMessagesException.push_back( make_shared<Groupalarm::CGroupalarmMessage>( groupalarmMessage3 ) );
+	groupalarmMessage3.SetAlarmToDefinedUsers({}, {}, {"unit1"}, {}, "", "template1", 2.0);
+	alarmMessagesException.push_back( make_shared<Groupalarm::CGroupalarm2Message>( groupalarmMessage2 ) );
+	alarmMessagesException.push_back( make_shared<Groupalarm::CGroupalarm2Message>( groupalarmMessage3 ) );
 	exceptionWeeks = { FIRST, THIRD };
 	weeklyException = Validities::CWeeklyValidity( begin( exceptionWeeks ), end( exceptionWeeks ), SUNDAY, Utilities::CTime( 7, 9, 4, 0 ), Utilities::CTime( 7, 21, 23, 0 ) );
 	weeklyException2 = Validities::CWeeklyValidity( begin( exceptionWeeks ), end( exceptionWeeks ), TUESDAY, Utilities::CTime( 14, 9, 4, 0 ), Utilities::CTime( 3, 21, 25, 0 ) );
@@ -89,7 +89,7 @@ bool Utilitites::XMLTest::XMLAlarmValiditiesTest::Test()
 
 	monthlyException = Validities::CMonthlyValidity( 7, Utilities::CTime( 13, 21, 49, 0 ), Utilities::CTime( 13, 51, 49, 0 ) );
 	alarmMessagesMonthly.push_back( make_shared<Email::CEmailMessage>( "siteIDMonth", "alarmIDMonth", recipients, "monthly exception", true ) );
-	alarmMessagesMonthly.push_back( make_shared<Groupalarm::CGroupalarmMessage>( groupalarmMessage ) );
+	alarmMessagesMonthly.push_back( make_shared<Groupalarm::CGroupalarm2Message>( groupalarmMessage ) );
 	setAlarmValidities.AddEntry( make_shared<Validities::CMonthlyValidity>( monthlyException ), begin( alarmMessagesMonthly ), end( alarmMessagesMonthly ) );
 
 	// write the XML-file

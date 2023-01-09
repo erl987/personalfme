@@ -20,7 +20,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 #include <sstream>
 #include <boost/test/unit_test.hpp>
 #include "EmailGateway.h"
-#include "GroupalarmGateway.h"
+#include "Groupalarm2Gateway.h"
 
 using boost::unit_test::label;
 
@@ -33,16 +33,16 @@ namespace Networking {
 	/** \ingroup GatewayTests
 	*/
 	namespace GroupalarmTest {
-		namespace GroupalarmGatewayTest {
+		namespace Groupalarm2GatewayTest {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( GroupalarmGateway_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( Groupalarm2Gateway_test_suite, *label("basic") );
 
 			/**	@brief		Testing of the groupalarm gateway
 			*/
-			BOOST_AUTO_TEST_CASE( GroupalarmGateway_test_case )
+			BOOST_AUTO_TEST_CASE( Groupalarm2Gateway_test_case )
 			{
 				using namespace std;
-				unique_ptr< External::CAlarmGateway> gateway = make_unique<External::Groupalarm::CGroupalarmGateway>();
+				unique_ptr< External::CAlarmGateway> gateway = make_unique<External::Groupalarm::CGroupalarm2Gateway>();
 
 				// this test aims for detecting deadlocks that may occur from a broken implementation
 				for ( int i = 0; i < 5; i++ ) {
@@ -57,7 +57,7 @@ namespace Networking {
 				using namespace std;
 				using namespace External;
 
-				unique_ptr< External::CAlarmGateway> gateway1 = make_unique<Groupalarm::CGroupalarmGateway>();
+				unique_ptr< External::CAlarmGateway> gateway1 = make_unique<Groupalarm::CGroupalarm2Gateway>();
 				unique_ptr< External::CAlarmGateway> gateway2 = make_unique<Email::CEmailGateway>();
 
 				// test valid comparisons

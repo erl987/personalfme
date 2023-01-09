@@ -29,7 +29,9 @@ namespace Utilitites {
 	*/
 	namespace XMLTest {
 		namespace XMLGroupalarmMessageTest {
-			bool Test();
+			bool TestDefinedUsers();
+			bool TestAllUsers();
+			bool TestAlarmTemplate();
 		}
 	}
 }
