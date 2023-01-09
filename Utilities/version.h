@@ -21,8 +21,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>
 *	Currently the detection of 5-tone sequences is implemented. The detected sequences are logged and further
 *	actions can automatically be started, when detecting a sequence.
 *	@author		Ralf Rettig (info@personalfme.de, www.personalfme.de)
-*	@version	623e048
-*	@date		"2022-11-19 11:41:19 +0000"
+*	@version	2c1a21f
+*	@date		"2023-01-09 21:07:01 +0100"
 *
 *	The object-oriented code is currently designed for 5-tone sequences only, but it can be flexibly extended to other 
 *	types of sequences, because the basic class "CSearch" is an abstract interface.
@@ -46,15 +46,15 @@ namespace Utilities {
 	/**	@param	MAJOR_VERSION		storing the major version number of the library */
 	const unsigned int MAJOR_VERSION = 1;
 	/**	@param	MINOR_VERSION		storing the minor version number of the library */
-	const unsigned int MINOR_VERSION = 0;
+	const unsigned int MINOR_VERSION = 1;
 	/**	@param	RELEASE_VERSION		storing the release version number of the library */
-	const unsigned int RELEASE_VERSION = 1;
+	const unsigned int RELEASE_VERSION = 0;
 	/**	@param	VERSION_TYPE		storing the version type (i.e. "" = Release to Manufacturing, "RC1" = Release candidate 1, "pre-release" = Development version) */
 	const std::string VERSION_TYPE = "";
 	/**	@param	REVISION			storing the revision number from the current build, automatically updated by SVN */
-	const std::string REVISION = "623e048";
+	const std::string REVISION = "2c1a21f";
 	/**	@param	DATE_STRING			storing the build date from the current revision, automatically updated by SVN */
-	const std::string DATE_STRING = "2022-11-19 11:41:19 +0000";
+	const std::string DATE_STRING = "2023-01-09 21:07:01 +0100";
 	/**	@param	SOFTWARE_NAME		storing the name of the software, automatically updated by SVN */
 	const std::string SOFTWARE_NAME_STRING = "PersonalFME";
 	/**	@param	VENDOR_NAME			storing the name of the software owner, automatically updated by SVN */
