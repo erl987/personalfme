@@ -1,3 +1,9 @@
+PersonalFME 1.1.0 (15 January 2023):
+
+- integrated a gateway for supporting the current app-based alarm service of Groupalarm.de
+- removed the gateway for the old service of Groupalarm.de that had been decommissioned
+
+
 PersonalFME 1.0.1 (19 November 2022):
 
 - supporting now Debian / Raspberry Pi OS 11, Ubuntu 22.04 LTS and Windows 8.1, 10 and 11

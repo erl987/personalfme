@@ -1,9 +1,9 @@
 # PersonalFME - Gateway linking analog radio selcalls to internet communication services
 
 *PersonalFME* is detecting selcalls ("Fünftonfolgen") within the analog radio network of the German emergency 
-services ("BOS") and is forwarding them in various ways such as SMS, e-mail and via external program calls. It 
-requires an external radio receiver such as a radio device or a radio scanner that needs to be connected to the 
-applied computer via a sound card.
+services ("BOS") and is forwarding them in various ways such as alarm message apps, e-mail and via external program
+calls. It requires an external radio receiver such as a radio device or a radio scanner that needs to be connected to
+the applied computer via a sound card.
 
 *PersonalFME* can even run on mini-computers such as RaspberryPi in continuous operation.
 
