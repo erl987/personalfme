@@ -542,7 +542,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Non-realtime high-throughput testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( multiple_non_realtime_case, *label("advanced") )
+	BOOST_AUTO_TEST_CASE( multiple_non_realtime_case, *label("basic") )
 	{
 		using namespace std;
 		float SNR;
