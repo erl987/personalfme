@@ -269,22 +269,20 @@ cmake -DCMAKE_BUILD_TYPE=Release -DOption_BUILD_UNITTESTS=ON ..
 The tests are grouped by different labels. All tests with a single label can be run like this:
 
 ```shell
-./Unittests --run_test=@basic
+./Unittests --run_test=@default
 ```
 
 The following labels are available:
 
-| Label    | Contained Tests                                                                           |
-|----------|-------------------------------------------------------------------------------------------|
-| basic    | All tests that should always work, even if no audio device is available                   |
-| advanced | Brute-force testing of the selcall detection algorithm, not requiring an audio device[^1] |
-| audio    | All tests requiring an active audio device on the test machine                            |
-| realtime | Testing of realtime selcall detection                                                     |
+| Label               | Contained Tests                                                         |
+|---------------------|-------------------------------------------------------------------------|
+| default             | All tests that should always work, even if no audio device is available |
+| with_audio          | All tests requiring an active audio device on the test machine          |
+| realtime_with_audio | Testing of realtime selcall detection[^1]                               |
 
-[^1]: Some tests at very low signal-to-noise ratio will always fail, this is expected.
+[^1]: Requires running the executable `CoreTester` as a counterpart on the same computer.
 
-
-The label `basic` contains the tests that can be run even on a cloud machine without an audio device
+The label `default` contains the tests that can be run even on a cloud machine without an audio device
 and covers all relevant use cases. **Running the tests with this label is sufficient to ensure the
 correct functionality of the software.**
 

@@ -432,7 +432,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Single non-realtime testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( single_non_realtime_case, *label("basic") )
+	BOOST_AUTO_TEST_CASE( single_non_realtime_case, *label("default") )
 	{
 		using namespace std;
 		boost::posix_time::ptime startTimeSeq;
@@ -467,7 +467,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Realtime high-throughput testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( multiple_realtime_case, *label("realtime") )
+	BOOST_AUTO_TEST_CASE( multiple_realtime_case, *label("realtime_with_audio") )
 	{
 		using namespace std;
 		float SNR;
@@ -542,7 +542,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Non-realtime high-throughput testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( multiple_non_realtime_case, *label("basic") )
+	BOOST_AUTO_TEST_CASE( multiple_non_realtime_case, *label("default") )
 	{
 		using namespace std;
 		float SNR;

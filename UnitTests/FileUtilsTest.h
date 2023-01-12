@@ -38,7 +38,7 @@ namespace Utilitites {
 	*/
 	namespace FileUtils {
 		// Test section
-		BOOST_AUTO_TEST_SUITE( FileUtils_test_suite, *label("basic") );
+		BOOST_AUTO_TEST_SUITE( FileUtils_test_suite, *label("default") );
 
 		/**	@brief		Testing of of relative path determination
 		*/

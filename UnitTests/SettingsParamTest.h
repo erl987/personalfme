@@ -42,7 +42,7 @@ using boost::unit_test::label;
 namespace Middleware {
 	namespace SettingsParamTest {
 		// Test section
-		BOOST_AUTO_TEST_SUITE( SettingsParam_test_suite, *label("basic") );
+		BOOST_AUTO_TEST_SUITE( SettingsParam_test_suite, *label("default") );
 
 		/**	@brief		Testing of the class
 		*/

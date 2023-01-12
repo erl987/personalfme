@@ -43,7 +43,7 @@ namespace Utilitites {
 		*/
 		namespace OGGHandler {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( OGGHandler_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( OGGHandler_test_suite, *label("default") );
 
 			/**	@brief		Testing storage of OGG-files
 			*/

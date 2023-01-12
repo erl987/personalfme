@@ -60,7 +60,7 @@ namespace ProcessingTests {
 
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( DataProcessing_test_suite, *label("basic") );
+		BOOST_AUTO_TEST_SUITE( DataProcessing_test_suite, *label("default") );
 
 
 

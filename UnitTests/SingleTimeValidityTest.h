@@ -56,7 +56,7 @@ namespace Networking {
 			const Utilities::CDateTime endTimeSet7 = Utilities::CDateTime( 01, 07, 2016, Utilities::CTime( 06, 00, 00 ) );
 
 			// Test section
-			BOOST_AUTO_TEST_SUITE( SingleTimeValidity_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( SingleTimeValidity_test_suite, *label("default") );
 
 			/**	@brief		Testing of the construction of the single time validity exception
 			*/

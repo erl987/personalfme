@@ -55,7 +55,7 @@ namespace Audio {
 		}
 
 		// test section
-		BOOST_AUTO_TEST_SUITE( CAudioSignalReader_test_suite, *label("audio") );
+		BOOST_AUTO_TEST_SUITE( CAudioSignalReader_test_suite, *label("with_audio") );
 
 		/**	@brief		Test of set and get functions
 		*/

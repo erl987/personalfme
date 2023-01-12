@@ -54,7 +54,7 @@ namespace Audio {
 
 
 		// test section
-		BOOST_AUTO_TEST_SUITE( CAudioSequencePasser_test_suite, *label("basic") );
+		BOOST_AUTO_TEST_SUITE( CAudioSequencePasser_test_suite, *label("default") );
 
 		/**	@brief		Test of set parameter function
 		*/

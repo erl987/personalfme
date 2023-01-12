@@ -44,7 +44,7 @@ namespace Utilitites {
 		*/
 		namespace GermanLocalDateTime {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( GermanLocalDateTime_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( GermanLocalDateTime_test_suite, *label("default") );
 
 			/**	@brief		Testing of formatted time output for first wintertime of the year
 			*/

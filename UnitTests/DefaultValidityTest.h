@@ -34,7 +34,7 @@ namespace Networking {
 	namespace ValiditiesTest {
 		namespace DefaultValidityTest {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( DefaultValidity_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( DefaultValidity_test_suite, *label("default") );
 
 			/**	@brief		Testing of the default validity exception
 			*/

@@ -43,7 +43,7 @@ namespace Utilitites {
 		const int millisecSet1 = 951;
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( Time_test_suite, *label("basic") );
+		BOOST_AUTO_TEST_SUITE( Time_test_suite, *label("default") );
 
 		/**	@brief		Testing of setting and getting functions of the class
 		*/
