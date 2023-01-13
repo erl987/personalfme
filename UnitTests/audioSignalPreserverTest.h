@@ -101,7 +101,7 @@ namespace Audio {
 
 
 		// test section
-		BOOST_AUTO_TEST_SUITE( CAudioSignalPreserver_test_suite, *label("basic") );
+		BOOST_AUTO_TEST_SUITE( CAudioSignalPreserver_test_suite, *label("default") );
 
 		/**	@brief		Test of set and get functions
 		*/

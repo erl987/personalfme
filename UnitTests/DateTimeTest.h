@@ -42,7 +42,7 @@ namespace Utilitites {
 		const Utilities::CTime timeOfDaySet( 11, 7, 20, 205 );
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( DateTime_test_suite, *label("basic") );
+		BOOST_AUTO_TEST_SUITE( DateTime_test_suite, *label("default") );
 
 		/**	@brief		Testing of setting and getting functions of the class
 		*/

@@ -37,7 +37,7 @@ namespace Utilitites {
 	namespace Messages {
 		namespace DetectorStatusMessage {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( DetectorStatusMessage_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( DetectorStatusMessage_test_suite, *label("default") );
 
 			/**	@brief		Testing of setting and getting functions of the class
 			*/

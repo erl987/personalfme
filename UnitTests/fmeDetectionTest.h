@@ -220,7 +220,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Checking if a code with the given parameters must be or must not be detected according to the standard TR-BOS FME
 	*/
-	void CheckFailing(std::vector<float> deltaF, std::vector<float> deltaLength, std::vector<float> deltaCycle, bool& mustSucceed, bool& mustFail)
+	void CheckFailing(std::vector<float> deltaF, std::vector<float> deltaLength, std::vector<float> deltaCycle, float SNR, bool& mustSucceed, bool& mustFail)
 	{
 		using namespace std;
 
@@ -231,6 +231,8 @@ namespace FMEdetectionTests {
 		float maxDeltaLengthCan = 20.0f;	// maximum deviation of tone length that is allowed to be detected [ms]
 		float maxDeltaCycleMust = 5.0f;		// maximum deviation of tone period that must be detected [ms]
 		float maxDeltaCycleCan = 20.0f;		// maximum deviation of tone period that is allowed to be detected [ms]
+
+		float minSNRrequired = -10;         // this is not defined by the TR-BOS FME but based on the experienced detection quality of the algorithm
 	
 		// check if the sequence is within the required limits of the TR-BOS FME
 		mustSucceed = true;
@@ -241,6 +243,10 @@ namespace FMEdetectionTests {
 			mustSucceed = false;
 		}
 		if ( find_if( deltaCycle.begin(), deltaCycle.end(), [=](float val){ return( std::abs( val ) > maxDeltaCycleMust ); } ) != deltaCycle.end() ) {
+			mustSucceed = false;
+		}
+
+		if (SNR < minSNRrequired) {
 			mustSucceed = false;
 		}
 		
@@ -426,7 +432,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Single non-realtime testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( single_non_realtime_case, *label("basic") )
+	BOOST_AUTO_TEST_CASE( single_non_realtime_case, *label("default") )
 	{
 		using namespace std;
 		boost::posix_time::ptime startTimeSeq;
@@ -461,7 +467,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Realtime high-throughput testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( multiple_realtime_case, *label("realtime") )
+	BOOST_AUTO_TEST_CASE( multiple_realtime_case, *label("realtime_with_audio") )
 	{
 		using namespace std;
 		float SNR;
@@ -479,7 +485,7 @@ namespace FMEdetectionTests {
 
 		try {
 			// intialize operations
-			cout << "Multiple real-time testing of FME-sequence signal processing algorithm ...\n";
+			cout << "Multiple real-time testing (" << numTestCasesRealtime << " samples) of FME-sequence signal processing algorithm ...\n";
 			FMEdetectionTests::CRandomFMEParams randomProducer( isAllTonesIdentical, lengthCode, minCodeDigit, maxCodeDigit, minToneAmp, maxToneAmp, minDeltaF, maxDeltaF, minDeltaLength, maxDeltaLength, minDeltaCycle, maxDeltaCycle, minSNR, maxSNR );
 			PrepareResultsFiles();
 
@@ -500,7 +506,7 @@ namespace FMEdetectionTests {
 				std::this_thread::sleep_for( realTimeDelayTime );
 
 				// determine if the sequence must be successfully detected or must not be detected (outside of the range defined by the standard TR-BOS FME)
-				CheckFailing( deltaF, deltaLength, deltaCycle, mustSucceed, mustFail );
+				CheckFailing( deltaF, deltaLength, deltaCycle, SNR, mustSucceed, mustFail );
 
 				// check for correctness
 				std::unique_lock<std::mutex> lock( realTimeCodeMutex );
@@ -536,7 +542,7 @@ namespace FMEdetectionTests {
 
 	/**	@brief		Non-realtime high-throughput testing of the FME analysis algorithm
 	*/
-	BOOST_AUTO_TEST_CASE( multiple_non_realtime_case, *label("advanced") )
+	BOOST_AUTO_TEST_CASE( multiple_non_realtime_case, *label("default") )
 	{
 		using namespace std;
 		float SNR;
@@ -553,7 +559,7 @@ namespace FMEdetectionTests {
 		vector<float> deltaCycle( lengthCode );
 
 		// initialize operations
-		cout << "Multiple testing of FME-sequence signal processing algorithm ...\n";
+		cout << "Multiple testing (" << numTestCasesNonRealtime << " samples) of FME-sequence signal processing algorithm ...\n";
 		PrepareResultsFiles();
 		FMEdetectionTests::CFMEdetectionTester tester( audioSettingsFileName, pageSize, delayTime, finalDelayTime, maxDevRealTime, downsamplingFactorProc, downsamplingFactorRec, samplingFreq, rootDirName );
 		FMEdetectionTests::CRandomFMEParams randomProducer( isAllTonesIdentical, lengthCode, minCodeDigit, maxCodeDigit, minToneAmp, maxToneAmp, minDeltaF, maxDeltaF, minDeltaLength, maxDeltaLength, minDeltaCycle, maxDeltaCycle, minSNR, maxSNR );
@@ -568,7 +574,7 @@ namespace FMEdetectionTests {
 			startTimeSeq += boost::posix_time::microseconds( static_cast<long>( seqOffsetTime * 1.0e6 ) );
 
 			// determine if the sequence must be successfully detected or must not be detected (outside of the range defined by the standard TR-BOS FME)
-			CheckFailing( deltaF, deltaLength, deltaCycle, mustSucceed, mustFail );
+			CheckFailing( deltaF, deltaLength, deltaCycle, SNR, mustSucceed, mustFail );
 
 			// check for correctness
 			isCorrectCode = CheckForCorrectness( foundCodes.begin(), foundCodes.end(), testCode.begin(), testCode.end() );	

@@ -40,7 +40,7 @@ namespace Utilitites {
 		*/
 		namespace BoostStdTimeConverter {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( BoostStdTimeConverter_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( BoostStdTimeConverter_test_suite, *label("default") );
 
 			/**	@brief		Testing of time conversion
 			*/

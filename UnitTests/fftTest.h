@@ -54,7 +54,7 @@ namespace FFTTests {
 
 
 	// Test section
-	BOOST_AUTO_TEST_SUITE( fft_test_suite, *label("basic") );
+	BOOST_AUTO_TEST_SUITE( fft_test_suite, *label("default") );
 
 	// Amplitude FFT calculation
 	BOOST_AUTO_TEST_CASE( amplitude_fft_test_case )

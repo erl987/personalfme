@@ -257,7 +257,7 @@ namespace FilterTests {
 
 
     // Test section - the specific filter settings are defined by the reference data
-    BOOST_FIXTURE_TEST_SUITE( Filter_test_suite, Fixture, *label("basic") )
+    BOOST_FIXTURE_TEST_SUITE( Filter_test_suite, Fixture, *label("default") )
 
         BOOST_AUTO_TEST_CASE( transition_width_test_case )
         {

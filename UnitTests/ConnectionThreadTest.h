@@ -55,7 +55,7 @@ namespace Networking {
 
 
 		// Test section
-		BOOST_AUTO_TEST_SUITE( ConnectionThread_test_suite, *label("basic") );
+		BOOST_AUTO_TEST_SUITE( ConnectionThread_test_suite, *label("default") );
 
 		/**	@brief		Testing of the construction of the class
 		*/

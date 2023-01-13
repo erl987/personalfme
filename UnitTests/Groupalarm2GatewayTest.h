@@ -35,7 +35,7 @@ namespace Networking {
 	namespace GroupalarmTest {
 		namespace Groupalarm2GatewayTest {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( Groupalarm2Gateway_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( Groupalarm2Gateway_test_suite, *label("default") );
 
 			/**	@brief		Testing of the groupalarm gateway
 			*/

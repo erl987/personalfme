@@ -34,7 +34,7 @@ namespace Networking {
 	namespace ExternalProgramTest {
 		namespace ExternalProgramGatewayTest {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( ExternalProgramGateway_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( ExternalProgramGateway_test_suite, *label("default") );
 
 			/**	@brief		Testing of the external program gateway
 			*/

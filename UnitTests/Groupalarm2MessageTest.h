@@ -49,7 +49,7 @@ namespace Networking {
 		const double eventOpenPeriodInHoursSet = 2.13;
 
 			// Test section
-			BOOST_AUTO_TEST_SUITE( GroupalarmMessage_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( GroupalarmMessage_test_suite, *label("default") );
 
 			/**	@brief		Testing of the CGroupalarmMessage constructors
 			*/

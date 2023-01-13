@@ -49,7 +49,7 @@ namespace Utilitites {
 	*/
 	namespace XMLTest {
 		// Test section
-		BOOST_AUTO_TEST_SUITE( XML_Test_test_suite, *label("basic") );
+		BOOST_AUTO_TEST_SUITE( XML_Test_test_suite, *label("default") );
 
 		/**	@brief		Testing XML serialization and deserialization of the CGatewayLoginDatabase class
 		*/

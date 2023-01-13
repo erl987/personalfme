@@ -34,7 +34,7 @@ namespace Networking {
 	namespace EmailTest {
 		namespace EmailGatewayTest {
 			// Test section
-			BOOST_AUTO_TEST_SUITE( EmailGateway_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( EmailGateway_test_suite, *label("default") );
 
 			/**	@brief		Testing of the e-mail gateway
 			*/

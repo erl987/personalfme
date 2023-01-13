@@ -37,7 +37,7 @@ namespace Networking {
 			const unsigned int maxNumConnectionsSet = 10;
 
 			// Test section
-			BOOST_AUTO_TEST_SUITE( ExternalProgramLoginData_test_suite, *label("basic") );
+			BOOST_AUTO_TEST_SUITE( ExternalProgramLoginData_test_suite, *label("default") );
 
 			/**	@brief		Testing the constructors
 			*/
