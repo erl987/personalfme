@@ -3,11 +3,11 @@ Upstream-Name: personalfme
 Source: http://www.personalfme.de
 
 Files: *
-Copyright: Copyright 2010-2022 Ralf Rettig <info@personalfme.de>
+Copyright: Copyright 2010-2023 Ralf Rettig <info@personalfme.de>
 License: GPL-3+
 
 Files: debian/*
-Copyright: Copyright 2016-2022 Ralf Rettig <info@personalfme.de>
+Copyright: Copyright 2016-2023 Ralf Rettig <info@personalfme.de>
 License: GPL-3+
 
 License: GPL-3+

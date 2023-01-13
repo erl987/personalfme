@@ -1,6 +1,6 @@
 // DO NOT CHANGE THIS FILE MANUALLY. CHANGE INSTEAD "VERSION.TEMPLATE" FROM WHICH IT IS GENERATED AUTOMATICALLY BY SVN.
 /*	PersonalFME - Gateway linking analog radio selcalls to internet communication services
-Copyright(C) 2010-2022 Ralf Rettig (www.personalfme.de)
+Copyright(C) 2010-2023 Ralf Rettig (www.personalfme.de)
 
 This program is free software: you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by

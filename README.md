@@ -298,7 +298,7 @@ Es wird darauf hingewiesen, dass das willentliche unbefugte Erlangen von Informa
 Funkdiensten, z.B. der Behörden und Organisationen mit Sicherheitsaufgaben (BOS) strafbar ist. Dies gilt auch für die 
 Auswertung von Fünftonfolgen. Die vorschriftsgemäße Nutzung des Programms liegt allein in der Verantwortung des Nutzers.
 
-**Copyright (c) 2010-2022 Ralf Rettig**
+**Copyright (c) 2010-2023 Ralf Rettig**
 
 **This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
 License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later 
