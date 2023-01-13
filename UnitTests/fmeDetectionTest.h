@@ -485,7 +485,7 @@ namespace FMEdetectionTests {
 
 		try {
 			// intialize operations
-			cout << "Multiple real-time testing (" << numTestCasesRealtime << "samples) of FME-sequence signal processing algorithm ...\n";
+			cout << "Multiple real-time testing (" << numTestCasesRealtime << " samples) of FME-sequence signal processing algorithm ...\n";
 			FMEdetectionTests::CRandomFMEParams randomProducer( isAllTonesIdentical, lengthCode, minCodeDigit, maxCodeDigit, minToneAmp, maxToneAmp, minDeltaF, maxDeltaF, minDeltaLength, maxDeltaLength, minDeltaCycle, maxDeltaCycle, minSNR, maxSNR );
 			PrepareResultsFiles();
 
