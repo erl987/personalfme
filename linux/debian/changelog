@@ -3,7 +3,7 @@ personalfme (1.1.0-1) jammy; urgency=medium
  * integrated a gateway for supporting the current app-based alarm service of Groupalarm.de
  * removed the gateway for the old service of Groupalarm.de that had been decommissioned
 
- -- Ralf Rettig <info@personalfme.de>  Sun, 15 January 2023 21:00:00 +0100
+ -- Ralf Rettig <info@personalfme.de>  Sun, 14 January 2023 21:00:00 +0100
 
 personalfme (1.0.1-1) jammy; urgency=medium
 

@@ -1,4 +1,4 @@
-PersonalFME 1.1.0 (15 January 2023):
+PersonalFME 1.1.0 (14 January 2023):
 
 - integrated a gateway for supporting the current app-based alarm service of Groupalarm.de
 - removed the gateway for the old service of Groupalarm.de that had been decommissioned
