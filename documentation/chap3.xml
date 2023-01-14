@@ -469,7 +469,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>-->
 							<para><emphasis>Standard (wenn weggelassen)</emphasis>: kein Benutzername</para>
 						</listitem>
 						<listitem>
-							<code language="xml"><![CDATA[<username>]]></code>: Password für den Proxy-Server
+							<code language="xml"><![CDATA[<password>]]></code>: Passwort für den Proxy-Server
 							<para><emphasis>Standard (wenn weggelassen)</emphasis>: kein Passwort</para>
 						</listitem>
 					</itemizedlist>
